@@ -1,0 +1,34 @@
+SELECT ?crypto ?cryptoLabel ?tickerSymbol ?namedAfter ?logo ?founder ?creator ?inspiredBy ?use ?country ?exchanges ?derivatives ?basedOn ?creationDate ?pubDate ?unitSymbol ?consumption ?developer ?progLanguage ?copyright ?technology ?articleEN WHERE {
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE]". }
+  ?crypto wdt:P31 wd:Q13479982.
+  OPTIONAL {?crypto wdt:P5810 ?tickerSymbol. }
+  ?crypto wdt:P154 ?logo.
+  ?crypto wdt:P112 ?founder.
+  OPTIONAL {?crypto wdt:P170 ?creator. }
+  OPTIONAL {?crypto wdt:P941  ?inspiredBy. }
+  OPTIONAL {?crypto wdt:P366 ?use. }
+  OPTIONAL {?crypto wdt:P17 ?country. }
+  OPTIONAL {?crypto wdt:P414 ?exchanges. }
+  OPTIONAL {?crypto wdt:P4969 ?derivatives. }
+  OPTIONAL {?crypto wdt:P144 ?basedOn. }
+  OPTIONAL {?crypto wdt:P571 ?creationDate. }
+  OPTIONAL {?crypto wdt:P577 ?pubDate. }
+  OPTIONAL {?crypto wdt:P5061 ?unitSymbol. }
+  OPTIONAL {?crypto wdt:P2791 ?consumption. }
+  ?crypto wdt:P178 ?developer.
+  ?crypto wdt:P277 ?progLanguage.
+  OPTIONAL {?crypto wdt:P275 ?copyright. }
+  OPTIONAL {?crypto wdt:P2283 ?technology. }
+  OPTIONAL {?crypto wdt:P138 ?namedAfter. }
+  
+  OPTIONAL {
+        
+      
+      ?articleEN schema:about ?crypto .
+      ?articleEN schema:inLanguage "en" .
+      ?articleEN schema:isPartOf <https://en.wikipedia.org/> .
+    }
+ 
+ 
+}
+LIMIT 10

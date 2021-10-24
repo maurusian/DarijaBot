@@ -1,0 +1,28 @@
+SELECT ?monument ?monumentLabel ?monumentDescription ?articleAR ?articleFR ?articleEN WHERE {
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE]". }
+  ?monument wdt:P1435 wd:Q57338034.
+  #?monument wdt:P17 wd:Q1028.
+    NOT EXISTS  {
+      ?articleMA schema:about ?monument .
+      ?articleMA schema:inLanguage "ary" .
+      ?articleMA schema:isPartOf <https://ary.wikipedia.org/> .
+    }
+  OPTIONAL {
+      ?articleEN schema:about ?monument .
+      ?articleEN schema:inLanguage "en" .
+      ?articleEN schema:isPartOf <https://en.wikipedia.org/> .
+    }
+ 
+  OPTIONAL {
+      ?articleAR schema:about ?monument .
+      ?articleAR schema:inLanguage "ar" .
+      ?articleAR schema:isPartOf <https://ar.wikipedia.org/> .
+    }
+  
+  OPTIONAL {
+      ?articleFR schema:about ?monument .
+      ?articleFR schema:inLanguage "fr" .
+      ?articleFR schema:isPartOf <https://fr.wikipedia.org/> .
+    }
+}
+LIMIT 500

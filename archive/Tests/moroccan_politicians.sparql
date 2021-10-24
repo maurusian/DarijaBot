@@ -1,0 +1,71 @@
+SELECT ?politician ?politicianLabel ?sexLabel ?nativeName (group_concat(?citizenshipLabel;separator=" .. ") as ?citizenships) (group_concat(?languageLabel;separator=" .. ") as ?languages) (group_concat(?educationLabel;separator=" .. ") as ?education) (group_concat(?partyLabel;separator=" .. ") as ?parties) ?dateOfBirth ?placeOfBirthLabel (group_concat(?occupationLabel;separator=" .. ") as ?occupations) (group_concat(?positionLabel;separator=" .. ") as ?positions) ?dateOfDeath ?placeOfDeathLabel ?mannerOfDeathLabel ?articleEN ?articleFR ?articleAR WHERE {
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE]".
+    ?politician rdfs:label ?politicianLabel .
+    
+    ?sex rdfs:label ?sexLabel.
+    ?placeOfBirth rdfs:label ?placeOfBirthLabel.
+    ?placeOfDeath rdfs:label ?placeOfDeathLabel.
+    ?mannerOfDeath rdfs:label ?mannerOfDeathLabel.
+    ?citizenship rdfs:label ?citizenshipLabel.
+    ?language rdfs:label ?languageLabel.
+    ?party rdfs:label ?partyLabel.
+    ?education rdfs:label ?educationLabel.
+    ?occupation rdfs:label ?occupationLabel.
+    ?position rdfs:label ?positionLabel.
+    } 
+  ?politician wdt:P31 wd:Q5.
+  ?politician wdt:P27 wd:Q1028.
+  ?politician wdt:P106 wd:Q82955.
+  OPTIONAL {?politician wdt:P21 ?sex. }
+  OPTIONAL {?politician wdt:P1559 ?nativeName. }
+  OPTIONAL {?politician wdt:P27 ?citizenship.}
+  OPTIONAL {?politician wdt:P1412 ?language. }
+  OPTIONAL {?politician wdt:P69  ?education. }
+  OPTIONAL {?politician wdt:P102 ?party. }
+  OPTIONAL {?politician wdt:P569 ?dateOfBirth. }
+  OPTIONAL {?politician wdt:P19 ?placeOfBirth. }
+  OPTIONAL {?politician wdt:P106 ?occupation. }
+  OPTIONAL {?politician wdt:P39 ?position. }
+  OPTIONAL {?politician wdt:P570 ?dateOfDeath. }
+  OPTIONAL {?politician wdt:P20 ?placeOfDeath. }
+  OPTIONAL {?politician wdt:P1196 ?mannerOfDeath. }
+  
+  
+  OPTIONAL {
+        
+      ?articleEN schema:about ?politician .
+      ?articleEN schema:inLanguage "en" .
+      ?articleEN schema:isPartOf <https://en.wikipedia.org/> .
+    }
+	
+   OPTIONAL {
+        
+      ?articleFR schema:about ?politician .
+      ?articleFR schema:inLanguage "fr" .
+      ?articleFR schema:isPartOf <https://fr.wikipedia.org/> .
+    }
+	
+	OPTIONAL {
+        
+      ?articleAR schema:about ?politician .
+      ?articleAR schema:inLanguage "ar" .
+      ?articleAR schema:isPartOf <https://ar.wikipedia.org/> .
+    }
+	
+	FILTER NOT EXISTS {
+        
+      ?articleMA schema:about ?politician .
+      ?articleMA schema:inLanguage "ary" .
+      ?articleMA schema:isPartOf <https://ary.wikipedia.org/> .
+    }
+  
+  FILTER (?dateOfBirth > "1900-01-01"^^xsd:dateTime)
+ 
+ 
+  
+}
+
+group by ?politician ?politicianLabel ?sexLabel ?nativeName ?dateOfBirth ?placeOfBirthLabel ?dateOfDeath ?placeOfDeathLabel ?mannerOfDeathLabel ?articleEN ?articleFR ?articleAR
+
+
+LIMIT 1000

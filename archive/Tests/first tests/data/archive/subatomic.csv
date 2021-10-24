@@ -1,0 +1,213 @@
+particle,particleLabel,particleDescription,articleEN,articleAR,articleFR
+http://www.wikidata.org/entity/Q82586,lepton,class of elementary particles,https://en.wikipedia.org/wiki/Lepton,https://ar.wikipedia.org/wiki/%D9%84%D8%A8%D8%AA%D9%88%D9%86_(%D9%81%D9%8A%D8%B2%D9%8A%D8%A7%D8%A1),https://fr.wikipedia.org/wiki/Lepton
+http://www.wikidata.org/entity/Q101667,hadron,quantum particle: bound system of quark(s) and/or antiquark(s),https://en.wikipedia.org/wiki/Hadron,https://ar.wikipedia.org/wiki/%D9%87%D8%A7%D8%AF%D8%B1%D9%88%D9%86,https://fr.wikipedia.org/wiki/Hadron
+http://www.wikidata.org/entity/Q102165,nucleon,particle that makes up the atomic nucleus (proton or neutron),https://en.wikipedia.org/wiki/Nucleon,https://ar.wikipedia.org/wiki/%D9%86%D9%88%D9%8A%D8%A9_(%D8%B0%D8%B1%D8%A9),https://fr.wikipedia.org/wiki/Nucl%C3%A9on
+http://www.wikidata.org/entity/Q102742,meson,subatomic particle; hadron made of equal number of quark(s) and antiquark(s): normally one of each,https://en.wikipedia.org/wiki/Meson,https://ar.wikipedia.org/wiki/%D9%85%D9%8A%D8%B2%D9%88%D9%86,https://fr.wikipedia.org/wiki/M%C3%A9son
+http://www.wikidata.org/entity/Q103585,graviton,hypothetical elementary particle that mediates gravitation,https://en.wikipedia.org/wiki/Graviton,https://ar.wikipedia.org/wiki/%D8%AC%D8%B1%D8%A7%D9%81%D8%AA%D9%88%D9%86,https://fr.wikipedia.org/wiki/Graviton
+http://www.wikidata.org/entity/Q105580,gauge boson,"force carrier, a bosonic particle that carries any of the fundamental interactions of nature, commonly called forces",https://en.wikipedia.org/wiki/Gauge_boson,https://ar.wikipedia.org/wiki/%D8%A8%D9%88%D8%B2%D9%88%D9%86_%D8%B9%D9%8A%D8%A7%D8%B1%D9%8A,https://fr.wikipedia.org/wiki/Boson_de_jauge
+http://www.wikidata.org/entity/Q107575,antiproton,antiparticle of the proton,https://en.wikipedia.org/wiki/Antiproton,https://ar.wikipedia.org/wiki/%D9%85%D8%B6%D8%A7%D8%AF_%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%86,https://fr.wikipedia.org/wiki/Antiproton
+http://www.wikidata.org/entity/Q156530,antineutron,antiparticle of the neutron,https://en.wikipedia.org/wiki/Antineutron,https://ar.wikipedia.org/wiki/%D9%85%D8%B6%D8%A7%D8%AF_%D9%86%D9%8A%D9%88%D8%AA%D8%B1%D9%88%D9%86,https://fr.wikipedia.org/wiki/Antineutron
+http://www.wikidata.org/entity/Q159731,baryon,proton or any other hadron that is composed of three quarks,https://en.wikipedia.org/wiki/Baryon,https://ar.wikipedia.org/wiki/%D8%A8%D8%A7%D8%B1%D9%8A%D9%88%D9%86,https://fr.wikipedia.org/wiki/Baryon
+http://www.wikidata.org/entity/Q178483,hypernucleus,nucleus which contains at least one hyperon in addition to nucleons,https://en.wikipedia.org/wiki/Hypernucleus,,https://fr.wikipedia.org/wiki/Hypernoyau
+http://www.wikidata.org/entity/Q188392,tau,subatomic particle with negative electric charge,https://en.wikipedia.org/wiki/Tau_(particle),https://ar.wikipedia.org/wiki/%D8%AA%D8%A7%D9%88%D9%88%D9%86,https://fr.wikipedia.org/wiki/Tau_(particule)
+http://www.wikidata.org/entity/Q211922,W or Z boson,elementary particles; gauge bosons that mediate the weak interaction,https://en.wikipedia.org/wiki/W_and_Z_bosons,https://ar.wikipedia.org/wiki/%D8%A8%D9%88%D8%B2%D9%88%D9%86%D8%A7%D8%AA_%D8%AF%D8%A8%D9%84%D9%8A%D9%88_%D9%88%D8%B2%D8%AF,
+http://www.wikidata.org/entity/Q219708,magnetic monopole,hypothetical particle with one magnetic pole,https://en.wikipedia.org/wiki/Magnetic_monopole,https://ar.wikipedia.org/wiki/%D8%A3%D8%AD%D8%A7%D8%AF%D9%8A_%D8%A7%D9%84%D9%82%D8%B7%D8%A8_%D8%A7%D9%84%D9%85%D8%BA%D9%86%D8%A7%D8%B7%D9%8A%D8%B3%D9%8A,https://fr.wikipedia.org/wiki/Monop%C3%B4le_magn%C3%A9tique
+http://www.wikidata.org/entity/Q250974,gluino,superpartner of the gluon,https://en.wikipedia.org/wiki/Gluino,https://ar.wikipedia.org/wiki/%D8%BA%D9%84%D9%88%D9%8A%D9%86%D9%88,
+http://www.wikidata.org/entity/Q277816,pentaquark,type of subatomic particle,https://en.wikipedia.org/wiki/Pentaquark,https://ar.wikipedia.org/wiki/%D8%A8%D9%86%D8%AA%D8%A7_%D9%83%D9%88%D8%A7%D8%B1%D9%83,https://fr.wikipedia.org/wiki/Pentaquark
+http://www.wikidata.org/entity/Q279735,muon neutrino,neutral subatomic elementary particle,https://en.wikipedia.org/wiki/Muon_neutrino,https://ar.wikipedia.org/wiki/%D9%85%D9%8A%D9%88%D9%88%D9%86_%D9%86%D9%8A%D8%AA%D8%B1%D9%8A%D9%86%D9%88,
+http://www.wikidata.org/entity/Q306428,rho meson,meson that carries the nuclear force,https://en.wikipedia.org/wiki/Rho_meson,,https://fr.wikipedia.org/wiki/M%C3%A9son_rho
+http://www.wikidata.org/entity/Q306600,tau neutrino,neutral subatomic elementary particle,https://en.wikipedia.org/wiki/Tau_neutrino,https://ar.wikipedia.org/wiki/%D8%AA%D8%A7%D9%88_%D9%86%D9%8A%D8%AA%D8%B1%D9%8A%D9%86%D9%88,
+http://www.wikidata.org/entity/Q309940,eta meson,quantum particle,https://en.wikipedia.org/wiki/Eta_and_eta_prime_mesons,,https://fr.wikipedia.org/wiki/M%C3%A9son_%C3%AAta
+http://www.wikidata.org/entity/Q309954,Phi meson,,https://en.wikipedia.org/wiki/Phi_meson,,https://fr.wikipedia.org/wiki/M%C3%A9son_phi
+http://www.wikidata.org/entity/Q311821,Xi baryon,subatomic particle,https://en.wikipedia.org/wiki/Xi_baryon,,https://fr.wikipedia.org/wiki/Baryon_Xi
+http://www.wikidata.org/entity/Q363922,prompt neutron,neutron immediately emitted by a nuclear fission event,https://en.wikipedia.org/wiki/Prompt_neutron,,
+http://www.wikidata.org/entity/Q377236,chargino,charged mass eigenstate formed from superpartners of the Higgs and W bosons,https://en.wikipedia.org/wiki/Chargino,https://ar.wikipedia.org/wiki/%D8%B4%D8%A7%D8%B1%D8%AC%D9%8A%D9%86%D9%88,https://fr.wikipedia.org/wiki/Chargino
+http://www.wikidata.org/entity/Q423998,Delta baryon,,https://en.wikipedia.org/wiki/Delta_baryon,,https://fr.wikipedia.org/wiki/Baryon_Delta
+http://www.wikidata.org/entity/Q424019,Lambda baryon,,https://en.wikipedia.org/wiki/Lambda_baryon,,https://fr.wikipedia.org/wiki/Baryon_Lambda
+http://www.wikidata.org/entity/Q424078,Sigma baryon,,https://en.wikipedia.org/wiki/Sigma_baryon,,https://fr.wikipedia.org/wiki/Baryon_Sigma
+http://www.wikidata.org/entity/Q424117,Upsilon meson,particle,https://en.wikipedia.org/wiki/Upsilon_meson,https://ar.wikipedia.org/wiki/%D9%85%D9%8A%D8%B2%D9%88%D9%86_%D8%A3%D8%A8%D8%B3%D9%84%D9%88%D9%86,https://fr.wikipedia.org/wiki/M%C3%A9son_upsilon
+http://www.wikidata.org/entity/Q424123,χb(3P) meson,meson,,,
+http://www.wikidata.org/entity/Q424134,Omega meson,,,,https://fr.wikipedia.org/wiki/M%C3%A9son_om%C3%A9ga
+http://www.wikidata.org/entity/Q424139,Omega baryon,subatomic hadron particle,https://en.wikipedia.org/wiki/Omega_baryon,,https://fr.wikipedia.org/wiki/Baryon_Om%C3%A9ga
+http://www.wikidata.org/entity/Q464590,lightest supersymmetric particle,,https://en.wikipedia.org/wiki/Lightest_supersymmetric_particle,,
+http://www.wikidata.org/entity/Q488424,triton,"atomic nucleus; having the symbol ³H⁺ or T⁺, is the +1 ion of tritium, ³H or T",,,
+http://www.wikidata.org/entity/Q488719,Z boson,electrically neutral elementary particle that mediate the weak interaction,,,https://fr.wikipedia.org/wiki/Boson_Z
+http://www.wikidata.org/entity/Q587553,charged particle,particle with an electric charge,https://en.wikipedia.org/wiki/Charged_particle,https://ar.wikipedia.org/wiki/%D8%AC%D8%B3%D9%8A%D9%85_%D9%85%D8%B4%D8%AD%D9%88%D9%86,
+http://www.wikidata.org/entity/Q602556,D meson,,https://en.wikipedia.org/wiki/D_meson,,https://fr.wikipedia.org/wiki/M%C3%A9son_D
+http://www.wikidata.org/entity/Q606387,tetraquark,exotic meson composed of four valence quarks,https://en.wikipedia.org/wiki/Tetraquark,https://ar.wikipedia.org/wiki/%D8%AA%D8%AA%D8%B1%D8%A7_%D9%83%D9%88%D8%A7%D8%B1%D9%83,https://fr.wikipedia.org/wiki/T%C3%A9traquark
+http://www.wikidata.org/entity/Q619699,electron neutrino,neutral subatomic elementary particle of first generation of leptons,https://en.wikipedia.org/wiki/Electron_neutrino,https://ar.wikipedia.org/wiki/%D8%A5%D9%84%D9%83%D8%AA%D8%B1%D9%88%D9%86_%D9%86%D9%8A%D9%88%D8%AA%D8%B1%D9%8A%D9%86%D9%88,https://fr.wikipedia.org/wiki/Neutrino_%C3%A9lectronique
+http://www.wikidata.org/entity/Q626719,hyperon,type of strange baryon,https://en.wikipedia.org/wiki/Hyperon,https://ar.wikipedia.org/wiki/%D9%87%D8%A7%D9%8A%D8%A8%D8%B1%D9%88%D9%86,https://fr.wikipedia.org/wiki/Hyp%C3%A9ron
+http://www.wikidata.org/entity/Q643257,Sphaleron,solution to field equations in Standard Model particle physics,https://en.wikipedia.org/wiki/Sphaleron,,https://fr.wikipedia.org/wiki/Sphaleron
+http://www.wikidata.org/entity/Q678837,neutralino,neutral mass eigenstate formed from superpartners of gauge and Higgs bosons,https://en.wikipedia.org/wiki/Neutralino,https://ar.wikipedia.org/wiki/%D9%86%D9%8A%D9%88%D8%AA%D8%B1%D8%A7%D9%84%D9%8A%D9%86%D9%88,https://fr.wikipedia.org/wiki/Neutralino
+http://www.wikidata.org/entity/Q792519,axino,superpartner of the axion,https://en.wikipedia.org/wiki/Axino,https://ar.wikipedia.org/wiki/%D8%A3%D9%83%D8%B3%D9%8A%D9%86%D9%88,https://fr.wikipedia.org/wiki/Axino
+http://www.wikidata.org/entity/Q792548,axion,hypothetical elementary particle,https://en.wikipedia.org/wiki/Axion,,https://fr.wikipedia.org/wiki/Axion
+http://www.wikidata.org/entity/Q795131,B meson,,https://en.wikipedia.org/wiki/B_meson,https://ar.wikipedia.org/wiki/%D9%85%D9%8A%D8%B2%D9%88%D9%86_%D8%A8%D9%8A,https://fr.wikipedia.org/wiki/M%C3%A9son_B
+http://www.wikidata.org/entity/Q843503,kaon,quantum particle,https://en.wikipedia.org/wiki/Kaon,https://ar.wikipedia.org/wiki/%D9%83%D8%A7%D9%88%D9%86,https://fr.wikipedia.org/wiki/Kaon
+http://www.wikidata.org/entity/Q876518,J/psi meson,neutral meson having charm quark and charm anti quark,https://en.wikipedia.org/wiki/J/psi_meson,,https://fr.wikipedia.org/wiki/M%C3%A9son_J/%CE%A8
+http://www.wikidata.org/entity/Q904461,free neutron,neutron existing outside the nucleus,,,
+http://www.wikidata.org/entity/Q1029485,W boson,charged elementary particle that mediate the weak interaction,,,https://fr.wikipedia.org/wiki/Boson_W
+http://www.wikidata.org/entity/Q1031134,photino,superpartner of the photon,https://en.wikipedia.org/wiki/Photino,,https://fr.wikipedia.org/wiki/Photino
+http://www.wikidata.org/entity/Q1041630,skyrmion,hypothetical particle related originally to baryons. It was described by Tony Skyrme in 1962 and consists of a quantum superposition of baryons and resonance states. It could be predicted from some nuclear matter properties,https://en.wikipedia.org/wiki/Skyrmion,,https://fr.wikipedia.org/wiki/Skyrmion
+http://www.wikidata.org/entity/Q1045270,theta meson,,https://en.wikipedia.org/wiki/Theta_meson,,https://fr.wikipedia.org/wiki/M%C3%A9son_th%C3%AAta
+http://www.wikidata.org/entity/Q1051902,superpartner,hypothetical elementary particle,https://en.wikipedia.org/wiki/Superpartner,https://ar.wikipedia.org/wiki/%D9%86%D8%B8%D9%8A%D8%B1_%D9%81%D8%A7%D8%A6%D9%82,https://fr.wikipedia.org/wiki/Superpartenaire
+http://www.wikidata.org/entity/Q1060144,gaugino,superpartner of a gauge boson,https://en.wikipedia.org/wiki/Gaugino,https://ar.wikipedia.org/wiki/%D8%BA%D9%88%D8%AC%D9%8A%D9%86%D9%88,https://fr.wikipedia.org/wiki/Jaugino
+http://www.wikidata.org/entity/Q1065883,Majorana fermion,fermion that is its own antiparticle,https://en.wikipedia.org/wiki/Majorana_fermion,,https://fr.wikipedia.org/wiki/Particule_de_Majorana
+http://www.wikidata.org/entity/Q1066748,antineutrino,antiparticle of a neutrino,,,
+http://www.wikidata.org/entity/Q1087194,sneutrino,superpartner of a neutrino,,,
+http://www.wikidata.org/entity/Q1087203,selectron,superpartner of the electron,,,https://fr.wikipedia.org/wiki/S%C3%A9lectron
+http://www.wikidata.org/entity/Q1132774,T meson,,https://en.wikipedia.org/wiki/T_meson,,https://fr.wikipedia.org/wiki/M%C3%A9son_T
+http://www.wikidata.org/entity/Q1153441,Goldstone boson,massless boson that must be present in a quantum system with spontaneously broken symmetry,https://en.wikipedia.org/wiki/Goldstone_boson,https://ar.wikipedia.org/wiki/%D8%A8%D9%88%D8%B2%D9%88%D9%86_%D8%BA%D9%88%D9%84%D8%AF%D8%B3%D8%AA%D9%88%D9%86,https://fr.wikipedia.org/wiki/Boson_de_Goldstone
+http://www.wikidata.org/entity/Q1193188,gravitino,superpartner of the graviton,https://en.wikipedia.org/wiki/Gravitino,https://ar.wikipedia.org/wiki/%D8%BA%D8%B1%D8%A7%D9%81%D9%8A%D8%AA%D9%8A%D9%86%D9%88,https://fr.wikipedia.org/wiki/Gravitino
+http://www.wikidata.org/entity/Q1199270,glueball,a composite particle made of gluons bound by the strong force,https://en.wikipedia.org/wiki/Glueball,,https://fr.wikipedia.org/wiki/Boule_de_glu
+http://www.wikidata.org/entity/Q1339405,Sterile neutrino,Hypothetical Antiparticle of Neutrino,https://en.wikipedia.org/wiki/Sterile_neutrino,https://ar.wikipedia.org/wiki/%D9%86%D9%8A%D9%88%D8%AA%D8%B1%D9%8A%D9%86%D9%88_%D8%AE%D8%A7%D9%85%D9%84,https://fr.wikipedia.org/wiki/Neutrino_st%C3%A9rile
+http://www.wikidata.org/entity/Q1391812,Faddeev–Popov ghost,type of unphysical field in quantum field theory which provides mathematical consistency,https://en.wikipedia.org/wiki/Faddeev%E2%80%93Popov_ghost,https://ar.wikipedia.org/wiki/%D8%A7%D8%B4%D8%A8%D8%A7%D8%AD_%D9%81%D8%A7%D8%AF%D9%8A%D9%8A%D9%81-%D8%A8%D9%88%D8%A8%D9%88%D9%81,
+http://www.wikidata.org/entity/Q1528450,E(38) boson,lightest known nuclear particle,,,
+http://www.wikidata.org/entity/Q1536139,Goldstino,,https://en.wikipedia.org/wiki/Goldstino,,https://fr.wikipedia.org/wiki/Goldstino
+http://www.wikidata.org/entity/Q1617700,higgsino,superpartner of the Higgs boson,https://en.wikipedia.org/wiki/Higgsino,https://ar.wikipedia.org/wiki/%D9%87%D9%8A%D9%83%D8%B2%D9%8A%D9%86%D9%88,https://fr.wikipedia.org/wiki/Higgsino
+http://www.wikidata.org/entity/Q1758767,leptoquark,hypothetical particles with both lepton and baryon number,https://en.wikipedia.org/wiki/Leptoquark,https://ar.wikipedia.org/wiki/%D8%A7%D9%84%D9%84%D9%8A%D8%A8%D8%AA%D9%88%D9%83%D9%88%D8%A7%D8%B1%D9%83%D8%A7%D8%AA,
+http://www.wikidata.org/entity/Q1996385,X and Y bosons,hypothetical force particles,https://en.wikipedia.org/wiki/X_and_Y_bosons,https://ar.wikipedia.org/wiki/%D8%A8%D9%88%D8%B2%D9%88%D9%86%D8%A7%D8%AA_%D8%A7%D9%83%D8%B3_%D9%88_%D9%88%D8%A7%D9%8A,
+http://www.wikidata.org/entity/Q2022629,relativistic particle,,https://en.wikipedia.org/wiki/Relativistic_particle,https://ar.wikipedia.org/wiki/%D8%AC%D8%B3%D9%8A%D9%85_%D9%86%D8%B3%D8%A8%D9%8A,
+http://www.wikidata.org/entity/Q2024141,massless quantum particle,quantum particle having zero rest mass (zero invariant or intrinsic mass),https://en.wikipedia.org/wiki/Massless_particle,,https://fr.wikipedia.org/wiki/Luxon
+http://www.wikidata.org/entity/Q2052084,antiquark,antiparticle of the quark,,,
+http://www.wikidata.org/entity/Q2147400,muon antineutrino,,,,
+http://www.wikidata.org/entity/Q2172777,antitau,antiparticle of the tau lepton,,,https://fr.wikipedia.org/wiki/Antitau
+http://www.wikidata.org/entity/Q2174695,antimuon,antiparticle of the muon,,,https://fr.wikipedia.org/wiki/Antimuon
+http://www.wikidata.org/entity/Q2216633,solar neutrino,neutrinos produced in the core of the sun through various nuclear fusion reactions,https://en.wikipedia.org/wiki/Solar_neutrino,https://ar.wikipedia.org/wiki/%D9%86%D9%8A%D9%88%D8%AA%D8%B1%D9%8A%D9%86%D9%88_%D8%B4%D9%85%D8%B3%D9%8A,https://fr.wikipedia.org/wiki/Neutrino_solaire
+http://www.wikidata.org/entity/Q2259051,tau antineutrino,,,,
+http://www.wikidata.org/entity/Q2265489,sea quark,,,,
+http://www.wikidata.org/entity/Q2296863,tetraneutron,hypothesised cluster of four neutrons which has failed to be empirically validated,https://en.wikipedia.org/wiki/Tetraneutron,https://ar.wikipedia.org/wiki/%D9%86%D9%88%D8%A7%D8%A9_%D8%B1%D8%A8%D8%A7%D8%B9%D9%8A%D8%A9_%D8%A7%D9%84%D9%86%D9%8A%D9%88%D8%AA%D8%B1%D9%88%D9%86%D8%A7%D8%AA,https://fr.wikipedia.org/wiki/T%C3%A9traneutron
+http://www.wikidata.org/entity/Q2347008,sfermion,bosonic superpartner of a fermion,https://en.wikipedia.org/wiki/Sfermion,https://ar.wikipedia.org/wiki/%D8%B3%D9%81%D8%B1%D9%85%D9%8A%D9%88%D9%86,https://fr.wikipedia.org/wiki/Sfermion
+http://www.wikidata.org/entity/Q402,Higgs boson,elementary particle transmitting the Higgs field giving particles mass,https://en.wikipedia.org/wiki/Higgs_boson,https://ar.wikipedia.org/wiki/%D8%A8%D9%88%D8%B2%D9%88%D9%86_%D9%87%D9%8A%D8%BA%D8%B2,https://fr.wikipedia.org/wiki/Boson_de_Higgs
+http://www.wikidata.org/entity/Q2126,neutrino,elementary particle,https://en.wikipedia.org/wiki/Neutrino,https://ar.wikipedia.org/wiki/%D9%86%D9%8A%D9%88%D8%AA%D8%B1%D9%8A%D9%86%D9%88,https://fr.wikipedia.org/wiki/Neutrino
+http://www.wikidata.org/entity/Q2225,electron,subatomic particle with negative electric charge,https://en.wikipedia.org/wiki/Electron,https://ar.wikipedia.org/wiki/%D8%A5%D9%84%D9%83%D8%AA%D8%B1%D9%88%D9%86,https://fr.wikipedia.org/wiki/%C3%89lectron
+http://www.wikidata.org/entity/Q2294,proton,nucleon (constituent of the nucleus of the atom) that has positive electric charge; symbol p,https://en.wikipedia.org/wiki/Proton,https://ar.wikipedia.org/wiki/%D8%A8%D8%B1%D9%88%D8%AA%D9%88%D9%86,https://fr.wikipedia.org/wiki/Proton
+http://www.wikidata.org/entity/Q2348,neutron,nucleon (constituent of the nucleus of the atom) that has neutral electric charge (no charge); symbol n,https://en.wikipedia.org/wiki/Neutron,https://ar.wikipedia.org/wiki/%D9%86%D9%8A%D9%88%D8%AA%D8%B1%D9%88%D9%86,https://fr.wikipedia.org/wiki/Neutron
+http://www.wikidata.org/entity/Q3151,muon,elementary subatomic particle with negative electric charge,https://en.wikipedia.org/wiki/Muon,https://ar.wikipedia.org/wiki/%D9%85%D9%8A%D9%88%D9%88%D9%86,https://fr.wikipedia.org/wiki/Muon
+http://www.wikidata.org/entity/Q3198,photon,"elementary particle, the carrier and quantum of electromagnetism",https://en.wikipedia.org/wiki/Photon,https://ar.wikipedia.org/wiki/%D9%81%D9%88%D8%AA%D9%88%D9%86,https://fr.wikipedia.org/wiki/Photon
+http://www.wikidata.org/entity/Q3229,positron,subatomic particle with positive charge,https://en.wikipedia.org/wiki/Positron,https://ar.wikipedia.org/wiki/%D8%A8%D9%88%D8%B2%D9%8A%D8%AA%D8%B1%D9%88%D9%86,https://fr.wikipedia.org/wiki/Positon
+http://www.wikidata.org/entity/Q3299,gluon,elementary particle that mediates the strong force,https://en.wikipedia.org/wiki/Gluon,https://ar.wikipedia.org/wiki/%D8%BA%D9%84%D9%88%D9%88%D9%86,https://fr.wikipedia.org/wiki/Gluon
+http://www.wikidata.org/entity/Q4097,pion,Lightest meson with a quark and an antiquark,https://en.wikipedia.org/wiki/Pion,https://ar.wikipedia.org/wiki/%D8%A8%D9%8A%D9%88%D9%86,https://fr.wikipedia.org/wiki/Pion_(particule)
+http://www.wikidata.org/entity/Q6718,quark,class of fundamental particles,https://en.wikipedia.org/wiki/Quark,https://ar.wikipedia.org/wiki/%D9%83%D9%88%D8%A7%D8%B1%D9%83,https://fr.wikipedia.org/wiki/Quark
+http://www.wikidata.org/entity/Q6732,up quark,type of quark,https://en.wikipedia.org/wiki/Up_quark,https://ar.wikipedia.org/wiki/%D9%83%D9%88%D8%A7%D8%B1%D9%83_%D8%B9%D9%84%D9%88%D9%8A,https://fr.wikipedia.org/wiki/Quark_up
+http://www.wikidata.org/entity/Q6745,down quark,type of quark,https://en.wikipedia.org/wiki/Down_quark,https://ar.wikipedia.org/wiki/%D9%83%D9%88%D8%A7%D8%B1%D9%83_%D8%B3%D9%81%D9%84%D9%8A,https://fr.wikipedia.org/wiki/Quark_down
+http://www.wikidata.org/entity/Q6754,charm quark,type of quark,https://en.wikipedia.org/wiki/Charm_quark,https://ar.wikipedia.org/wiki/%D9%83%D9%88%D8%A7%D8%B1%D9%83_%D8%B3%D8%A7%D8%AD%D8%B1,https://fr.wikipedia.org/wiki/Quark_charm%C3%A9
+http://www.wikidata.org/entity/Q6763,strange quark,type of quark,https://en.wikipedia.org/wiki/Strange_quark,https://ar.wikipedia.org/wiki/%D9%83%D9%88%D8%A7%D8%B1%D9%83_%D8%BA%D8%B1%D9%8A%D8%A8,https://fr.wikipedia.org/wiki/Quark_%C3%A9trange
+http://www.wikidata.org/entity/Q6778,top quark,type of quark,https://en.wikipedia.org/wiki/Top_quark,https://ar.wikipedia.org/wiki/%D9%83%D9%88%D8%A7%D8%B1%D9%83_%D9%82%D9%85%D9%8A,https://fr.wikipedia.org/wiki/Quark_top
+http://www.wikidata.org/entity/Q6786,bottom quark,type of quark,https://en.wikipedia.org/wiki/Bottom_quark,https://ar.wikipedia.org/wiki/%D9%83%D9%88%D8%A7%D8%B1%D9%83_%D9%82%D8%B9%D8%B1%D9%8A,https://fr.wikipedia.org/wiki/Quark_bottom
+http://www.wikidata.org/entity/Q37147,atomic nucleus,core of the atom; composed of bound nucleons (protons and neutrons),https://en.wikipedia.org/wiki/Atomic_nucleus,https://ar.wikipedia.org/wiki/%D9%86%D9%88%D8%A7%D8%A9_%D8%A7%D9%84%D8%B0%D8%B1%D8%A9,https://fr.wikipedia.org/wiki/Noyau_atomique
+http://www.wikidata.org/entity/Q41995,tachyon,hypothetical particle faster than light,https://en.wikipedia.org/wiki/Tachyon,https://ar.wikipedia.org/wiki/%D8%AA%D8%A7%D9%83%D9%8A%D9%88%D9%86,https://fr.wikipedia.org/wiki/Tachyon
+http://www.wikidata.org/entity/Q43101,boson,quantum system invariant by exchange of two identical instances,https://en.wikipedia.org/wiki/Boson,https://ar.wikipedia.org/wiki/%D8%A8%D9%88%D8%B2%D9%88%D9%86,https://fr.wikipedia.org/wiki/Boson
+http://www.wikidata.org/entity/Q43116,elementary particle,"quantum particle having no known substructure; quark, electron, photon, etc.",https://en.wikipedia.org/wiki/Elementary_particle,https://ar.wikipedia.org/wiki/%D8%AC%D8%B3%D9%8A%D9%85_%D8%A3%D9%88%D9%84%D9%8A,https://fr.wikipedia.org/wiki/Particule_%C3%A9l%C3%A9mentaire
+http://www.wikidata.org/entity/Q44363,fermion,quantum system whose wave function changes when exchanging identical instances,https://en.wikipedia.org/wiki/Fermion,https://ar.wikipedia.org/wiki/%D9%81%D8%B1%D9%85%D9%8A%D9%88%D9%86,https://fr.wikipedia.org/wiki/Fermion
+http://www.wikidata.org/entity/Q60063013,negative rho meson,,,,
+http://www.wikidata.org/entity/Q60063168,neutral rho meson,,,,
+http://www.wikidata.org/entity/Q60063718,charged pion,pion with electric charge,,,
+http://www.wikidata.org/entity/Q73875472,K0,quantum particle,,,
+http://www.wikidata.org/entity/Q74031442,K0 short,quantum particle,,,
+http://www.wikidata.org/entity/Q76161097,X17 particle,,https://en.wikipedia.org/wiki/X17_particle,,https://fr.wikipedia.org/wiki/Particule_X17
+http://www.wikidata.org/entity/Q77839715,X boson,physics,,,
+http://www.wikidata.org/entity/Q78320094,Q78320094,,,,
+http://www.wikidata.org/entity/Q86536292,charged higgs boson,,,,
+http://www.wikidata.org/entity/Q86536312,Q86536312,,,,
+http://www.wikidata.org/entity/Q94535579,charged lepton,"electron, muon or tau",,,
+http://www.wikidata.org/entity/Q97155932,X(6900),subatomic particle,,,
+http://www.wikidata.org/entity/Q2370322,fast neutron,neutron with energy exceeding 1 MeV,,,
+http://www.wikidata.org/entity/Q2425590,W' and Z' bosons,hypothetical gauge bosons that arise from extensions of the electroweak symmetry of the Standard Model,https://en.wikipedia.org/wiki/W%E2%80%B2_and_Z%E2%80%B2_bosons,,
+http://www.wikidata.org/entity/Q2440762,exotic baryon,"type of hadron (bound states of quarks and gluons) with half-integer spin, but have a quark content different to the three quarks (qqq) present in conventional baryons",https://en.wikipedia.org/wiki/Exotic_baryon,,https://fr.wikipedia.org/wiki/Baryon_exotique
+http://www.wikidata.org/entity/Q2440857,exotic hadron,,https://en.wikipedia.org/wiki/Exotic_hadron,https://ar.wikipedia.org/wiki/%D9%87%D8%A7%D8%AF%D8%B1%D9%88%D9%86_%D8%B4%D8%A7%D8%B0,https://fr.wikipedia.org/wiki/Hadron_exotique
+http://www.wikidata.org/entity/Q2563571,vector boson,boson with the spin equal to 1,https://en.wikipedia.org/wiki/Vector_boson,,https://fr.wikipedia.org/wiki/Boson_vecteur
+http://www.wikidata.org/entity/Q2576923,inflaton,hypothetical scalar field driving cosmic inflation,https://en.wikipedia.org/wiki/Inflaton,,https://fr.wikipedia.org/wiki/Inflaton
+http://www.wikidata.org/entity/Q2616706,Y(4140),,https://en.wikipedia.org/wiki/Y(4140),,
+http://www.wikidata.org/entity/Q2629256,exotic meson,hadron with an even number of quarks greater than two,https://en.wikipedia.org/wiki/Exotic_meson,,
+http://www.wikidata.org/entity/Q2714177,Dibaryon,"hexaquark, might contain six quarks, resembling two baryons bound together",,,
+http://www.wikidata.org/entity/Q2748910,vector meson,"type of meson, a subatomic particle",https://en.wikipedia.org/wiki/Vector_meson,,https://fr.wikipedia.org/wiki/M%C3%A9son_vecteur
+http://www.wikidata.org/entity/Q2750336,scalar boson,boson with spin equal to zero,https://en.wikipedia.org/wiki/Scalar_boson,https://ar.wikipedia.org/wiki/%D8%B3%D9%83%D8%A7%D9%84%D8%A7%D8%B1_%D8%A8%D9%88%D8%B2%D9%88%D9%86,
+http://www.wikidata.org/entity/Q2990328,neutral particle,particle with no electric charge,https://en.wikipedia.org/wiki/Neutral_particle,https://ar.wikipedia.org/wiki/%D8%A7%D9%84%D8%AC%D8%B3%D9%8A%D9%85%D8%A7%D8%AA_%D8%A7%D9%84%D9%85%D8%AD%D8%A7%D9%8A%D8%AF%D8%A9,
+http://www.wikidata.org/entity/Q3044545,delayed neutron,"neutron emitted after a nuclear fission event, as a fission product daughter after beta decay, any time from a few milliseconds to a few minutes after the fission event",https://en.wikipedia.org/wiki/Delayed_neutron,,https://fr.wikipedia.org/wiki/Fraction_de_neutrons_retard%C3%A9s
+http://www.wikidata.org/entity/Q3107191,squark,superpartner of quark,https://en.wikipedia.org/wiki/Squark,,https://fr.wikipedia.org/wiki/Squark
+http://www.wikidata.org/entity/Q3366856,composite particle,"quantum particle that is itself a system of other quantum particles bound by strong, weak or electromagnetic interaction",,,https://fr.wikipedia.org/wiki/Particule_composite
+http://www.wikidata.org/entity/Q3642920,pseudoscalar meson,,https://en.wikipedia.org/wiki/Pseudoscalar_meson,,
+http://www.wikidata.org/entity/Q4044799,N-baryon,,https://en.wikipedia.org/wiki/N-baryons,,
+http://www.wikidata.org/entity/Q4053420,Y boson,,,,
+http://www.wikidata.org/entity/Q4204340,real neutral particle,particle that is its own antiparticle because all of its generalized charges are zero,https://en.wikipedia.org/wiki/Truly_neutral_particle,,
+http://www.wikidata.org/entity/Q4276370,Maximon,Hypothetical subatomic particle,,,https://fr.wikipedia.org/wiki/Maximon
+http://www.wikidata.org/entity/Q4331355,Odderon,,https://en.wikipedia.org/wiki/Odderon,,
+http://www.wikidata.org/entity/Q4949130,Bottom eta meson,,https://en.wikipedia.org/wiki/Bottom_eta_meson,,https://fr.wikipedia.org/wiki/M%C3%A9son_%C3%AAta_bottom
+http://www.wikidata.org/entity/Q5086456,Charmed baryon,,https://en.wikipedia.org/wiki/Charmed_baryon,,
+http://www.wikidata.org/entity/Q6130374,slepton,superpartner of a lepton,https://en.wikipedia.org/wiki/Slepton,,https://fr.wikipedia.org/wiki/Slepton
+http://www.wikidata.org/entity/Q6167984,wino,superpartner of the W boson,,,
+http://www.wikidata.org/entity/Q6171412,zino,superpartner of the Z boson,,,https://fr.wikipedia.org/wiki/Zino_(particule)
+http://www.wikidata.org/entity/Q6865195,Minicharged particle,,https://en.wikipedia.org/wiki/Minicharged_particle,,
+http://www.wikidata.org/entity/Q7187639,Photo-meson,meson ejected from an atomic nucleus by a high energy photon,https://en.wikipedia.org/wiki/Photo-meson,,
+http://www.wikidata.org/entity/Q7187860,Photon gas,Gas-like collection of photons,https://en.wikipedia.org/wiki/Photon_gas,,https://fr.wikipedia.org/wiki/Gaz_de_photons
+http://www.wikidata.org/entity/Q7254408,Pseudo-Goldstone boson,,https://en.wikipedia.org/wiki/Pseudo-Goldstone_boson,,
+http://www.wikidata.org/entity/Q7255699,pseudovector meson,,https://en.wikipedia.org/wiki/Pseudovector_meson,,
+http://www.wikidata.org/entity/Q7273283,R-hadron,hypothetical composite particle,https://en.wikipedia.org/wiki/R-hadron,,
+http://www.wikidata.org/entity/Q7429686,scalar meson,,https://en.wikipedia.org/wiki/Scalar_meson,,https://fr.wikipedia.org/wiki/M%C3%A9son_scalaire
+http://www.wikidata.org/entity/Q7621335,strange B meson,meson composed of a bottom antiquark and a strange quark,https://en.wikipedia.org/wiki/Strange_B_meson,,
+http://www.wikidata.org/entity/Q7880518,Ultracold neutrons,free neutrons stored in very small traps,https://en.wikipedia.org/wiki/Ultracold_neutrons,https://ar.wikipedia.org/wiki/%D9%86%D9%8A%D8%AA%D8%B1%D9%88%D9%86%D8%A7%D8%AA_%D8%B4%D8%AF%D9%8A%D8%AF%D8%A9_%D8%A7%D9%84%D8%A8%D8%B1%D9%88%D8%AF%D8%A9,https://fr.wikipedia.org/wiki/Neutron_ultra-froid
+http://www.wikidata.org/entity/Q7907767,V particle,,https://en.wikipedia.org/wiki/V_particle,,
+http://www.wikidata.org/entity/Q8062799,Z(4430),,https://en.wikipedia.org/wiki/Z(4430),,https://fr.wikipedia.org/wiki/Z(4430)
+http://www.wikidata.org/entity/Q9304844,atomic core,atom without valence electrons,,,
+http://www.wikidata.org/entity/Q9617716,antilepton,positron or any other antiparticle of a lepton,,,
+http://www.wikidata.org/entity/Q10888573,hypothetical particle,quantum particle hypothesized or theorized or part of a posited model or explanation,,,
+http://www.wikidata.org/entity/Q11905754,top antiquark,,,,
+http://www.wikidata.org/entity/Q11905755,strange antiquark,,,,
+http://www.wikidata.org/entity/Q11905753,charm antiquark,,,,
+http://www.wikidata.org/entity/Q11905758,bottom antiquark,,,,
+http://www.wikidata.org/entity/Q13501303,Zc(3900),subatomic particle,https://en.wikipedia.org/wiki/Zc(3900),,
+http://www.wikidata.org/entity/Q14623492,hypothetical composite particle,,,,
+http://www.wikidata.org/entity/Q14861565,antibaryon,antiproton or any other hadron that is composed of three antiquarks; antiparticle of the baryon,,,
+http://www.wikidata.org/entity/Q15927226,Z(3930),meson,,,
+http://www.wikidata.org/entity/Q16537791,bino,gaugino,,,
+http://www.wikidata.org/entity/Q16957338,Electron-hole droplets,condensed phase of excitons in semiconductors,https://en.wikipedia.org/wiki/Electron-hole_droplets,,
+http://www.wikidata.org/entity/Q17253483,Δ++,double positiv charged delta-baryon,,,
+http://www.wikidata.org/entity/Q17253521,Δ+,single positive charged delta-baryon,,,
+http://www.wikidata.org/entity/Q17253525,Δ0,neutrally charged delta-baryon,,,
+http://www.wikidata.org/entity/Q17253537,Δ−,single negative charged delta-baryon,,,
+http://www.wikidata.org/entity/Q17254249,π+,positive charged pion,,,
+http://www.wikidata.org/entity/Q17254273,π-,negative charged pion,,,
+http://www.wikidata.org/entity/Q17254284,π0,meson that carries the nuclear force,,,
+http://www.wikidata.org/entity/Q17255427,B⁰ meson,neutrally charged B meson,,,
+http://www.wikidata.org/entity/Q17255430,B¯ meson,negative charged B meson,,,
+http://www.wikidata.org/entity/Q17255429,B⁺ meson,positive charged B meson,,,
+http://www.wikidata.org/entity/Q17255434,charmed B meson,meson composed of a bottom antiquark and a charm quark,,,
+http://www.wikidata.org/entity/Q17258042,strange baryon,,,,
+http://www.wikidata.org/entity/Q17258124,Σ+,positive charged sigma baryon,,,
+http://www.wikidata.org/entity/Q17258131,Σ0,neutrally charged sigma baryon,,,
+http://www.wikidata.org/entity/Q17258142,Σ−,negative charged sigma baryon,,,
+http://www.wikidata.org/entity/Q17258317,charmed lambda baryon,,,,
+http://www.wikidata.org/entity/Q17258831,Ξ0,neutrally charged xi baryon,,,
+http://www.wikidata.org/entity/Q17258837,Ξ-,negative charged xi baryon,,,
+http://www.wikidata.org/entity/Q17273078,bosino,fermionic superpartner of a boson,,,
+http://www.wikidata.org/entity/Q18481576,down antiquark,,,,
+http://www.wikidata.org/entity/Q18481607,up antiquark,,,,
+http://www.wikidata.org/entity/Q18732721,Smuon sneutrino,superpartner of a Muon neutrino,,,
+http://www.wikidata.org/entity/Q18732729,Stau sneutrino,superpartner of a Tau neutrino,,,
+http://www.wikidata.org/entity/Q18732735,smuon,superpartner of a muon,,,
+http://www.wikidata.org/entity/Q18732748,stop squark,superpartner of the top quark,https://en.wikipedia.org/wiki/Stop_squark,https://ar.wikipedia.org/wiki/%D8%A5%D9%8A%D9%82%D8%A7%D9%81_%D8%A7%D9%84%D9%83%D9%88%D8%B1%D9%83%D8%A7%D8%AA_%D8%A7%D9%84%D9%85%D8%AA%D9%86%D8%A7%D8%B8%D8%B1%D8%A9,
+http://www.wikidata.org/entity/Q18732794,Stauon,,,,
+http://www.wikidata.org/entity/Q19358317,dark photon,theoretical elementary particle,https://en.wikipedia.org/wiki/Dark_photon,,https://fr.wikipedia.org/wiki/Photon_sombre
+http://www.wikidata.org/entity/Q20180843,Ξb-Baryon,,,,
+http://www.wikidata.org/entity/Q21660975,stable elementary particle,,,,
+http://www.wikidata.org/entity/Q23894016,electron antineutrino,,,,
+http://www.wikidata.org/entity/Q27058556,minimon,,,,
+http://www.wikidata.org/entity/Q27431222,octoneutron,,,,
+http://www.wikidata.org/entity/Q28057480,homonuclear diatomic molecule,diatomic molecule consists of two atoms of the same element,,,
+http://www.wikidata.org/entity/Q28739684,antiquark or antilepton,fundamental particle of which all antimatter is composed: antiquark or antilepton,,,
+http://www.wikidata.org/entity/Q28855250,antinucleon,particle that makes up the nucleus of an antimatter atom (anti-atom); antiparticle of the nucleon,,,
+http://www.wikidata.org/entity/Q28855263,N-antibaryon,antiparticle of the N-baryon,,,
+http://www.wikidata.org/entity/Q28920814,elementary boson,particle of non-matter that has no known substructure,,,
+http://www.wikidata.org/entity/Q30036083,hexaquark,"large family of hypothetical particles, each particle consisting of six quarks or antiquarks of any flavours",https://en.wikipedia.org/wiki/Hexaquark,,https://fr.wikipedia.org/wiki/Hexaquark
+http://www.wikidata.org/entity/Q30036136,hypothetical baryon,hypothetical composite particle,,,
+http://www.wikidata.org/entity/Q50258940,non-matter particles,,,,
+http://www.wikidata.org/entity/Q50276333,g3,3rd gluon colour eigenstate,,,
+http://www.wikidata.org/entity/Q50276388,g1,1st gluon colour eigenstate,,,
+http://www.wikidata.org/entity/Q50277755,g2,2nd gluon colour eigenstate,,,
+http://www.wikidata.org/entity/Q50277762,g4,4th gluon colour eigenstate,,,
+http://www.wikidata.org/entity/Q50277767,g5,5th gluon colour eigenstate,,,
+http://www.wikidata.org/entity/Q50277774,g6,6th gluon colour eigenstate,,,
+http://www.wikidata.org/entity/Q50277792,g7,7th gluon colour eigenstate,,,
+http://www.wikidata.org/entity/Q50277800,g8,8th gluon colour eigenstate,,,
+http://www.wikidata.org/entity/Q52234516,elementary fermion,particle of matter or antimatter that has no known substructure,,,
+http://www.wikidata.org/entity/Q60062950,positive rho meson,,,,

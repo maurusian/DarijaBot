@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<article>
+	<paragraph>
+		<sentence value="'''{}''' (مزيود ف {}{}{}) {}{} مغريبي{}. {}{} ل حيزب {}.">
+			<param name="person_name" type="var"/>
+			<param name="birth_date" type="var"/>
+			<param name="location_birth_sentence" type="sub"/>
+			<param name="sentence_death" type="sub"/>
+			<param name="state_indicator" type="var"/>
+			<param name="occupations" type="var"/>
+			<param name="f_marker" type="var"/>
+			<param name="past_tense_indicator" type="var"/>
+			<param name="belongs" type="var"/>
+			<param name="party" type="var"/>
+			<sentence name="location_birth_sentence" value=" ف {}">
+				<param name="location_birth" type="var"/>
+			</sentence>
+			<sentence name="sentence_death" value="، مات ف {}{}">
+				<param name="death_date" type="var"/>
+				<param name="location_date_sentence" type="sub"/>
+				<sentence name="location_date_sentence" value=" ف {}">
+					<param name="location_death" type="var"/>
+				</sentence>
+			</sentence>
+		</sentence>
+	</paragraph>
+</article>
