@@ -1,0 +1,54 @@
+SELECT ?crypto ?cryptoLabel ?tickerSymbol ?namedAfterLabel ?logo (group_concat(?founderLabel;separator="..") as ?founders) (group_concat(?creatorLabel;separator=" .. ") as ?creators) (group_concat(?inspiredByLabel;separator=" .. ") as ?inspiredbyy) (group_concat(?useLabel;separator=" .. ") as ?usess) ?countryLabel (group_concat(?exchangeLabel;separator=" .. ") as ?exchanges) ?basedOnLabel ?creationDate ?pubDate ?unitSymbol ?consumption ?developerLabel (group_concat(?progLanguageLabel;separator=" .. ") as ?languages) (group_concat(?copyrightLabel;separator=" .. ") as ?copyrights) (group_concat(?technologyLabel;separator=" .. ") as ?technologies) ?articleEN WHERE {
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE]".
+    ?crypto rdfs:label ?cryptoLabel .
+    ?namedAfter rdfs:label ?namedAfterLabel .
+    ?founder rdfs:label ?founderLabel.
+    ?creator rdfs:label ?creatorLabel.
+    ?use rdfs:label ?useLabel.
+    ?inspiredBy rdfs:label ?inspiredByLabel.
+    ?country rdfs:label ?countryLabel.
+    ?exchange rdfs:label ?exchangeLabel.
+    ?basedOn rdfs:label ?basedOnLabel.
+    ?developer rdfs:label ?developerLabel.
+    ?progLanguage rdfs:label ?progLanguageLabel.
+    ?copyright rdfs:label ?copyrightLabel.
+    ?technology rdfs:label ?technologyLabel.} 
+  ?crypto wdt:P31 wd:Q13479982.
+  OPTIONAL {?crypto wdt:P5810 ?tickerSymbol. }
+  OPTIONAL {?crypto wdt:P154 ?logo. }
+  OPTIONAL {?crypto wdt:P112 ?founder.}
+  OPTIONAL {?crypto wdt:P170 ?creator. }
+  OPTIONAL {?crypto wdt:P941  ?inspiredBy. }
+  OPTIONAL {?crypto wdt:P366 ?use. }
+  OPTIONAL {?crypto wdt:P17 ?country. }
+  OPTIONAL {?crypto wdt:P414 ?exchange. }
+  #OPTIONAL {?crypto wdt:P4969 ?derivatives. }
+  OPTIONAL {?crypto wdt:P144 ?basedOn. }
+  OPTIONAL {?crypto wdt:P571 ?creationDate. }
+  OPTIONAL {?crypto wdt:P577 ?pubDate. }
+  OPTIONAL {?crypto wdt:P5061 ?unitSymbol. }
+  OPTIONAL {?crypto wdt:P2791 ?consumption. }
+  OPTIONAL {?crypto wdt:P178 ?developer.}
+  OPTIONAL {?crypto wdt:P277 ?progLanguage.}
+  OPTIONAL {?crypto wdt:P275 ?copyright. }
+  OPTIONAL {?crypto wdt:P2283 ?technology. }
+  OPTIONAL {?crypto wdt:P138 ?namedAfter. }
+  
+  OPTIONAL {
+        
+      ?articleEN schema:about ?crypto .
+      ?articleEN schema:inLanguage "en" .
+      ?articleEN schema:isPartOf <https://en.wikipedia.org/> .
+    }
+ 
+ FILTER ( ?crypto not in ( wd:Q131723,wd:Q4043030 ) )
+  
+}
+
+group by ?crypto ?cryptoLabel ?tickerSymbol ?namedAfterLabel ?logo ?countryLabel ?basedOnLabel ?creationDate ?pubDate ?unitSymbol ?consumption ?developerLabel ?articleEN
+
+
+
+
+
+LIMIT 500

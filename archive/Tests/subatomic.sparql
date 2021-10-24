@@ -1,0 +1,22 @@
+SELECT ?particle ?particleLabel ?particleDescription ?articleEN ?articleAR ?articleFR WHERE {
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE]". }
+  ?particle wdt:P31 wd:Q22675015.
+  OPTIONAL {
+      ?articleEN schema:about ?particle .
+      ?articleEN schema:inLanguage "en" .
+      ?articleEN schema:isPartOf <https://en.wikipedia.org/> .
+    }
+ 
+  OPTIONAL {
+      ?articleAR schema:about ?particle .
+      ?articleAR schema:inLanguage "ar" .
+      ?articleAR schema:isPartOf <https://ar.wikipedia.org/> .
+    }
+  
+  OPTIONAL {
+      ?articleFR schema:about ?particle .
+      ?articleFR schema:inLanguage "fr" .
+      ?articleFR schema:isPartOf <https://fr.wikipedia.org/> .
+    }
+}
+LIMIT 500
