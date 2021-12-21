@@ -27,7 +27,7 @@ def get_final_target(page):
         
 
 #List of subprograms
-#Help functions
+##Help functions
 ##Stub tag
 ##Source header
 ##Source tag
@@ -614,30 +614,32 @@ pool = site.allpages(namespace=ARTICLE_NAMESPACE)
 pool_size = len(list(deepcopy(site.allpages(namespace=ARTICLE_NAMESPACE))))
 print('Pool size: '+str(pool_size))
 i = 1
-for page in pool:
-    print('*********'+str(i)+'/'+str(pool_size))
-    pages_in_log = load_pages_in_log()
-    #print(pages_in_log[:20])
-    
-    with open(RECENT_LOG_FILE,'a',encoding='utf-8') as f:
+pages_in_log = load_pages_in_log()
+with open(RECENT_LOG_FILE,'a',encoding='utf-8') as f:
+    for page in pool:
+        print('*********'+str(i)+'/'+str(pool_size))
+        
+        #print(pages_in_log[:20])
+        
+        
         if str(page.title()) not in pages_in_log:
-            
+                
             MESSAGE = ""
-            
+                
             if validate_page(page):
                 #print("checking page "+str(i))
-                
+                    
                 new_text = page.text
 
                 #Calling "No category tag treatment" subprogram
                 new_text,MESSAGE = setCategoryTag(page,new_text,MESSAGE)
-               
+                   
                 #checking back links
                 new_text,MESSAGE = setOrphanTag(page,new_text,MESSAGE)
-               
+                   
                 #Set source tag
                 new_text,MESSAGE = setSourceTag(page,new_text,MESSAGE)
-                
+                    
                 #Set source header flag
                 new_text,MESSAGE = setSourceHeaderTag(page,new_text,MESSAGE)
 
@@ -673,10 +675,15 @@ for page in pool:
                         print(sys.exc_info())
 
                 if new_text != page.text:
-                    
+                        
                     page.text = new_text
-                    page.save(MESSAGE)
-                    
+                    try:
+                        page.save(MESSAGE)
+                    except:
+                        #LOG_PAGE_TITLE = 
+                        #log_error(LOG_PAGE_TITLE,log_message,save_log_message,site)
+                        continue
+                        
                     #cha = input("continue to next page?\n")
             elif page.isRedirectPage():
                 #handling transfer category for redirect pages
@@ -684,9 +691,13 @@ for page in pool:
                 new_text,MESSAGE = add_redirect_cat(page,new_text,MESSAGE)
 
                 if new_text != page.text:
-                    
+                        
                     page.text = new_text
-                    page.save(MESSAGE)
+                    try:
+                        page.save(MESSAGE)
+                    except:
+                        #log_error(LOG_PAGE_TITLE,log_message,save_log_message,site)
+                        continue
 
             f.write(page.title()+'\n')
-    i+=1
+        i+=1

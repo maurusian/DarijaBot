@@ -3,6 +3,7 @@ import pywikibot
 from copy import deepcopy
 #from sys import argv
 import re, sys, os
+from pywikibot.exceptions import UnknownSiteError
 
 SAVE_MESSAGE = "تّصنيفات لي ناقصين تزادو من ويكيپيديا ب {}"
 
@@ -76,6 +77,9 @@ for page in pool:
             if temp != page.text:
                 page.save(SAVE_MESSAGE.format(LANGUAGE_MAPPING[lang]))
         except KeyError:
+            print(page_lang.title())
+            print(sys.exc_info())
+        except UnknownSiteError:
             print(page_lang.title())
             print(sys.exc_info())
     i+=1

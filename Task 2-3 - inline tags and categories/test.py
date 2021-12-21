@@ -4,7 +4,8 @@ import re
 OUTLINK_PATTERN = r'\[\[.+?\]\]'
 
 #title = "الأعمدة ديال هيركوليس"
-title = "1Q84 (رواية)"
+title = "حرارة (طيرموديناميك)"
+title2 = "ويكيپيديا:زريعة"
 INFOBOX_TAG_PATTERN = r"{{معلومات.*}}"
 TITLE_PATTERN = r"==.+==[\n\s]+(?===\s|$)"
 EMPTY_PARAGRAPH_TAG = "{{فقرة مازالا خاوية ولا ناقصة}}"
@@ -26,6 +27,16 @@ FILE_PART_DICT = {'en':'[[File:'
 
 #print(text)
 
+def get_disambig_pages(page):
+    disambig_pages = []
+
+    for link in page.backlinks():
+        if link.isDisambig():
+            disambig_pages.append(link)
+        elif link.isRedirectPage():
+            disambig_pages+=get_disambig_pages(link)
+    return disambig_pages
+
 
 def has_infobox_tag(page):
     regexp = re.compile(INFOBOX_TAG_PATTERN,flags=re.DOTALL)
@@ -36,6 +47,20 @@ def has_infobox_tag(page):
 site = pywikibot.Site()
 
 page = pywikibot.Page(site,title)
+page2 = pywikibot.Page(site,title2)
+
+#print(dir(page))
+
+print(get_disambig_pages(page))
+
+if page2 in page.linkedPages():
+    print(True)
+
+for linkedPage in page.linkedPages():
+    if page2 == linkedPage:
+        print(linkedPage.title())
+
+"""
 
 if FILE_PART_DICT['en'] in page.text or FILE_PART_DICT['ar'] in page.text:
     print("yes file/milf")
@@ -44,8 +69,8 @@ if FILE_PART_DICT['ar'] in page.text:
     print("yes milf")
 
 
-#print(dir(page))
-
+print(dir(page))
+"""
 #item = pywikibot.ItemPage.fromPage(page)
 
 #print([key for key in item.sitelinks.keys()])
