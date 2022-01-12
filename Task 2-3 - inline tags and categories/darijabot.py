@@ -4,6 +4,7 @@ from copy import deepcopy
 #from sys import argv
 import re, sys, os
 from pywikibot.exceptions import NoPageError
+from arywikibotlib import isHuman, hasPropertyXValue
 
 RECENT_LOG_FILE = "recent_log.txt"
 
@@ -76,6 +77,7 @@ def get_commons_category(page):
 ###Tags
 OLD_STUB_TAG = "{{بذرة}}"
 NEW_STUB_TAG = "{{زريعة}}"
+MOR_STUB_TAG = "{{زريعة شخصيات د لمغريب}}"
 
 ###Save messages
 CORRECT_STUB_TAG_MESSAGE = "إصلاح طّاڭ د زريعة."
@@ -85,21 +87,32 @@ REMOVE_STUB_TAG_MESSAGE = "تحياد طّاڭ د زريعة."
 ###Functions
 def setStubTag(page,text,MESSAGE):
     has_stub_tag = False
-    if NEW_STUB_TAG in text:
+    if NEW_STUB_TAG in text or MOR_STUB_TAG in text:
+        if isHuman(page) and hasPropertyXValue(page,"P27",1028):
+            temp = text
+            text = text.replace(NEW_STUB_TAG,MOR_STUB_TAG)
+            if text != temp:
+                MESSAGE += CORRECT_STUB_TAG_MESSAGE+SPACE
         has_stub_tag = True
     else:
         temp = text
         text = text.replace(OLD_STUB_TAG,NEW_STUB_TAG)
+        if isHuman(page) and hasPropertyXValue(page,"P27",1028):
+            text = text.replace(NEW_STUB_TAG,MOR_STUB_TAG)
         if text != temp:
             has_stub_tag = True
             MESSAGE += CORRECT_STUB_TAG_MESSAGE+SPACE
             #print("changing old stub tag with new one")
 
     if word_count(text) < 250 and not has_stub_tag:
-        text += "\n"+NEW_STUB_TAG
+        if isHuman(page) and hasPropertyXValue(page,"P27",1028):
+            text += "\n"+MOR_STUB_TAG
+        else:
+            text += "\n"+NEW_STUB_TAG
         MESSAGE += ADD_STUB_TAG_MESSAGE+SPACE
     elif word_count(text) > 500 and has_stub_tag:
         text = text.replace(NEW_STUB_TAG,"")
+        text = text.replace(MOR_STUB_TAG,"")
         MESSAGE += REMOVE_STUB_TAG_MESSAGE+SPACE
 
     return text,MESSAGE

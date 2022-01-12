@@ -1,10 +1,11 @@
 import pywikibot
 import re
+from arywikibotlib import *
 
 OUTLINK_PATTERN = r'\[\[.+?\]\]'
 
 #title = "الأعمدة ديال هيركوليس"
-title = "حرارة (طيرموديناميك)"
+title = "لمهدي بن بركة"
 title2 = "ويكيپيديا:زريعة"
 INFOBOX_TAG_PATTERN = r"{{معلومات.*}}"
 TITLE_PATTERN = r"==.+==[\n\s]+(?===\s|$)"
@@ -49,6 +50,18 @@ site = pywikibot.Site()
 page = pywikibot.Page(site,title)
 page2 = pywikibot.Page(site,title2)
 
+item = pywikibot.ItemPage.fromPage(page)
+
+print(getItemIdentity(page))
+print(getItemPropertyNumericId(page,"P27"))
+print(isHuman(page))
+print(hasPropertyXValue(page,"P27",1028))
+
+"""
+for link in page.iterlanglinks():
+    linkparts = str(link)[2:-2].split(':')
+    print(linkparts)
+
 #print(dir(page))
 
 print(get_disambig_pages(page))
@@ -60,7 +73,6 @@ for linkedPage in page.linkedPages():
     if page2 == linkedPage:
         print(linkedPage.title())
 
-"""
 
 if FILE_PART_DICT['en'] in page.text or FILE_PART_DICT['ar'] in page.text:
     print("yes file/milf")
