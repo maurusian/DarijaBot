@@ -16,6 +16,7 @@ SEPARATOR = " {{•}} "
 BC = "ق.م."
 STANDARD_BOT_NOTIF = "<noinclude>{{پاج كيعمرها بوت}}</noinclude>"
 UPDATED_EVENT_LIST_MESSAGE = "أپدييت ديال لأحدات"
+DATE_TEMPLATES_CAT = "[[تصنيف:قوالب د توارخ]]"
 
 EVENT_NAME_PREFIX = {'P585':''
                     ,'P571':'بدية/تأسيس ديال '
@@ -116,4 +117,5 @@ for daymonth, value in dict_events_by_date.items():
             page.text+="\n* '''"+str(abs(year))+" "+BC+":''' "
         page.text+=SEPARATOR.join(value[year])
 
+    page.text+="\n\n"+DATE_TEMPLATES_CAT
     page.save(UPDATED_EVENT_LIST_MESSAGE)
