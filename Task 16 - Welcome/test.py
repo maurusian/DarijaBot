@@ -15,19 +15,35 @@ title = "تاريخ د لمغريب"
 
 site = pywikibot.Site()
 
+#print(dir(site))
+
 page = pywikibot.Page(site,title)
 
 #print(dir(page))
 
 #print(dir(site))
-
 ADMIN_LIST = ["Ideophagous","Reda benkhadra","Anass Sedrati"]
+print(list(site.users(ADMIN_LIST)))
+
+
 
 def get_random_admin():
     return ADMIN_LIST[random.randint(0,len(ADMIN_LIST)-1)]
 
 while(True):
-    print(get_random_admin())
+    #print(get_random_admin())
+    random_admin = pywikibot.User(site,get_random_admin())
+    print(random_admin)
+    
+    print(random_admin.editCount())
+    print(random_admin.gender())
+    print(random_admin.rights())
+    print(random_admin.registration)
+    print(random_admin.properties)
+    #print(random_admin.data_item())
+    print(random_admin.coordinates())
+    print(random_admin._getInternals())
+    print(dir(random_admin))
     input()
 
 contributors = dict(page.contributors())
