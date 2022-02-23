@@ -1,12 +1,40 @@
 from pgvbotLib import *
+import arywikibotlib as awbl
 import pywikibot
 from copy import deepcopy
 #from sys import argv
 import re, sys, os
 from pywikibot.exceptions import NoPageError
 from arywikibotlib import isHuman, hasPropertyXValue
+from datetime import datetime, timezone
+from sys import argv
+
+LAST_RUN_FILE = "last_run.txt"
+
+DATE_FORMAT = "%Y-%m-%d %H:%M"
 
 RECENT_LOG_FILE = "recent_log.txt"
+
+def get_last_run_datetime():
+    if not os.path.exists(LAST_RUN_FILE):
+        with open(LAST_RUN_FILE,'w') as f:
+            return None
+
+    with open(LAST_RUN_FILE,'r') as f:
+        datetime_str = f.read().strip()
+
+    return datetime.strptime(datetime_str,DATE_FORMAT)
+
+def write_run_time():
+    with open(LAST_RUN_FILE,'w') as f:
+        f.write(pywikibot.Timestamp.now().strftime(DATE_FORMAT))
+
+def get_time_string():
+    raw_time = pywikibot.Timestamp.now(tz=timezone.utc)
+    #utc_time = datetime.now(tz=timezone.utc)
+    raw_time_parts = str(raw_time).split('T')
+    date_parts = raw_time_parts[0].split('-')
+    return " "+raw_time_parts[1][:-4]+"، "+date_parts[2]+" "+MONTHS[int(date_parts[1])-1]["ary_name"]+" "+date_parts[0]+" (UTC)"
 
 def load_pages_in_log():
     if not os.path.exists(RECENT_LOG_FILE):
@@ -620,15 +648,37 @@ def add_smth_not_right_tag(page,text,MESSAGE):
 ##############################################MAIN PROGRAM##############################################
 site = pywikibot.Site()
 
-print("Creating working pool")
-pool = site.allpages(namespace=ARTICLE_NAMESPACE)
-#pool = [page for page in site.allpages() if validate_page(page)]
+print(len(argv))
+if len(argv)>2:
+    if len(argv) > 3:
+        local_args = argv[3:]
+else:
+    local_args = None
 
-pool_size = len(list(deepcopy(site.allpages(namespace=ARTICLE_NAMESPACE))))
+if local_args is not None and local_args[0] == '-l':
+    last_run_time = get_last_run_datetime()
+    print(last_run_time)
+    print("running for last changed pages")
+    #load last changed
+    last_changes = site.recentchanges(reverse=True,bot=False,namespaces=[ARTICLE_NAMESPACE],top_only=True,start=last_run_time)
+    #create page pool
+    #NEXT: check other potential last_change types
+
+    pool = [pywikibot.Page(site, item['title']) for item in last_changes]
+
+else:
+
+    print("Creating working pool")
+    pool = site.allpages(namespace=ARTICLE_NAMESPACE)
+    #pool = [page for page in site.allpages() if validate_page(page)]
+
+pool_size = len(list(deepcopy(pool)))
 print('Pool size: '+str(pool_size))
 i = 1
 pages_in_log = load_pages_in_log()
+
 with open(RECENT_LOG_FILE,'a',encoding='utf-8') as f:
+    
     for page in pool:
         print('*********'+str(i)+'/'+str(pool_size))
         
@@ -639,7 +689,7 @@ with open(RECENT_LOG_FILE,'a',encoding='utf-8') as f:
                 
             MESSAGE = ""
                 
-            if validate_page(page):
+            if validate_page(page) and awbl.validate_page(page,0,"article",2,"GEN"):
                 #print("checking page "+str(i))
                     
                 new_text = page.text
