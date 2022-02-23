@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<categories>
+	<category name="birthyearcat" value="تصنيف:زيادة {birth_year}">
+		<param name="birth_year"/>
+	</category>
+	<category name="deathyearcat" value="تصنيف:وفيات {death_year}">
+		<param name="death_year"/>
+	</category>
+	<category name="worknat" value="تصنيف:{main_occupation} {main_citizenship}">
+		<param name="main_occupation"/>
+		<param name="main_citizenship"/>
+	</category>
+	<category name="worknat" value="تصنيف:{main_occupation} {independent}">
+		<param name="main_occupation"/>
+		<param name="independent"/>
+	</category>
+</categories>
