@@ -4,6 +4,7 @@ from copy import deepcopy
 #from sys import argv
 import re, sys, os
 from pywikibot.exceptions import UnknownSiteError
+#from arywikibotlib import getOnlyArticles
 
 SAVE_MESSAGE = "تّصنيفات لي ناقصين تزادو من ويكيپيديا ب {}"
 
@@ -31,11 +32,16 @@ site = pywikibot.Site()
 
 site_lang = pywikibot.Site(lang,'wikipedia')
 
-pool = site.allpages(namespace=namespace)
+if namespace == 0:
+    pool = site.allpages(namespace=0,filterredir=False)
+    pool_size = len(list(deepcopy(site.allpages(namespace=0,filterredir=False))))
+else:
+    pool = site.allpages(namespace=namespace)
+    pool_size = len(list(deepcopy(site.allpages(namespace=namespace))))
 #pool = [page for page in site.allpages() if validate_page(page)]
 
 
-pool_size = len(list(deepcopy(site.allpages(namespace=namespace))))
+
 print('Pool size: '+str(pool_size))
 
 title_part = ''
