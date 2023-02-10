@@ -1,0 +1,26 @@
+SELECT ?person ?personLabel ?dateOfBirth ?dateOfDeath ?article WHERE {
+  ?person wdt:P31 wd:Q5.
+  ?article schema:about ?person .
+  ?article schema:name ?personLabel .
+  
+  ?article schema:inLanguage "ar" .
+  ?article schema:isPartOf <https://ar.wikipedia.org/> .
+  ?person wdt:P569 ?dateOfBirth.
+  ?person wdt:P27 wd:Q1028.
+  OPTIONAL {?person wdt:P570 ?dateOfDeath. }
+
+  MINUS {
+        
+      ?articleMA schema:about ?person .
+      ?articleMA schema:inLanguage "ary" .
+      ?articleMA schema:isPartOf <https://ary.wikipedia.org/> .
+    }
+  
+  
+SERVICE wikibase:label { bd:serviceParam wikibase:language "ary,ar,[AUTO_LANGUAGE]".
+    ?person rdfs:label ?personLabel .
+                        }
+  }
+group by ?person ?personLabel ?nativeName ?dateOfBirth ?dateOfDeath  ?article
+
+LIMIT 5000

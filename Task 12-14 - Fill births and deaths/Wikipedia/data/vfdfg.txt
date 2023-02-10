@@ -1,0 +1,19 @@
+{{infobox
+| تعليق  = {{{شرح|}}}
+| title1     = معلومات عامة
+| صورة رئيسية   =   {{#invoke:Wikidata | claim | property=P154| list=firstrank | value={{{تصويرة د لوڭو|}}} }}  {{#invoke:Wikidata | claim | property=P18| list=firstrank | value={{{تصويرة|}}} }} 
+| header1_2  = title original | عنصر1_2 = {{#invoke:Wikidata | claim | property=P1476 |list=firstrank |formatting=ucfirst|case=gender 
+                                            |value={{{title د لمانڭا|}}} }}
+| header1_3  = نوع د لمانڭا             | عنصر1_3 = {{#invoke:Wikidata | claim | property=P136 |list=firstrank |formatting=ucfirst|case=gender 
+                                            |value={{{نوع د لمانڭا|}}} }}
+| header1_4  = مانڭاكا             | عنصر1_4 = {{#invoke:Wikidata | claim | property=P50 |list=firstrank |formatting=ucfirst|case=gender 
+                                            |value={{{mangka|}}} }}
+| header1_5  = لبلاد                      | عنصر1_5 = {{#invoke:Wikidata | claim| property=P17 | value={{{لبلاد|}}} }}
+| header1_6  = لعام د نّشر | عنصر1_7 = {{#invoke:Wikidata|claim |property=P577 |FETCH_WIKIDATA}}
+| header1_7  = تاريخ د لبدية                  | عنصر1_8 = {{#invoke:Wikidata|claim |property=P580|FETCH_WIKIDATA}}
+| header1_8  = تاريخ دلمسالية                  | عنصر1_9 = {{#invoke:Wikidata|claim |property=P582|FETCH_WIKIDATA}}
+
+| header1_9  = لموقع الرسمي                   | عنصر1_10 = {{#invoke:Wikidata | claim | property=P856 |list=firstrank |formatting=ucfirst|case=gender 
+                                            |value={{{لموقع الرسمي|}}} }}
+
+}}

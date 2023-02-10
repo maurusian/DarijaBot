@@ -6,14 +6,22 @@ from urllib.request import urlopen, quote, Request
 from urllib.error import URLError
 import json, sys, os
 #import SPARQLWrapper
-import requests
+import requests, traceback
+import pandas as pd
+from arywikibotlib import REQUEST_HEADER
 
 date_pattern = r'[-]{0,1}[0-9]+-[0-9]+-[0-9]+'
 #print(re.match(date_pattern,'t2391385487'))
 
+DATA_FOLDER = "./data/"
+
+QUERYFILES = ["query.sparql","arwiki_query.sparql"]
+
 filename = './data/query.sparql'
 
 export = './data/dict_list.json'
+
+BIRTH_YEAR_BATCH_FILE = ""
 
 BIRTH_PAGE_PART = "قالب:ناس تزادو ف"
 DEATH_PAGE_PART = "قالب:ناس توفاو ف"
@@ -33,6 +41,8 @@ WHERE
      
 }
 """
+
+FOOTER = "<noinclude>{{شرح}}[[تصنيف:قوالب زادهوم داريجابوت]][[تصنيف:قوالب د توارخ]]</noinclude>"
 
 #added to corresponding person page and potentially created
 BIRTH_YEAR_CAT_PATTERN = "تصنيف:زيادة {year}{BC}"
@@ -165,13 +175,13 @@ def get_precision(objectCode,date_type,date):
     }
     response = requests.get(url, headers=headers)
     res      = response.json()
-    
+    print(res)
     if response is not None:
         #res = json.loads(response)
         res      = response.json()
         #print(res)
         values = []
-        for i in range(len(res['results']['bindings'])):
+        for i in range(len(res['results']['bindings'])): #
             if res['results']['bindings'][i]['time']['value'] == date:
 
                 values.append(int(res['results']['bindings'][i]['timeprecision']['value']))
@@ -182,46 +192,64 @@ def get_precision(objectCode,date_type,date):
 
 def simplify_json(jason):
     """
-    Converts json response from Wikidata server into a simpler dictionary list,
+    Converts json response from Wikidata server into a simpler dictionary list dict_list,
     that only has the required values.
+
+    Input:
+    -jason: json response from Wikidata server
+
+    Output:
+    -dict_list: list of dictionaries containing birth and death information for each person.
+
+    Each element in dict_list hast the following keys:
+    -personLabel: name of the person
+    -dateOfBirth
+    -birthPrecision: precision level for the birth date. The precision = 11 if the date
+    is full. Set to 0 if not available.
+    -dateOfDeath
+    -deathPrecision: similar to birthPrecision
     """
     dict_list = []
     
-    for i in range(len(jason['results']['bindings'])):
+    for i in range(len(jason)): #['results']['bindings']
         #print(i)
         #print(jason['results']['bindings'][i]['personLabel']['value'])
         dict_list.append({})
-        dict_list[i]['personLabel']    = jason['results']['bindings'][i]['personLabel']['value']
+        dict_list[i]['personLabel']    = jason[i]['personLabel']['value']
         try:
-            dict_list[i]['dateOfBirth']    = jason['results']['bindings'][i]['dateOfBirth']['value']
+            dict_list[i]['dateOfBirth']    = jason[i]['dateOfBirth']['value']
             
         except KeyError:
             #print('Date of Birth not available for '+jason['results']['bindings'][i]['personLabel']['value'])
             #print(sys.exc_info())
-            pass
+            print(traceback.format_exc())
         if 'dateOfBirth' in dict_list[i].keys():
-            objectCode = jason['results']['bindings'][i]['person']['value'].split('/')[-1]
+            objectCode = jason[i]['person']['value'].split('/')[-1]
             date_type  = 'P569'
             date       = dict_list[i]['dateOfBirth']
             try:
+                print("getting precision")
                 dict_list[i]['birthPrecision'] = get_precision(objectCode,date_type,date)
             except:
+                print(traceback.format_exc())
                 dict_list[i]['birthPrecision'] = 0
         try:
-            if 'dateOfDeath' in jason['results']['bindings'][i].keys():
-                dict_list[i]['dateOfDeath']    = jason['results']['bindings'][i]['dateOfDeath']['value']
+            if 'dateOfDeath' in jason[i].keys():
+                dict_list[i]['dateOfDeath']    = jason[i]['dateOfDeath']['value']
             
         except KeyError:
             #print('Date of Death not available for '+jason['results']['bindings'][i]['personLabel']['value'])
             #print(sys.exc_info())
-            pass
+            print(traceback.format_exc())
         if 'dateOfDeath' in dict_list[i].keys():
-            objectCode = jason['results']['bindings'][i]['person']['value'].split('/')[-1]
+            objectCode = jason[i]['person']['value'].split('/')[-1]
             date_type  = 'P570'
             date       = dict_list[i]['dateOfDeath']
             try:
+                print("getting precision")
                 dict_list[i]['deathPrecision'] = get_precision(objectCode,date_type,date)
             except:
+                print(traceback.format_exc())
                 dict_list[i]['deathPrecision'] = 0
     return dict_list
 
@@ -235,8 +263,21 @@ def wikidata_rest_query(filename):
         'Content-Type': 'text/text; charset=utf-8'
     }
     url = "https://query.wikidata.org/sparql?query=%s&format=json" % quote(query)
+    print("query loaded from "+filename)
     response = requests.get(url, headers=headers)
     return response.json()
+
+def get_all_query_results():
+    results = []
+
+    for filename in QUERYFILES:
+        result = wikidata_rest_query(DATA_FOLDER+filename)
+        print(len(result['results']['bindings']))
+        results.extend(result['results']['bindings'])
+
+    return results
+    
+        
 
 def get_dict_by_new_key(key_index,value_index,raw_dict,min_prec):
     """
@@ -249,7 +290,8 @@ def get_dict_by_new_key(key_index,value_index,raw_dict,min_prec):
     - key_index
     - value_index
     - raw_dict
-    - min_prec
+    - min_prec: minimum required precision of the date (9 for
+    key = year, 11 for key = daymonth)
     """
     new_dict = {}
     for key,value in raw_dict.items():
@@ -258,19 +300,20 @@ def get_dict_by_new_key(key_index,value_index,raw_dict,min_prec):
             if (key_index == 0 and value[0][2] >= min_prec) or (key_index == 1 and (value[0][key_index]!='0101' or value[0][2] >= min_prec)):
                 if value[0][key_index] not in new_dict.keys():
                     new_dict[value[0][key_index]] = []
-                new_dict[value[0][key_index]].append((key,value[0][value_index]))
+                new_dict[value[0][key_index]].append((key,value[0][value_index],value[0][2]))
         elif len(value)>1:
             for v in value:
                 #make sure the precision is at least equal to min_prec, for daymonth values if it is different from 1 January, the precision doesn't matter
                 if (key_index == 0 and v[2] >= min_prec) or (key_index == 1 and (v[key_index]!='0101' or v[2] >= min_prec)):
                     if v[key_index] not in new_dict.keys():
                          new_dict[v[key_index]] = []
-                    new_dict[v[key_index]].append((key,v[value_index]))
+                    new_dict[v[key_index]].append((key,v[value_index],v[2]))
                     
     return new_dict
 
 def get_daymonth(key):
     """
+    Returns day month, with month name in Darija. E.g.: 27 
     """
     day_number = key[2:]
     if day_number[0] == '0':
@@ -290,7 +333,57 @@ def load_dict_list():
     return dict_list
 
 
+def create_update_year_tmp(site,_type,year,content):
+    if year < 0:
+        year = year - 1 #for some reason we need this to get the correct value of the year BCE
+    if _type == 'b':
+        title = BIRTH_PAGE_PART+' '+str(abs(year))+BC_value(year)
+        first_header = '== ناس تزادو =='
+    elif _type == 'd':
+        title = DEATH_PAGE_PART+' '+str(abs(year))+BC_value(year)
+        first_header = '== ناس توفاو =='
+    else:
+        print("invalid type for create_update_year_tmp")
+        return
+
+    tmp_page = pywikibot.Page(site,title)
+
+    tmp_page.text = BOT_NOTICE+'\n'+first_header+'\n'
+
+    #filter precision == 9 and order
+    unspecified_date = ['[['+v[0]+']]' for v in content if v[2] == 9]
+
+    if len(unspecified_date) > 0:
+        tmp_page.text+="*'''نهار مامحددش''': "+NAME_SEPARATOR.join(sorted(unspecified_date))+'\n'
+
+    #filter precision != 9 and order
+    specified_month = sorted([x for x in content if x[2] > 9], key=lambda v: (v[2],v[1],v[0]))
+    for i in range(1,13):
+        month_name = MONTHS[i-1]['ary_name']
+        month_i = [v for v in specified_month if v[2] == 11 and v[1][:2] == str(i).rjust(2,'0')]
+        unspecified_day_i = ['[['+v[0]+']]' for v in specified_month if v[2] == 10 and v[1][:2] == str(i).rjust(2,'0')]
+
+        if len(unspecified_day_i) > 0 or len(month_i) > 0:
+            tmp_page.text+="*'''"+month_name+"''':\n"
+            if len(unspecified_day_i) > 0:
+                tmp_page.text+="**'''نهار مامحددش ف "+month_name+"''': "+NAME_SEPARATOR.join(sorted(unspecified_day_i))+'\n'
+        for j in range(1,MONTHS[i-1]['day_count']+1):
+            #restrict values to specific day in month
+            daymonth_raw = str(i).rjust(2,'0')+str(j).rjust(2,'0')
+            day_i = ['[['+m[0]+']]' for m in month_i if m[1] == daymonth_raw]
+            if len(day_i) > 0:
+                tmp_page.text+="**'''"+get_daymonth(daymonth_raw)+"''': "+NAME_SEPARATOR.join(sorted(day_i))+'\n'
+
+
+    tmp_page.text+=FOOTER
+
+    tmp_page.text = tmp_page.text.strip().replace("\n\n\n","\n\n")
+    tmp_page.save(SAVE_MESSAGE)
+    
+
 def create_add_all_categories(site,_type,year,title):
+    if year < 0:
+        year = year - 1 #for some reason we need this to get the correct value of the year BCE
     abs_year = abs(year)
     #print('Year: '+str(abs(year)))
     #print('BC: '+BC_value(year))
@@ -400,7 +493,7 @@ print("Loading data from Wikidata")
 if os.path.exists(export):
     dict_list = load_dict_list()
 else:
-    dict_list = simplify_json(wikidata_rest_query(filename))
+    dict_list = simplify_json(get_all_query_results()) #simplify_json(wikidata_rest_query(filename))
     save_dict_list(dict_list)
 print("Data loaded")
 
@@ -484,9 +577,11 @@ dict_by_year_death = get_dict_by_new_key(0,1,dict_by_person_death,9)
 for key, value in dict_by_year_death.items():
     dict_by_year_death[key] = sorted(value,key=lambda x:x[1])
 
+print(dict_by_year_death)
 
 site = pywikibot.Site()
 
+"""
 current_year = None
 for key, value in dict_by_day_birth.items():
     if len(key) == 4:
@@ -505,6 +600,7 @@ for key, value in dict_by_day_birth.items():
                 #print(current_year)
                 text+= '\n* '
                 if current_year < 0:
+                    year = year - 1 #for some reason we need this to get the correct value of the year BCE
                     text+="'''"+str(0-current_year)+" "+BC+":''' "
                     print(str(0-current_year))
                 else:
@@ -519,12 +615,13 @@ for key, value in dict_by_day_birth.items():
             #text+= '* [['+v[0]+']]\n'
         text+= '\n* '
         if current_year < 0:
+            year = year - 1 #for some reason we need this to get the correct value of the year BCE
             text+="'''"+str(0-current_year)+" "+BC+":''' "
             print(str(0-current_year))
         else:
             text+="'''"+str(current_year)+":''' "
         if len(name_list)>0:
-            text+=NAME_SEPARATOR.join(["[["+name+"]]" for name in name_list])
+            text+=NAME_SEPARATOR.join(["[["+name+"]]" for name in name_list])+FOOTER
         if temp != text:
             #text+='\n'+DARIJABOT_CAT
             page.text = text
@@ -552,7 +649,8 @@ for key, value in dict_by_day_death.items():
                 
                 #print(current_year)
                 text+= '\n* '
-                if current_year < 0:
+                if current_year < 0: 
+                    year = year - 1 #for some reason we need this to get the correct value of the year BCE
                     text+="'''"+str(0-current_year)+" "+BC+":''' "
                     print(str(0-current_year))
                 else:
@@ -568,12 +666,13 @@ for key, value in dict_by_day_death.items():
             #text+= '* [['+v[0]+']]\n'
         text+= '\n* '
         if current_year < 0:
+            year = year - 1 #for some reason we need this to get the correct value of the year BCE
             text+="'''"+str(0-current_year)+" "+BC+":''' "
             print(str(0-current_year))
         else:
             text+="'''"+str(current_year)+":''' "
         if len(name_list)>0:
-            text+=NAME_SEPARATOR.join(["[["+name+"]]" for name in name_list])
+            text+=NAME_SEPARATOR.join(["[["+name+"]]" for name in name_list])+FOOTER
         if temp != text:
             #text+='\n'+DARIJABOT_CAT
             page.text = text
@@ -582,14 +681,17 @@ for key, value in dict_by_day_death.items():
 
     else:
         print("Invalid key: "+key+" for record "+str(value))
-
+"""
 
 for key, value in dict_by_year_birth.items():
     year = key
     for v in value:
+        #print("key: "+str(key)+" value: "+str(value))
+        #break
         name = v[0]
         create_add_all_categories(site=site,_type='b',year=year,title=name)
-        
+
+    create_update_year_tmp(site=site,_type='b',year=year,content=value)
 
 
 for key, value in dict_by_year_death.items():
@@ -597,6 +699,10 @@ for key, value in dict_by_year_death.items():
     for v in value:
         name = v[0]
         create_add_all_categories(site=site,_type='d',year=year,title=name)
+
+    create_update_year_tmp(site=site,_type='d',year=year,content=value)
+
+#special task for fixing categories, do NOT run!!!!
 """
 
 for i in range(-600,2022):

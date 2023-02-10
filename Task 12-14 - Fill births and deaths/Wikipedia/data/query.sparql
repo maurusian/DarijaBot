@@ -1,4 +1,4 @@
-SELECT ?person ?personLabel ?dateOfBirth ?dateOfDeath ?articleMA WHERE {
+SELECT ?person ?personLabel ?dateOfBirth ?dateOfDeath ?article WHERE {
   SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE]".
     ?person rdfs:label ?personLabel .
     
@@ -12,27 +12,17 @@ SELECT ?person ?personLabel ?dateOfBirth ?dateOfDeath ?articleMA WHERE {
   
   
   
-      ?articleMA schema:about ?person .
-      ?articleMA schema:name ?personLabel .
-      ?articleMA schema:inLanguage "ary" .
-      ?articleMA schema:isPartOf <https://ary.wikipedia.org/> .
+      ?article schema:about ?person .
+      ?article schema:name ?personLabel .
+      ?article schema:inLanguage "ary" .
+      ?article schema:isPartOf <https://ary.wikipedia.org/> .
    
-  
-  
-	
-	FILTER EXISTS {
-        
-      ?articleMA schema:about ?person .
-      ?articleMA schema:inLanguage "ary" .
-      ?articleMA schema:isPartOf <https://ary.wikipedia.org/> .
-    }
-  
  
  
   
 }
 
-group by ?person ?personLabel ?nativeName ?dateOfBirth ?dateOfDeath  ?articleMA
+group by ?person ?personLabel ?nativeName ?dateOfBirth ?dateOfDeath  ?article
 
 
 LIMIT 5000
