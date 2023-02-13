@@ -10,4 +10,6 @@ reason = "test"
 
 print(len(list(cat.subcategories())))
 
-cat.move(new_title,reason=reason,movetalk=True)
+#cat.move(new_title,reason=reason,movetalk=True)
+
+print(dir(cat))
