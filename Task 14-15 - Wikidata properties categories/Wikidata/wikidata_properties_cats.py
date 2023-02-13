@@ -1,8 +1,9 @@
 import pywikibot
 from pgvbotLib import log_error
-from pywikibot.exceptions import NoPageError
+from pywikibot.exceptions import NoPageError, OtherPageSaveError
+import traceback
 
-
+PROP_FILE = "quarry-70843-untitled-run702727.json"
 
 TASK_LOG_PAGE = "مستخدم:DarijaBot/عطاشة 15: زّيادة د تّصنيفات ديال لخاصيات د ويكيداطا"
 
@@ -31,7 +32,7 @@ CATEGORY_NAME_TEMPLATES = {'ary':'تصنيف:پاجات كاتخدم خاصية 
 
 SAVE_LOG_MESSAGE = "دخلة ف لّوحة تزادت"
 
-with open('quarry-59138-untitled-run585800.json','r') as f:
+with open(PROP_FILE,'r') as f:
     dict_data = eval(f.read())
 
 
@@ -65,6 +66,11 @@ for elem in dict_data['rows']:
                         print("Page on "+LANGUAGES[lang]+" Wikipedia for Property "+wikidata_property+" is not linked to Wikidata")
                         
                         wiki_log_message = "لپاج [[:"+lang+":"+title_lang+"]] مامربوطاش معا ويكيداطا"
+                        log_error(TASK_LOG_PAGE,wiki_log_message,SAVE_LOG_MESSAGE,site_ary)
+                    except OtherPageSaveError:
+                        print("Could not save page.")
+                        
+                        wiki_log_message = str(traceback.format_exc())
                         log_error(TASK_LOG_PAGE,wiki_log_message,SAVE_LOG_MESSAGE,site_ary)
                     
                 i+=1
