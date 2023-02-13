@@ -1,3 +1,3 @@
-test_cat_class.py login -all
+move_cat.py login -all
 
 pause
