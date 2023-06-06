@@ -13,6 +13,22 @@ EMPTY_PARAGRAPH_TAG = "{{فقرة مازالا خاوية ولا ناقصة}}"
 CATEGORY = "تصنيف:عنصر كيميائي"
 CATEGORY = "تصنيف:17"
 
+TEST_STRINGS = ["{{معلومات مدينة|صورة=سفسف.سد}}"
+               ,"{{معلومات مدينة|صورة=سفسف.}}"
+               ,"{{معلومات مدينة|صورة=سفسف}}"
+               ,"{{معلومات مدينة|صورة=.سفسف}}"
+               ,"{{معلومات مدينة|صورة=}}"
+               ,"{{معلومات مدينة|صورة=}}}}"
+               ,"{{معلومات مدينة|صورة=}}فسفسف}}"
+               ,"{{معلومات مدينة|صورة=}}  فسفسف}}"
+               ,"""{{معلومات مدينة|صورة=}} 
+
+{{فسفسف|صورة=}}"""
+               ,"""{{معلومات مدينة|صورة=}} 
+
+{{فسفسف|صورة=ففدفف.ڢسفڢف}}"""]
+PIC_REGEX = r"{{معلومات.+\|صورة=.+\..+}}"
+
 FILE = '[[File:'
 MILF = '[[ملف:'
 
@@ -45,6 +61,41 @@ def has_infobox_tag(page):
         return True
     return False
 
+def get_infobox_template_page(page):
+    regexp = re.compile(INFOBOX_TAG_PATTERN)
+    m = regexp.search(page.text)
+    if m:
+        #return m.group(0)
+        return TEMPLATE_NS+":"+str(m.group(0)).split("|")[0].replace("{{","").replace("}}","")
+
+#TEMPLATE_NS = "قالب"
+title = "إبليس ف لإسلام"
+site = pywikibot.Site()
+page = pywikibot.Page(site,title)
+#print(get_infobox_template_page(page))
+
+CATEGORY_ISSUE_RGX = "{{مقالة خاصها تقاد\|.+عيون لكلام.+}}"
+
+
+print(site.deadendpages())
+"""
+regexp = re.compile(CATEGORY_ISSUE_RGX,flags=re.DOTALL)
+if regexp.search(page.text):
+    print(True)
+else:
+    print(False)
+
+
+regexp = re.compile(PIC_REGEX,flags=re.DOTALL)
+for TEST_STRING in TEST_STRINGS:
+    if regexp.search(TEST_STRING):
+        print(True)
+    else:
+        print(False)
+
+
+"""
+"""
 site = pywikibot.Site()
 
 page = pywikibot.Page(site,title)
@@ -57,7 +108,7 @@ print(getItemPropertyNumericId(page,"P27"))
 print(isHuman(page))
 print(hasPropertyXValue(page,"P27",1028))
 
-"""
+
 for link in page.iterlanglinks():
     linkparts = str(link)[2:-2].split(':')
     print(linkparts)
