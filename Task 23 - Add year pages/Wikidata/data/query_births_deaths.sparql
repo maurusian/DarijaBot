@@ -1,0 +1,14 @@
+SELECT ?categoryLabel ?itemLabel WHERE {
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE]".
+    ?category rdfs:label ?categoryLabel .
+    ?item rdfs:label ?itemLabel
+
+    } 
+      
+   
+      ?category wdt:P31 wd:Q4167836.
+      ?category wdt:P971 ?item.
+      ?item wdt:P279 wd:Q21821348.
+      ?item wdt:P1296 wd:Q14819852
+
+}

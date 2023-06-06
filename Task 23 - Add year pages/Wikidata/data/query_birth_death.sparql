@@ -1,0 +1,22 @@
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX wikibase: <http://wikiba.se/ontology#>
+PREFIX p: <http://www.wikidata.org/prop/>
+PREFIX ps: <http://www.wikidata.org/prop/statement/>
+PREFIX pq: <http://www.wikidata.org/prop/qualifier/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+#Sample query to start a list of values for property P971
+#Remove some of the "#" below to see if it helps you
+
+SELECT ?item ?itemLabel
+WHERE
+{
+  ?item wdt:P971 wd:Q21160456.
+  ?item wdt:P971 ?elem.
+  ?elem wdt:P31 wd:Q39911.
+#  ?value wdt:P31 wd:Q128207.
+#  ?item wdt:P569 ?dob .
+#  ?item wdt:P570 ?dod .
+#  ?item wdt:P17 ?country .
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en"  }
+}
