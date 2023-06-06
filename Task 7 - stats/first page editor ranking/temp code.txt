@@ -1,0 +1,49 @@
+topic = "فن وموسيقى"
+    section_title = "فنانون وموسيقيون"
+    subsection_title = "غير موجود"
+    """
+    for i in range(len(topics_tables[topic][section_title][subsection_title])):
+        qcode = hf.extract_qcodes(topics_tables[topic][section_title][subsection_title][i][json_data["translations"]["topic"]])[0]
+        print(i, topics_tables[topic][section_title][subsection_title][i]["الموضوع"])
+        print(qcode_dict[qcode][0]["rownum"],qcode)
+    """
+
+    subpage_link = f"{json_data['pages']['main_page']}/{json_data['pages']['topics']['main_topic_page']}/{topic}"
+    page = pywikibot.Page(site,subpage_link)
+    page_text = page.text
+
+    subsection_code = extract_subsection_wikicode(page_text,section_title,subsection_title)
+
+    print(subsection_code)
+
+    print((topics_tables[topic][section_title][subsection_title]))
+
+    new_subsection_code = hf.list_of_dicts_to_wikitext_table(topics_tables[topic][section_title][subsection_title])
+
+    print(new_subsection_code)
+    
+    '''
+    print(type(topics_tables[topic][section_title][subsection_title][0]))
+    print(topics_tables[topic][section_title][subsection_title][0].keys())
+    print(topics_tables[topic][section_title][subsection_title])
+
+    print()
+
+    
+    #make sure no qcodes are repeated
+    for qcode, content in qcode_dict.items():
+        #print(qcode, len(content))
+        if len(content)>1:
+            print(qcode, content)
+
+
+def extract_subsection_wikicode(page_text,section_title,subsection_title):
+    #extract code from section with section_title (unique)
+
+    section_code = hf.get_section_by_title(page_text, section_title)
+
+    #extract code from subsection of section with subsection_title (not unique within the page)
+
+    subsection_code = hf.get_section_by_title(section_code, subsection_title)
+
+    return subsection_code
