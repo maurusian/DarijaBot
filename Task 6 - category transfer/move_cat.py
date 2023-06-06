@@ -48,6 +48,7 @@ for i in range(len(jason)):
 
     source_cat = pywikibot.Page(site,source_cat_title)
 
+    
     if to_move(source_cat, pywikibot.Category(site,target_cat_title)):
 
         try:
@@ -56,7 +57,7 @@ for i in range(len(jason)):
         except:
             print("could not transfer cat "+source_cat.title())
             print(traceback.format_exc())
-
+    
     source_cat = pywikibot.Category(site,source_cat_title)
 
            
