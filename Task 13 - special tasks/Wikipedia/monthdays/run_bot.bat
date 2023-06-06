@@ -1,3 +1,3 @@
-get_page_list.py login -all
+daymonth.py login -all
 
 pause
