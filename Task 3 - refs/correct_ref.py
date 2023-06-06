@@ -150,15 +150,24 @@ def get_simple_ref_part(ref):
             return value
     return None
 
+def extract_isbn(wiki_reference):
+    isbn_pattern = r"isbn\s*\|\s*([\d\-]+)"
+    match = re.search(isbn_pattern, wiki_reference, flags=re.IGNORECASE)
+
+    if match:
+        return match.group(1)
+    else:
+        return None
+
 def get_simple_book_ref(ref):
     print(ref.split('{{ISBN'))
-    raw_isbn = ref.split('{{ISBN')[1].split('}}')[0]
+    raw_isbn = extract_isbn(ref)
     if 'name=' in ref:
         ref_name_part = ' name='+ref.split('name=')[1].split('>')[0]
     else:
         ref_name_part = ""
 
-    remainder_text = ref.replace('{{ISBN'+raw_isbn+'}}','').replace('</ref>','').strip().strip('.').strip()
+    remainder_text = ref.replace('{{ISBN|'+raw_isbn+'}}','').replace('</ref>','').strip().strip('.').strip()
 
     remainder_text = re.sub('<ref.*?>','',remainder_text)
 
@@ -225,9 +234,9 @@ site = pywikibot.Site()
 
 print_to_console_and_log('Number of passed arguments: '+str(len(argv)))
 local_args = None
-if len(argv)>2:
-    if len(argv) > 3:
-        local_args = argv[3:]
+if len(argv)>3:
+    if len(argv) > 4:
+        local_args = argv[4:]
 
 JOB_ID = None
 if local_args is not None and len(local_args)>2:

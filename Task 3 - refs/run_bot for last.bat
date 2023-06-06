@@ -1,3 +1,3 @@
-correct_ref.py login -all -l
+correct_ref.py login -all -pass -l
 
 pause
