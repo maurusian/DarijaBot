@@ -66,6 +66,31 @@ def has_disambig_cross_ref(page1,page2):
 
     return False
 
+def get_admins(site):
+    """
+    Retrieves a list of human administrators on the given wiki site.
+
+    Args:
+        site (str): The URL of the wiki site to retrieve admins from.
+
+    Returns:
+        list: A list of usernames of all the human administrators on the given wiki site.
+    """
+    # Get the Site object for the wiki site
+    site = pywikibot.Site(site)
+
+    # Get the User object for the "Administrators" group
+    admins_group = pywikibot.Group(site, 'sysop')
+
+    # Get a list of User objects for all members of the "Administrators" group
+    admins_list = list(admins_group.members())
+
+    # Extract the usernames from the User objects and exclude adminbots
+    usernames = [admin.username for admin in admins_list if not admin.isBot()]
+
+    # Return the list of usernames
+    return usernames
+
 def notify_admins(page,ar_page):
     talk_page_title = TALK_PAGE_TITLE_PART+page.title()
     talk_page = pywikibot.Page(pywikibot.Site(),talk_page_title)
@@ -73,7 +98,7 @@ def notify_admins(page,ar_page):
     ar_talk_page = pywikibot.Page(pywikibot.Site(),ar_talk_page_title)
     if (NOTIF_SECTION_TITLE not in talk_page.text and BOT_COMMENT_TAG not in talk_page.text
         and NOTIF_SECTION_TITLE not in ar_talk_page.text and BOT_COMMENT_TAG not in ar_talk_page.text):
-        NOTIF_MESSAGE = NOTIF_TEMPLATE.replace("{إمغارن}",'|'.join(ADMIN_LIST)).replace('{پاج1}',page.title()).replace('{پاج2}',ar_page.title())
+        NOTIF_MESSAGE = NOTIF_TEMPLATE.replace("{إمغارن}",'|'.join(get_admins(site))).replace('{پاج1}',page.title()).replace('{پاج2}',ar_page.title())
         talk_page.text+=NOTIF_SECTION_TITLE+'\n'+NOTIF_MESSAGE
         talk_page.save(NOTIF_ADMINS_SAVE_MESSAGE)
     else:
@@ -182,7 +207,7 @@ with open(RECENT_LOG_FILE,'a',encoding='utf-8') as f:
                 except KeyError:
                     print(page.title())
                     print(sys.exc_info())
-                except UnknownSiteError:
+                except pywikibot.exceptions.UnknownSiteError:
                     print(page.title())
                     print(sys.exc_info())
                         
