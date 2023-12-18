@@ -21,7 +21,7 @@ So far the following T1 tasks have been run on arywiki:
 * Monuments in Morocco (5 on the main namespace)
 * Moroccan politicians (around 15 articles written to draft namespace)
 * Cryprocurrencies (30 articles on the main namespace)
-* Moroccan villages (1219 articles created on the main namespace)
+* Moroccan villages (2219 articles created on the main namespace)
 
 ## Future development
 It is envisaged that T1 would leverage the power of LLMs to generate articles for a variety of subjects with Wikidata, or by searching the web. These articles would have to be written to the draft namespace, or generated in small manageable batches to the main namespace with a strict reviewing protocol.
