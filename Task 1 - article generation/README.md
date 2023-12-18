@@ -5,6 +5,8 @@ T1 for short, DarijaBot Task 1 handles the creation of new automated articles, f
 
 This is not the only task that creates automated articles, since T23 for example handles the creation of time-related articles, but it specializes in automated articles that have a free or general format, which has to be defined using a text template, as opposed to T23 where the format is technically predefined and constant using templates.
 
+The ary documentation for this task can be found at: https://w.wiki/8Ydn
+
 ## Subclasses and subtasks:
 ### Subclasses:
 There are three types of tasks in the T1 class:
@@ -14,11 +16,12 @@ There are three types of tasks in the T1 class:
 
 The choice between different techniques and data formats is still being experimented with.
 
-# Subtasks:
+### Subtasks:
 So far the following T1 tasks have been run on arywiki:
 * Monuments in Morocco (5 on the main namespace)
 * Moroccan politicians (around 15 articles written to draft namespace)
 * Cryprocurrencies (30 articles on the main namespace)
 * Moroccan villages (1219 articles created on the main namespace)
+
 ## Future development
 It is envisaged that T1 would leverage the power of LLMs to generate articles for a variety of subjects with Wikidata, or by searching the web. These articles would have to be written to the draft namespace, or generated in small manageable batches to the main namespace with a strict reviewing protocol.
