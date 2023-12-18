@@ -134,3 +134,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+./Task 1.2 - Moroccan villages/*.xlsx
+./Task 1.2 - Moroccan villages/archive

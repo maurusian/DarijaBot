@@ -1,0 +1,17 @@
+{{معلومات دوار}}
+'''{village_name}''' هوّ [[دوار]] {village_type} كاين ف جماعة [[{commune}]]، دائرة [[{circle} (دائرة)|{circle}]]، [[{prov_type} {province}]]، [[{region}]] ف [[لمغريب]]. هاد دّوار كينتامي ل مشيخة [[{fraction} (مشيخة)|{fraction}]] لي كتضم {village_count} د دّواور. لعاداد د سّكان ديالو واصل ل {population_2004} شخص على حساب [[لإحصاء لعام 2004|لإحصاء الرسمي د عام 2004]].<ref>{{مرجع ويب
+| url = https://docs.google.com/spreadsheets/d/18mOOuVCAhkc38zrmKPxLUqGN6t0dTIOe/edit?usp=sharing&ouid=109715649259751438490&rtpof=true&sd=true
+| title = لإحصاء لعام د السكان 2004
+| date = 2004
+| publisher = [[لمندوبية سامية د تخطيط]]
+}}</ref>{{refn|group=ن|ف [[لإحصاء لعام د 2014]] ماتعلنوش لإحصائيات ديال الدواور لي فيهوم قل من 30 فاميلة على ود حماية لخصوصية<ref name=census>{{Cite report|title=Données démographiques et socio-économiques de la population rurale (hors nomades) par douar selon le Recensement général de la population et de l'habitat de 2014|publisher=[[لمندوبية سامية د تخطيط]]|url=https://rgph2014.hcp.ma/file/212306/}}</ref>}}
+
+== نوطات ==
+{{عيون|group=ن}}
+
+== عيون لكلام ==
+{{عيون}}
+{{ضبط مخازني}}
+
+[[تصنيف:دوار ف لمغريب]]
+[[تصنيف:دوار ف  {prov_type} {province}]]
