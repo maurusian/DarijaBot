@@ -1,0 +1,65 @@
+{{معلومات دوار}}
+'''{village_name}''' هوّ [[دوار]] {village_type} كاين ف جماعة [[{commune}]]، دائرة [[{circle} (دائرة)|{circle}]]، [[{prov_type} {province}]]، [[{region}]] ف [[لمغريب]]. هاد دّوار كينتامي ل مشيخة [[{fraction} (مشيخة)|{fraction}]] لي كتضم {village_count} د دّواور. لعاداد د سّكان ديالو واصل ل {population} شخص على حساب [[لإحصاء لعام 2014|لإحصاء الرسمي د عام 2014]].<ref name=census>{{Cite report
+|title=Données démographiques et socio-économiques de la population rurale (hors nomades) par douar selon le Recensement général de la population et de l'habitat de 2014|publisher=[[لمندوبية سامية د تخطيط]]
+|url=https://rgph2014.hcp.ma/file/212306/
+|archive-url=http://web.archive.org/web/20230814234831/https://rgph2014.hcp.ma/file/212306/
+|archive-date=14 غشت 2023}}</ref>
+
+== إحصائيات ==
+=== إحصائيات عامة ===
+عدد السكان ديال {village_name} {pop_change} ب {population_increase_perc}% و عدد لفاميلات {fam_change} ب {families_increase_perc}% مابين 2004 و 2014.<ref>{{مرجع ويب
+| url = https://docs.google.com/spreadsheets/d/18mOOuVCAhkc38zrmKPxLUqGN6t0dTIOe/edit?usp=sharing&ouid=109715649259751438490&rtpof=true&sd=true
+| title = لإحصاء لعام د السكان 2004
+| date = 2004
+| publisher = [[لمندوبية سامية د تخطيط]]
+}}</ref> ف 2014، عدد لبالغين{{refn|group=ن|لي ف عمرهوم 15 عام ولّا كتر}} كان {adult_population} واحد، منهوم {male_adult_population} دكور و {female_adult_population} نتوات.
+<timeline>
+ImageSize = width:220 height:220
+PlotArea = left:70 right:40 top:20 bottom:20
+TimeAxis = orientation:vertical
+AlignBars = justify
+Colors =
+  id:gray1 value:gray(0.9)
+DateFormat = yyyy
+Period = from:0 till:{population_max_value}
+ScaleMajor = unit:year increment:1000 start:0 gridcolor:gray1
+PlotData =
+  bar:2004 color:green width:1 
+   from:0 till:{population_2004} width:25 text:{population_2004} textcolor:black  fontsize:8px
+  bar:2014 color:red width:1 
+   from:0 till:{population} width:25 text:{population} textcolor:black  fontsize:8px
+</timeline>
+
+*لفاميلات:
+<timeline>
+ImageSize = width:220 height:220
+PlotArea = left:70 right:40 top:20 bottom:20
+TimeAxis = orientation:vertical
+AlignBars = justify
+Colors =
+  id:gray1 value:gray(0.9)
+DateFormat = yyyy
+Period = from:0 till:{families_max_value}
+ScaleMajor = unit:year increment:1000 start:0 gridcolor:gray1
+PlotData =
+  bar:2004 color:green width:1 
+   from:0 till:{families_2004} width:25 text:{families_2004} textcolor:black  fontsize:8px
+  bar:2014 color:red width:1 
+   from:0 till:{families} width:25 text:{families} textcolor:black  fontsize:8px
+</timeline>
+
+=== التسكويل ===
+ف 2014، نسبة د ال[[تسكويل]]{{refn|group=ن|من بين الدراري و الدريات لي ف عمرهوم مابين 6 و 11 عام ف موسم 2013/2014}} واصلة ل {schooling}%، و نسبة د لأمية{{refn|group=ن|من بين السكان لي ف عمرهوم 10 سنين ل لفوق}} واصلة ل {illiteracy}%.
+
+=== لخدمة ===
+ف 2014. نسبة د الناس النشيطين{{refn|group=ن|النشيطين هوما الناس لي مستاعدّين يخدمو، سوا كانو خدّامين ؤلا باقين كيقلّبو على خدمة}} ف دوار {village_name} واصلة ل {active_population}%، و نسبة د ال[[شوماج]]{{refn|group=ن|الناس لي ف الشوماج هوما لي ف عمرهوم 15 عام ل لفوق، لي ماخدّامينش و مستاعدّين يخدمو سوا كانو كيقلّبو على خدمة ؤلا لا}} واصلة ل {unemployment}%.
+
+== نوطات ==
+{{عيون|group=ن}}
+
+== عيون لكلام ==
+{{عيون}}
+{{ضبط مخازني}}
+
+[[تصنيف:دوار ف لمغريب]]
+[[تصنيف:دوار ف  {prov_type} {province}]]
