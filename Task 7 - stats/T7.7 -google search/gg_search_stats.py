@@ -11,8 +11,11 @@ MAX_REQUESTS = 10
 
 site = pywikibot.Site()
 
-api_key = "AIzaSyAkTZCwc6Pihm_IGxiWiPn5DN2r4Pn0cUI"
-cx_id = "f401aad12a40e4d66"
+with open("api_key.txt","r") as f:
+    api_key = str(f.read()).strip()
+
+with open("cx_id.txt","r") as f:
+    cx_id = str(f.read()).strip()
 
 ary_base_url = "https://ary.wikipedia.org/wiki/"
 
