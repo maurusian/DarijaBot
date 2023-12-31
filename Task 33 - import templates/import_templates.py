@@ -131,7 +131,7 @@ for tmp in TEMPLATES:
         ary_page = pywikibot.Page(site,ary_titles[-1])
         ary_page.text = tmp.text
         ary_page.save(CREATE_TMP_SAVE_MESSAGE)
-        if item is not None:
-            interlink_page(ary_page,tmp,"ary")
+    if item is not None:
+        interlink_page(ary_page,tmp,"ary","template")
             
         
