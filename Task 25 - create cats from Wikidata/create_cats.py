@@ -201,10 +201,10 @@ def create_cat_tree(jason, cat, param_values,bag_of_cats):
                     if len(hypercats)>0:
                         for hypercat in hypercats:
                             tmp_text+='[['+get_actual_name(hypercat,param_values)+']]\n'
-                        if len(tmp_text.strip()) > len(supercat_page.text):
+                        if len(tmp_text.strip()) > len(supercat_page.text): #rough check to ensure we don't empty a cat page or reduce the number of its supercats
                             supercat_page.text = tmp_text.strip()
                             supercat_page.save(SAVE_MESSAGE)
-                            bag_of_cats.add(supercat_page.title())
+                            bag_of_cats.add(supercat_actual_name)
 
                 
     tmp_text = ""
@@ -218,7 +218,7 @@ def create_cat_tree(jason, cat, param_values,bag_of_cats):
         if len(tmp_text.strip()) > len(cat_page.text):
             cat_page.text = tmp_text.strip()
             cat_page.save(CREATE_CAT_MESSAGE)
-            bag_of_cats.add(supercat_page.title())
+            bag_of_cats.add(cat_page.title())
 
     return bag_of_cats
 
@@ -230,29 +230,30 @@ def link_cats(wkdt_jason,jason,page):
         for lang, cat_lang_code_name in wkdt_jason[cat_code_name].items():
             lang_param_values = get_param_values(jason,page,lang)
             if lang_param_values is not None:
-                print(str(type(cat_lang_code_name).__name__))
+                #print(str(type(cat_lang_code_name).__name__))
                 if str(type(cat_lang_code_name).__name__) != 'list':
                     cat_lang_code_name = [cat_lang_code_name]
                     
                 for code_name in cat_lang_code_name:
                     cat_lang_name = get_actual_name(code_name,lang_param_values)
-                    print(cat_lang_name)
+                    #print(cat_lang_name)
                     site_lang = pywikibot.Site(lang,'wikipedia')
                     cat_lang = pywikibot.Page(site_lang,cat_lang_name)
 
-                    print("title for "+lang+" "+cat_lang.title())
+                    #print("title for "+lang+" "+cat_lang.title())
 
-                    linked = interlink_page(cat_ary,cat_lang,lang)
+                    linked = interlink_page(cat_ary,cat_lang,lang,"category page")
                     if linked:
                         break
                 if linked:
                         break
                     
         if not linked:
+            WIKILOG = pywikibot.Page(site,WIKILOG_PAGE_TITLE)
             
-            if cat_name not in NOT_LINKED_TO_LOG:
+            if cat_name not in NOT_LINKED_TO_LOG and cat_name not in WIKILOG.text:
                 write_to_interlink_log(INTERLINK_FAILED_MSG.format(cat_name))
-                NOT_LINKED_TO_LOG.add(cat_name)
+                NOT_LINKED_TO_LOG.add("[["+cat_name+"]]")
     
 def write_to_interlink_log(MSG):
     WIKILOG = pywikibot.Page(site,WIKILOG_PAGE_TITLE)
@@ -303,12 +304,13 @@ with open(RECENT_LOG_FILE,'a',encoding='utf-8') as f:
             print_to_console_and_log('*********'+str(i)+'/'+str(pool_size),LOCAL_LOG)
             if str(page.title()) not in pages_in_log:
                 #adding this cat only to pages where it was previously missing
-                check_cat = '[['+jason[0]["category"].split("{")[0].strip()
+                #check_cat = '[['+jason[0]["category"].split("{")[0].strip()
                 #print(check_cat)
-                if True: #if check_cat not in page.text:
+                #break
+                if True: #if check_cat not in page.text: #check causes issues, e.g. if another category exists with the same substring
                     if jason[0]["instanceof"] in getItemIdentities(page):
                         param_values = get_param_values(jason,page,'ary')
-                        print("param values: "+str(param_values))
+                        #print("param values: "+str(param_values))
                         if param_values is not None:
                             cat = get_category(jason,param_values)
 
