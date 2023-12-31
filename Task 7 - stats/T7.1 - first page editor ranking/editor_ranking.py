@@ -7,12 +7,14 @@ from datetime import datetime, timedelta
 #import Levenshtein
 from fuzzywuzzy import fuzz
 
-ADMINS = ["Reda benkhadra", "Ideophagous", "Anass Sedrati", "مرشح الإساءة","Mounir Neddi"]
-IGNORE_LIST = ["CommonsDelinker"]
+#ADMINS = ["Reda benkhadra", "Ideophagous", "Anass Sedrati", "مرشح الإساءة","Mounir Neddi"]
+IGNORE_LIST = ["CommonsDelinker","Poulinets"]
 
 MAX_TOP_EDITORS = 5
 
 SAVE_MESSAGE = "أپدييت ل آخر كلاصمة د لكتاتبيا"
+
+NAMESPACES = [0,1,4,5,6,7,10,11,12,13,100,101,118,119,828,829]
 
 SAVE_PAGE = "قالب:تضمين ديال ترتيب د لكتاتبيا ف صفحة لولة"
 
@@ -53,6 +55,14 @@ BODY = """{{ترتيب د لكتاتبيا د صفحة لولة
 |كاراكطيرات5={chars5}
 }}"""
 
+
+def get_administrators():
+    """Return a set of Wikipedia administrator usernames."""
+    site = pywikibot.Site()
+    
+    # Fetch administrators using the allusers API with augroup set to sysop
+    return set(user['name'] for user in site.allusers(group='sysop'))
+
 site = pywikibot.Site()
 
 #page = pywikibot.Page(site,title)
@@ -70,7 +80,9 @@ while len(editors) < 5:
     last_days+=30
     difference = timedelta(days=last_days)
     START_TIME = datetime.now() - difference
-    last_changes = site.recentchanges(reverse=True, bot = False, anon = False, start=START_TIME)
+    last_changes = list(site.recentchanges(reverse=True, bot = False, anon = False, start=START_TIME,changetype="edit",patrolled=True,namespaces=NAMESPACES))
+    last_creations = list(site.recentchanges(reverse=True, bot = False, anon = False, start=START_TIME,changetype="new",patrolled=True,namespaces=NAMESPACES))
+    admins=get_administrators()
     edit_size = len(list(deepcopy(last_changes)))
     print('Edit size: '+str(edit_size))
     
@@ -78,15 +90,24 @@ while len(editors) < 5:
         print('*********'+str(i)+'/'+str(edit_size))
         editor = change["user"]
         user_editor = pywikibot.User(site,editor)
-        if 'sysop' not in user_editor.groups() and editor not in IGNORE_LIST and not user_editor.is_blocked():
+        if 'sysop' not in user_editor.groups() and editor not in admins and editor not in IGNORE_LIST and not user_editor.is_blocked():
             if editor not in editors.keys():
                 editors[editor] = {"edit_count":0,"size":0,"new_count":0}
             editors[editor]["edit_count"]+=1
             editors[editor]["size"]+=int(change["newlen"])-int(change["oldlen"])
-            if change["type"] == "new":
-                editors[editor]["new_count"]+=1
-            
         i+=1
+    new_size = len(list(deepcopy(last_creations)))
+    i=1
+    print("processing new page creations")
+    print('New size: '+str(new_size))
+    for change in last_creations:
+        print('*********'+str(i)+'/'+str(new_size))
+        editor = change["user"]
+        if editor in editors.keys():
+            editors[editor]["new_count"]+=1
+        i+=1
+            
+        
 
     print("Editors count: "+str(len(editors)))
     editors = dict(sorted(editors.items(), key=lambda item: (item[1]["edit_count"],item[1]["new_count"],item[1]["size"]), reverse=True))
