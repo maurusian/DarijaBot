@@ -122,7 +122,7 @@ def get_fixed_keywords_ref(ref):
 
     return fixed_keywords_ref
                 
-
+'''
 refs = get_ref_list(page)
 #print(len(refs))
 
@@ -162,3 +162,34 @@ for ref in refs:
         print(links.groups())
 
     """
+'''
+
+def is_simple_reference(reference_text):
+    # Define the regex pattern to match non-simple references
+    non_simple_reference_pattern = r'<ref>\{\{(?:Cite|مرجع).*?\}\}<\/ref>'
+    
+    # Check if the reference matches the non-simple pattern
+    if re.search(non_simple_reference_pattern, reference_text, re.IGNORECASE):
+        return False
+    
+    # If the reference does not match the non-simple pattern,
+    # check if it matches the simple reference pattern
+    simple_reference_pattern = r'<ref>(.*?)<\/ref>'
+    match = re.search(simple_reference_pattern, reference_text)
+    
+    # If a match is found, it's a simple reference
+    return bool(match)
+
+
+# Test the function with sample reference texts
+reference1 = "<ref>Simple reference</ref>"
+reference2 = "{{Cite book|title=Book Title|author=Author}} Some text"
+reference3 = "{{مرجع|عنوان=عنوان الكتاب|مؤلف=المؤلف}} بعض النص"
+reference4 = "<ref>Another simple reference</ref>"
+reference5 = "{{Cite journal|title=Journal Title|author=Author}} Some text"
+
+print(is_simple_reference(reference1))  # True
+print(is_simple_reference(reference2))  # False
+print(is_simple_reference(reference3))  # False
+print(is_simple_reference(reference4))  # True
+print(is_simple_reference(reference5))  # False
