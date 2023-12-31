@@ -36,7 +36,7 @@ PROBABLE_LANGS_FOR_MOROCCAN_USERS = ["shi","en","simple","fr","ar","de","nl","ja
 
 IGNORE_LIST = ["Mirji"]
 
-NEWUSER_COUNT_LIMIT = 100
+NEWUSER_COUNT_LIMIT = 500
 
 #EARLIEST_TIME = datetime.strptime("2000-01-01 00:00",DATE_FORMAT)
 
