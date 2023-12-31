@@ -4,7 +4,7 @@ from copy import deepcopy
 from params import MONTHS
 from datetime import datetime, timezone
 from sys import argv
-import os, re
+import os, re, traceback
 from pywikibot.exceptions import ArticleExistsConflictError, NoPageError, CascadeLockedPageError
 #from arywikibotlib import getOnlyArticles
 
@@ -270,17 +270,20 @@ if __name__ == '__main__':
                                 for link in page.iterlanglinks():
                                     #print(list(interlinks))
                                     has_interlinks = True
-                                    linkparts = str(link)[2:-2].split(':')
-                                    #print(linkparts)
-                                    if linkparts[0] in LANGS:
-                                        lang = linkparts[0]
-                                        site_lang  = pywikibot.Site(lang,'wikipedia')
-                                        title_part = TEMPLATE_LANG[lang]
-                                        doc_page_lang  = pywikibot.Page(site_lang,title_part+':'+linkparts[-1]+TMP_DOC_LANG[lang])
-                                        if doc_page_lang.text is not None and doc_page_lang.text != '':
-                                            documentation = doc_page_lang.text
-                                            #lang = 'en'                              
-                                            break
+                                    try:
+                                        linkparts = str(link)[2:-2].split(':')
+                                        #print(linkparts)
+                                        if linkparts[0] in LANGS:
+                                            lang = linkparts[0]
+                                            site_lang  = pywikibot.Site(lang,'wikipedia')
+                                            title_part = TEMPLATE_LANG[lang]
+                                            doc_page_lang  = pywikibot.Page(site_lang,title_part+':'+linkparts[-1]+TMP_DOC_LANG[lang])
+                                            if doc_page_lang.text is not None and doc_page_lang.text != '':
+                                                documentation = doc_page_lang.text
+                                                #lang = 'en'                              
+                                                break
+                                    except KeyError:
+                                        print(traceback.format_exc())
                             except pywikibot.exceptions.UnknownSiteError:
                                 log_message = "UnknownSiteError for "+str(page.title())
                                 log_error(LOG_PAGE_TITLE,log_message,LOG_ERROR_COMMENT,site)
