@@ -1,4 +1,5 @@
-import pywikibot
+import pywikibot, urllib, requests
+from bs4 import BeautifulSoup
 import json, traceback
 from copy import deepcopy
 
@@ -69,6 +70,42 @@ def get_all_subcategories(category_name):
 
     return subcategories
 
+def get_all_search_results(search_token,search_limit,lang):
+    search_url = "https://"+lang+".wikipedia.org/w/index.php?title=Special:search&limit="+search_limit+"&ns0=1&offset=0&profile=default&search="+urllib.parse.quote(search_token)
+    #search_url = base_url + search_title
+
+    response = requests.get(search_url)
+
+    if response.status_code != 200:
+        print(f"Failed to get page: {search_url}")
+        return None
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    divs = soup.find_all('div', class_='mw-search-result-heading')
+
+    titles = [div.find('a').get('title') for div in divs]
+
+    return titles
+
+def get_all_search_result_cats(jason):
+    search_token = jason["MAIN_SEARCH_TOKEN"]
+    search_limit = str(jason["MAX_DATA_POOL_SIZE"])
+    lang = jason["lang"]
+
+    titles = get_all_search_results(search_token,search_limit,lang)
+    
+    tokens = jason["TOKENS"]
+
+    all_cats = set()
+
+    for title in titles:
+        for token in tokens:
+            if token["SOURCE_TKN"] in title:
+                all_cats.add(pywikibot.Category(site,title))
+                break
+
+    return all_cats
 
 def code_wrap(json_content):
     CODE_TAGS_PTRN = "<syntaxhighlight lang=\"json\">{}</syntaxhighlight>"
@@ -101,12 +138,15 @@ jobs = []
 main_jobid = input("Enter main job ID: ")
 i = 1
 
-batch_filename = JOB_PAGE_TITLE_PTRN.format(1)
+batch_filename = JOB_PAGE_TITLE_PTRN.format(main_jobid)
 jason = read_json(site)
 tokens = jason["TOKENS"]
 
-all_subcategories = get_all_subcategories(jason["ROOT_CAT"])
-for cat in all_subcategories:
+if "ROOT_CAT" in jason.keys():
+    all_cats = get_all_subcategories(jason["ROOT_CAT"])
+elif "MAIN_SEARCH_TOKEN" in jason.keys():
+    all_cats = get_all_search_result_cats(jason)
+for cat in all_cats:
     for token in tokens:
         actual_src_token = token["FRONT_SEP"]+token["SOURCE_TKN"]+token["BACK_SEP"]
         if actual_src_token in cat.title():
