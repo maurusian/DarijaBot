@@ -65,7 +65,7 @@ def write_to_excel(max_row_num):
 
     load_wb.save(target_excel_filename)
         
-write_to_excel(272)
+write_to_excel(546)
 # Example usage:
 username = "Ideophagous"  # Replace with the desired username
 contributions = get_user_contributions(username)
