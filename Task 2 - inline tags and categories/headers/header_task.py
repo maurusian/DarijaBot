@@ -6,10 +6,12 @@ import pywikibot
 from pywikibot import textlib
 from   pywikibot.exceptions import NoPageError
 
-import re, sys, os, random
+import re, sys, os, random, json
 from   copy                 import deepcopy
 from   datetime             import datetime, timezone
 from   sys                  import argv
+
+MAIN_PARAM_PAGE = "ميدياويكي:عطاشة2.1.json"
 
 LAST_RUN_FILE = "last_run.txt"
 
@@ -20,6 +22,25 @@ RECENT_LOG_FILE = "recent_log.txt"
 JOB_ID_MSG_PART = "نمرة د دّوزة {}"
 
 LOCAL_LOG = "task2.log"
+
+
+################## Get parameters ####################
+
+def get_main_task_params():
+    """
+    Load parameters for DarijaBot Task 2.1.
+    """
+    param_page = pywikibot.Page(site,MAIN_PARAM_PAGE)
+
+    pjason = json.loads(param_page.text)
+
+    return pjason
+
+site = pywikibot.Site()
+
+pjason = get_main_task_params()
+
+################ End get parameters ##################
 
 def print_to_console_and_log(MSG):
     MESSAGE = MSG+'\n'
@@ -182,7 +203,7 @@ def hasExplicitCategory(page):
     #print("found "+str(i)+" categories (final)")
     return False
 
-def setCategoryTag(page,text,MESSAGE):
+def setNoCategoryTag(page,text,MESSAGE):
     #print("checking category tag")
     regexp = re.compile(CATEGORY_ISSUE_RGX,flags=re.DOTALL)
     if not hasExplicitCategory(page):
@@ -209,7 +230,7 @@ ADD_ORPHAN_TAG_MESSAGE = 'طاڭ ديال "مقطوعة من شجرة" تزاد.
 REMOVE_ORPHAN_TAG_MESSAGE = 'طاڭ ديال "مقطوعة من شجرة" تحيّد.'
 
 ###Functions
-def setOrphanTag(page,text,MESSAGE):
+def setNoBacklinkTag(page,text,MESSAGE):
     should_add_orphan_tag = True
     links =  page.backlinks()
     regexp = re.compile(ORPHANED_ISSUE_RGX,flags=re.DOTALL)
@@ -239,7 +260,7 @@ ADD_DEADEND_TAG_MESSAGE = "طّاڭ ديال زنقة ماكاتخرجش تزا�
 REMOVE_DEADEND_TAG_MESSAGE = "طّاڭ ديال زنقة ماكاتخرجش تحيد"
 
 ###Functions
-def setDeadendTag(page,text,MESSAGE,site):
+def setNoOutLinkTag(page,text,MESSAGE):
     has_deadend_tag = False
     should_not_add_tag = False
     regexp = re.compile(CUL_DE_SAC_ISSUE_RGX,flags=re.DOTALL)
@@ -264,17 +285,26 @@ def setDeadendTag(page,text,MESSAGE,site):
 
 ##############################################No sources tag##############################################
 ###Tags
-NO_SOURCES_ON_PAGE_TAG = "{{مقالة ناقصينها عيون لكلام}}"
-SOURCE_EXIST_PATTERN = r"ref.+?/ref"
-REF_TAG = "<ref"
-NO_SOURCES_ISSUE_RGX = "{{مقالة خاصها تقاد\|.+عيون لكلام.+}}"
+json_source_proc = pjason["JOBS"][0]
+func = json_source_proc["SETFUNC"]
+NO_SOURCES_ON_PAGE_TAG = json_source_proc["TAGCODE"]
+SOURCE_TAG_EXCEPTION_CAT = json_source_proc["TAG_EXCEPTION_CAT"]
 
 ###Save messages
-ADD_NO_SOURCE_TAG_MESSAGE = "طّاڭ ديال ناقصين عيون لكلام تزاد"
-REMOVE_NO_SOURCE_TAG_MESSAGE = "طّاڭ ديال ناقصين عيون لكلام تحيد"
+ADD_NO_SOURCE_TAG_MESSAGE = json_source_proc["ADD_SAVE_MESSAGE"]
+REMOVE_NO_SOURCE_TAG_MESSAGE = json_source_proc["RMV_SAVE_MESSAGE"]
 
+###Regex and regex-like
+#SOURCE_EXIST_PATTERN = r"ref.+?/ref" #probably not needed
+#REF_TAG = "<ref" #probably not needed
+NO_SOURCES_ISSUE_RGX = "{{"+json_source_proc["GENERIC_FIX_ART_TAG_NAME"]+"\|.+"+json_source_proc["RELATED_ARY_NAME_STR"]+".+}}"
+SOURCE_PATTERN = r"<ref[^>]*>"
+SRC_SFN_PATTERN = r"\{\{[Ss]fn\|([^}|]+)(\|[^}|]+)*\}\}" #matches {{sfn}} tag with parameters
+
+
+######Functions
 def has_sources(text):
-    source_patterns = [r"<ref[^>]*>"] #, r"{{\s*cite", r"{{\s*cite"]
+    source_patterns = [SOURCE_PATTERN, SRC_SFN_PATTERN] #, r"{{\s*cite", r"{{\s*cite"]
     for pattern in source_patterns:
         if re.search(pattern, text, re.IGNORECASE):
             return True
@@ -298,19 +328,26 @@ def find_template_sources(text):
 
     return False
 
-###Functions
 def setNoSourceTag(page,text,MESSAGE):
+    #print(setNoSourceTag)
     has_no_source_tag = False
     regexp = re.compile(NO_SOURCES_ISSUE_RGX,flags=re.DOTALL)
     if NO_SOURCES_ON_PAGE_TAG in text or regexp.search(page.text):
         has_no_source_tag = True
     
-    sources = re.findall(SOURCE_EXIST_PATTERN,page.text)
+    cats = page.categories()
+    is_source_exp_page = False
+    for cat in cats:
+        if cat.title() in SOURCE_TAG_EXCEPTION_CAT:
+            is_source_exp_page = True
+            break
+    
+    #sources = re.findall(SOURCE_EXIST_PATTERN,page.text) #probably not needed
 
-    if (REF_TAG not in page.text and not find_template_sources(text)) and not has_no_source_tag:
+    if (not has_sources(text) and not find_template_sources(text) and not is_source_exp_page) and not has_no_source_tag:
         text = NO_SOURCES_ON_PAGE_TAG + '\n' + text
         MESSAGE += ADD_NO_SOURCE_TAG_MESSAGE+SPACE
-    elif (REF_TAG in page.text or find_template_sources(text)) and has_no_source_tag:
+    elif (has_sources(text) or find_template_sources(text) or is_source_exp_page) and has_no_source_tag:
         text = text.replace(NO_SOURCES_ON_PAGE_TAG,'').strip()
         MESSAGE += REMOVE_NO_SOURCE_TAG_MESSAGE+SPACE
     return text,MESSAGE
@@ -432,7 +469,7 @@ def is_image_property_used_in_infobox(page, image_properties):
 
     return False
 
-def add_missing_picture_tag(page,text,MESSAGE):
+def setNoPicturetag(page,text,MESSAGE):
     #print("checking picture tag")
     has_picture = False
     has_picture_missing_tag = False
@@ -609,132 +646,145 @@ def add_smth_not_right_tag(page,text,MESSAGE):
 
 
 ##############################################MAIN PROGRAM##############################################
-site = pywikibot.Site()
+
+#site = pywikibot.Site()
+
+if __name__=="__main__":
+
+    function_map = {
+        'setNoSourceTag': setNoSourceTag,
+        'setNoCategoryTag': setNoCategoryTag,
+        'setNoBacklinkTag': setNoBacklinkTag,
+        'setEmptyParagraphTag': setEmptyParagraphTag,
+        'setNoOutLinkTag': setNoOutLinkTag
+    }
+
+    print_to_console_and_log('Number of passed arguments: '+str(len(argv)))
+    local_args = None
+    if len(argv)>2:
+        if len(argv) > 3:
+            local_args = argv[3:]
 
 
+    JOB_ID = random_n_digit_integer(year_based_integer())
+    print_to_console_and_log('Job ID '+str(JOB_ID))
 
-print_to_console_and_log('Number of passed arguments: '+str(len(argv)))
-local_args = None
-if len(argv)>2:
-    if len(argv) > 3:
-        local_args = argv[3:]
+    if local_args is not None and local_args[0] == '-l':
+        last_run_time = get_last_run_datetime()
+        print_to_console_and_log('Last run time '+str(last_run_time))
+        print_to_console_and_log("running for last changed pages")
+        #load last changed
+        last_changes = site.recentchanges(reverse=True,bot=False,namespaces=[ARTICLE_NAMESPACE],top_only=True,start=last_run_time)
+        #create page pool
+        #NEXT: check other potential last_change tyfpes
 
+        pool = [pywikibot.Page(site, item['title']) for item in last_changes]
 
-JOB_ID = random_n_digit_integer(year_based_integer())
-print_to_console_and_log('Job ID '+str(JOB_ID))
+    else:
 
-if local_args is not None and local_args[0] == '-l':
-    last_run_time = get_last_run_datetime()
-    print_to_console_and_log('Last run time '+str(last_run_time))
-    print_to_console_and_log("running for last changed pages")
-    #load last changed
-    last_changes = site.recentchanges(reverse=True,bot=False,namespaces=[ARTICLE_NAMESPACE],top_only=True,start=last_run_time)
-    #create page pool
-    #NEXT: check other potential last_change tyfpes
+        print_to_console_and_log("Creating working pool")
+        pool = site.allpages(namespace=ARTICLE_NAMESPACE, filterredir=False)
+        #pool = [page for page in site.allpages() if validate_page(page)]
+    #"""
 
-    pool = [pywikibot.Page(site, item['title']) for item in last_changes]
+    #pool = [pywikibot.Page(site, 'جن')]
+    #pool = list(pywikibot.Category(site,'تصنيف:مقالات ناقصينهوم تصاور').articles())
+    #pool = list(pywikibot.Category(site,'تصنيف:مقالات بلا عيون لكلام').articles())
+    #pool = list(pywikibot.Category(site,'تصنيف:أرتيكلات مامربوطينش معا ويكيداطا').articles())
+    #pool = list(pywikibot.Category(site,'تصنيف:مقالات زناقي ماكايخرّجوش').articles())
+    #pool = list(pywikibot.Category(site,'تصنيف:مقالات مقطوعين من شجرة').articles())
 
-else:
+    pool_size = len(list(deepcopy(pool)))
+    print_to_console_and_log('Pool size: '+str(pool_size))
+    i = 1
+    pages_in_log = load_pages_in_log()
 
-    print_to_console_and_log("Creating working pool")
-    pool = site.allpages(namespace=ARTICLE_NAMESPACE, filterredir=False)
-    #pool = [page for page in site.allpages() if validate_page(page)]
-#"""
-
-#pool = [pywikibot.Page(site, 'جن')]
-#pool = list(pywikibot.Category(site,'تصنيف:مقالات ناقصينهوم تصاور').articles())
-#pool = list(pywikibot.Category(site,'تصنيف:مقالات بلا عيون لكلام').articles())
-#pool = list(pywikibot.Category(site,'تصنيف:أرتيكلات مامربوطينش معا ويكيداطا').articles())
-#pool = list(pywikibot.Category(site,'تصنيف:مقالات زناقي ماكايخرّجوش').articles())
-#pool = list(pywikibot.Category(site,'تصنيف:مقالات مقطوعين من شجرة').articles())
-
-pool_size = len(list(deepcopy(pool)))
-print_to_console_and_log('Pool size: '+str(pool_size))
-i = 1
-pages_in_log = load_pages_in_log()
-
-with open(RECENT_LOG_FILE,'a',encoding='utf-8') as f:
-    
-    for page in pool:
-        print_to_console_and_log('*********'+str(i)+'/'+str(pool_size))
+    with open(RECENT_LOG_FILE,'a',encoding='utf-8') as f:
         
-        #print(pages_in_log[:20])
-        
-        
-        if str(page.title()) not in pages_in_log:
-                
-            MESSAGE = ""
-                
-            if validate_page(page) and awbl.validate_page(page,0,"article",2,"GEN"):
-                #print("checking page "+str(i))
+        for page in pool:
+            print_to_console_and_log('*********'+str(i)+'/'+str(pool_size))
+            
+            #print(pages_in_log[:20])
+            
+            
+            if str(page.title()) not in pages_in_log:
                     
-                new_text = page.text
-
-                #Calling "No category tag treatment" subprogram
-                new_text,MESSAGE = setCategoryTag(page,new_text,MESSAGE)
-                   
-                #checking back links
-                new_text,MESSAGE = setOrphanTag(page,new_text,MESSAGE)
-                  
-                #handling no source tag
-                new_text,MESSAGE = setNoSourceTag(page,new_text,MESSAGE)
-
-                #handling empty paragraphs
-                new_text,MESSAGE = setEmptyParagraphTag(page,new_text,MESSAGE)
-
-                #handling missing picture tag
-                new_text,MESSAGE = add_missing_picture_tag(page,new_text,MESSAGE)
-
-                #handling too many problems at once
-                new_text,MESSAGE = add_smth_not_right_tag(page,new_text,MESSAGE)
-
-                """
-                Deactivated for now
-                #handling Wikibidia with SOMETHINGS_NOT_RIGHT_TAG
-                new_text,MESSAGE = add_smth_not_right_tag(page,new_text,MESSAGE)
-                """
-                #handling deadend tag
-                try:
-                    new_text,MESSAGE = setDeadendTag(page,new_text,MESSAGE,site)
-                except Exception:
-                    with open('error_log.txt','w',encoding='utf-8') as er:
-                        er.write(str(page.title())+'\n'+str(sys.exc_info()))
-                        print_to_console_and_log(str(sys.exc_info()))
-
-                #print("testing page text changed")    
-                if new_text != page.text:
-                    #print("page text has been changed")
-                    page.text = new_text
-                    try:
-                        if JOB_ID is not None:
-                            MESSAGE+=" - "+JOB_ID_MSG_PART.format(JOB_ID)
-                        page.save(MESSAGE)
-                    except:
-                        #LOG_PAGE_TITLE = 
-                        #log_error(LOG_PAGE_TITLE,log_message,save_log_message,site)
-                        print(sys.exc_info())
-                        continue
+                MESSAGE = ""
+                    
+                if validate_page(page) and awbl.validate_page(page,0,"article",2,"GEN"):
+                    #print("checking page "+str(i))
                         
-                    #cha = input("continue to next page?\n")
-            """
-            elif page.isRedirectPage():
-                #handling transfer category for redirect pages
-                new_text = page.text
-                new_text,MESSAGE = add_redirect_cat(page,new_text,MESSAGE)
+                    new_text = page.text
 
-                if new_text != page.text:
+                    for func in function_map.keys():
+
+                        #Calling "No category tag treatment" subprogram
+                        #new_text,MESSAGE = setNoCategoryTag(page,new_text,MESSAGE)
+                           
+                        #checking back links
+                        #new_text,MESSAGE = setOrphanTag(page,new_text,MESSAGE)
+                          
+                        #handling no source tag
                         
-                    page.text = new_text
-                    try:
-                        if JOB_ID is not None:
-                            MESSAGE+=" - "+JOB_ID_MSG_PART.format(JOB_ID)
-                        page.save(MESSAGE)
-                    except:
-                        #log_error(LOG_PAGE_TITLE,log_message,save_log_message,site)
-                        continue
-            """
+                        new_text,MESSAGE = function_map[func](page,new_text,MESSAGE)
 
-            f.write(page.title()+'\n')
-        i+=1
+                        #handling empty paragraphs
+                        #new_text,MESSAGE = setEmptyParagraphTag(page,new_text,MESSAGE)
 
-write_run_time()
+                        #handling missing picture tag
+                        #new_text,MESSAGE = add_missing_picture_tag(page,new_text,MESSAGE)
+
+                        #handling too many problems at once
+                        #new_text,MESSAGE = add_smth_not_right_tag(page,new_text,MESSAGE)
+
+                        """
+                        Deactivated for now
+                        #handling Wikipidia with SOMETHINGS_NOT_RIGHT_TAG
+                        new_text,MESSAGE = add_smth_not_right_tag(page,new_text,MESSAGE)
+                        """
+                        #handling deadend tag
+                        """
+                        try:
+                            new_text,MESSAGE = setDeadendTag(page,new_text,MESSAGE,site)
+                        except Exception:
+                            with open('error_log.txt','w',encoding='utf-8') as er:
+                                er.write(str(page.title())+'\n'+str(sys.exc_info()))
+                                print_to_console_and_log(str(sys.exc_info()))
+                        """
+                        #print("testing page text changed")    
+                        if new_text != page.text:
+                            #print("page text has been changed")
+                            page.text = new_text
+                            try:
+                                if JOB_ID is not None:
+                                    MESSAGE+=" - "+JOB_ID_MSG_PART.format(JOB_ID)
+                                page.save(MESSAGE)
+                            except:
+                                #LOG_PAGE_TITLE = 
+                                #log_error(LOG_PAGE_TITLE,log_message,save_log_message,site)
+                                print(sys.exc_info())
+                                continue
+                            
+                        #cha = input("continue to next page?\n")
+                """
+                elif page.isRedirectPage():
+                    #handling transfer category for redirect pages
+                    new_text = page.text
+                    new_text,MESSAGE = add_redirect_cat(page,new_text,MESSAGE)
+
+                    if new_text != page.text:
+                            
+                        page.text = new_text
+                        try:
+                            if JOB_ID is not None:
+                                MESSAGE+=" - "+JOB_ID_MSG_PART.format(JOB_ID)
+                            page.save(MESSAGE)
+                        except:
+                            #log_error(LOG_PAGE_TITLE,log_message,save_log_message,site)
+                            continue
+                """
+
+                f.write(page.title()+'\n')
+            i+=1
+
+    write_run_time()
