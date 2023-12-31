@@ -7,6 +7,13 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+__pycache__/
+password.txt
+user-config.py
+*.ctrl
+*.lwp
+apicache-py3
+*log.txt
 .Python
 build/
 develop-eggs/
@@ -127,3 +134,14 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+#tracking files
+*save_users.txt
+*last_run.txt
+
+Task 7 - stats/T7.7 -google search/api_key.txt
+Task 7 - stats/T7.7 -google search/cx_id.txt
+Task 7 - stats/user_contribs.xlsx
+
+**/archive/
