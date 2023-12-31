@@ -1,26 +1,24 @@
-import pywikibot, os, re
+import pywikibot, os, re, json
 from copy import deepcopy
 
 ARTICLE_NAMESPACE = 0
-
-WIKI_LOG = "خدايمي:DarijaBot/عطاشة 24: معايير لجودة"
-
+batch_filename = "ميدياويكي:عطاشة24.2.json"
 LOCAL_LOG = "task24.2.log"
-
 RECENT_LOG_FILE = "recent_log.txt"
 
-SPECIAL_CAT = "[[تصنيف:مقالة ب جودة مابيهاش (تصنيف د إحصائيات لمينحة د 2023)]]"
 
-ADD_CAT_SAVE_MESSAGE = "تصنيف خاص د لجودة تزاد"
-RMV_CAT_SAVE_MESSAGE = "تصنيف خاص د لجودة تحيد"
+def read_json(site,filename):
+    """
+    Load job parameters from job json page on Mediawiki ns.
+    These parameters are job-specific, and concern the creation
+    of categories, adding those categories in articles, and
+    linking the categories on Wikidata.
+    """
+    batch = pywikibot.Page(site,filename)
 
-NEEDS_PICTURE_TAG_PART = "{{مقالة ناقصينها تصاور"
+    jason = json.loads(batch.text)
 
-NO_SOURCES_ON_PAGE_TAG = "{{مقالة ناقصينها عيون لكلام}}"
-
-NO_CATEGORY_TAG = "{{مقالة ما مصنفاش}}"
-
-need_more_work_tag_part = "{{مقالة خاصها تقاد"
+    return jason
 
 
 def load_pages_in_log():
@@ -40,36 +38,79 @@ def print_to_console_and_log(MSG):
         log.write(MESSAGE)
     print(MSG)
 
-site = pywikibot.Site()
 
-pool = site.allpages(namespace=ARTICLE_NAMESPACE, filterredir=False)
+def validate_page(page,addcat_entry):
+    no_hascats = addcat_entry["NO_HASCATS"]
+    hascats = addcat_entry["HASCATS"]
+    minsize = addcat_entry["MIN_SIZE"]
+    maxsize = addcat_entry["MAX_SIZE"]
+    page_size = len(page.text.encode('utf-8'))
+    ADDCAT = addcat_entry["ADDCAT"]
+    
+    if page_size >= minsize and (maxsize == 0 or page_size < maxsize):
+        for cat in page.categories():
+            if cat.title() in no_hascats:
+                return "RMV"
+        for hascat in hascats:
+            hascat_page = pywikibot.Category(site,hascat)
+            if hascat_page not in page.categories():
+                return "RMV"
+        if "[["+ADDCAT+"]]" not in page.text:
+            return "ADD"
+    else:
+        return "RMV"
 
-pool_size = len(list(deepcopy(pool)))
-print_to_console_and_log('Pool size: '+str(pool_size))
+    return None
 
-i = 1
-pages_in_log = load_pages_in_log()
+if __name__ == "__main__":
 
-with open(RECENT_LOG_FILE,'a',encoding='utf-8') as f:
-    with open("suggestion_list.txt","w",encoding='utf-8') as sug:
-        for page in pool:
-            print_to_console_and_log('*********'+str(i)+'/'+str(pool_size))
-            
-            if str(page.title()) not in pages_in_log:
-                #print(dir(page))
-                try:
-                    if len(page.text.encode('utf-8')) > 3000 and NEEDS_PICTURE_TAG_PART not in page.text \
-                       and NO_SOURCES_ON_PAGE_TAG not in page.text and NO_CATEGORY_TAG not in page.text \
-                       and need_more_work_tag_part not in page.text:
-                        if SPECIAL_CAT not in page.text:
-                            page.text+="\n"+SPECIAL_CAT
-                            page.save(ADD_CAT_SAVE_MESSAGE)
-                    else:
-                        if SPECIAL_CAT in page.text:
-                            page.text+=page.text.replace(SPECIAL_CAT,"").strip()
-                            page.save(RMV_CAT_SAVE_MESSAGE)
-                except pywikibot.exceptions.OtherPageSaveError:
-                    wiki_log_page = pywikibot.Page(site,WIKI_LOG)
-                    wiki_log_page.text += "صّفحة [["+page.title()+"]] ماقدراتش تّصوڤا ب زيادة د تصنيف ديال لمينحة د 2023."
-                f.write(page.title()+'\n')
-            i+=1
+    site = pywikibot.Site()
+    jason = read_json(site,batch_filename)
+
+    WIKI_LOG = jason["WIKI_LOG"]
+
+    #SPECIAL_CAT = "[[تصنيف:مقالات فيها مصدر و 3000 بايت]]"
+
+    ADD_CAT_SAVE_MESSAGE = jason["ADD_CAT_SAVE_MESSAGE"]
+    RMV_CAT_SAVE_MESSAGE = jason["RMV_CAT_SAVE_MESSAGE"]
+
+    ADDCATS = jason["ADDCATS"]
+    
+    pool = site.allpages(namespace=ARTICLE_NAMESPACE, filterredir=False)
+
+    pool_size = len(list(deepcopy(pool)))
+    print_to_console_and_log('Pool size: '+str(pool_size))
+
+    i = 1
+    pages_in_log = load_pages_in_log()
+
+    with open(RECENT_LOG_FILE,'a',encoding='utf-8') as f:
+        with open("suggestion_list.txt","w",encoding='utf-8') as sug:
+            for page in pool:
+                print_to_console_and_log('*********'+str(i)+'/'+str(pool_size))
+                
+                if str(page.title()) not in pages_in_log:
+                    #print(dir(page))
+                    for addcat_entry in ADDCATS:
+                        addcat = addcat_entry["ADDCAT"]
+                        
+                        try:
+                            action = validate_page(page,addcat_entry)
+                            print(action)
+                            
+                            if action is not None:
+                                if action == "RMV":
+                                    if "[["+addcat+"]]" in page.text:
+                                        page.text=page.text.replace("[["+addcat+"]]","").strip()
+                                        page.save(RMV_CAT_SAVE_MESSAGE)
+                                elif action == "ADD":
+                                    page.text+="\n[["+addcat+"]]"
+                                    page.save(ADD_CAT_SAVE_MESSAGE)
+                                    
+                        except pywikibot.exceptions.OtherPageSaveError:
+                            wiki_log_page = pywikibot.Page(site,WIKI_LOG)
+                            wiki_log_page.text += jason["ERROR_MSG"].replace("{title}",page.title())
+                        
+                        f.write(page.title()+'\n')
+                        
+                i+=1
