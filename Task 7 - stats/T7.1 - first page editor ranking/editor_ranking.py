@@ -2,21 +2,34 @@
 import pywikibot
 from copy import deepcopy
 #from sys import argv
-import re, sys, os
+import re, sys, os, json
 from datetime import datetime, timedelta
 #import Levenshtein
 from fuzzywuzzy import fuzz
 
+batch_filename = "ميدياويكي:عطاشة7.1.json"
+
+def read_json(site):
+    batch = pywikibot.Page(site,batch_filename)
+
+    jason = json.loads(batch.text)
+
+    return jason
+
+jason = read_json(site)
+
 #ADMINS = ["Reda benkhadra", "Ideophagous", "Anass Sedrati", "مرشح الإساءة","Mounir Neddi"]
-IGNORE_LIST = ["CommonsDelinker","Poulinets","MediaWiki message delivery"]
+IGNORE_LIST = jason["IGNORE_LIST"]
 
-MAX_TOP_EDITORS = 5
+MAX_TOP_EDITORS = jason["MAX_TOP_EDITORS"]
 
-SAVE_MESSAGE = "أپدييت ل آخر كلاصمة د لكتاتبيا"
+SAVE_MESSAGE = jason["SAVE_MESSAGE"]
 
-NAMESPACES = [0,1,4,5,6,7,10,11,12,13,100,101,118,119,828,829]
+NAMESPACES = jason["NAMESPACES"]
 
-SAVE_PAGE = "قالب:تضمين ديال ترتيب د لكتاتبيا ف صفحة لولة"
+SAVE_PAGE = jason["SAVE_PAGE"]
+
+DAYS_PAST = jason["DAYS_PAST"]
 
 LOG_FILE = "log.txt"
 
@@ -75,10 +88,8 @@ site = pywikibot.Site()
 
 i = 1
 editors = {}
-last_days = 0
 while len(editors) < 5:
-    last_days+=30
-    difference = timedelta(days=last_days)
+    difference = timedelta(days=DAYS_PAST)
     START_TIME = datetime.now() - difference
     last_changes = list(site.recentchanges(reverse=True, bot = False, anon = False, start=START_TIME,changetype="edit",patrolled=True,namespaces=NAMESPACES))
     last_creations = list(site.recentchanges(reverse=True, bot = False, anon = False, start=START_TIME,changetype="new",patrolled=True,namespaces=NAMESPACES))
