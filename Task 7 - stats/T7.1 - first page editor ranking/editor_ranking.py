@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from fuzzywuzzy import fuzz
 
 #ADMINS = ["Reda benkhadra", "Ideophagous", "Anass Sedrati", "مرشح الإساءة","Mounir Neddi"]
-IGNORE_LIST = ["CommonsDelinker","Poulinets"]
+IGNORE_LIST = ["CommonsDelinker","Poulinets","MediaWiki message delivery"]
 
 MAX_TOP_EDITORS = 5
 
@@ -90,7 +90,7 @@ while len(editors) < 5:
         print('*********'+str(i)+'/'+str(edit_size))
         editor = change["user"]
         user_editor = pywikibot.User(site,editor)
-        if 'sysop' not in user_editor.groups() and editor not in admins and editor not in IGNORE_LIST and not user_editor.is_blocked():
+        if 'sysop' not in user_editor.groups() and 'bot' not in user_editor.groups() and editor not in admins and editor not in IGNORE_LIST and not user_editor.is_blocked():
             if editor not in editors.keys():
                 editors[editor] = {"edit_count":0,"size":0,"new_count":0}
             editors[editor]["edit_count"]+=1
@@ -105,6 +105,7 @@ while len(editors) < 5:
         editor = change["user"]
         if editor in editors.keys():
             editors[editor]["new_count"]+=1
+            editors[editor]["size"]+=int(change["newlen"])
         i+=1
             
         
