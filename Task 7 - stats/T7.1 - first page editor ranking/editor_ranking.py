@@ -116,6 +116,7 @@ while len(editors) < 5:
             editors[editor]["new_count"]+=1
             editors[editor]["size"]+=int(change["newlen"])
         i+=1
+    
             
         
 
@@ -148,6 +149,10 @@ template_page.text = HEADER+BODY+"\n\n"+FOOTER
 #print(template_page.text)
 
 template_page.save(SAVE_MESSAGE)
+
+
+print("Editor ranking update finished at: ", datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+
 
 #"""
     
