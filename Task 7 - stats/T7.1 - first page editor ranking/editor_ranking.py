@@ -9,6 +9,8 @@ from fuzzywuzzy import fuzz
 
 batch_filename = "ميدياويكي:عطاشة7.1.json"
 
+site = pywikibot.Site()
+
 def read_json(site):
     batch = pywikibot.Page(site,batch_filename)
 
@@ -69,14 +71,10 @@ BODY = """{{ترتيب د لكتاتبيا د صفحة لولة
 }}"""
 
 
-def get_administrators():
-    """Return a set of Wikipedia administrator usernames."""
-    site = pywikibot.Site()
-    
+def get_administrators(site):
+    """Return a set of Wikipedia administrator usernames."""    
     # Fetch administrators using the allusers API with augroup set to sysop
     return set(user['name'] for user in site.allusers(group='sysop'))
-
-site = pywikibot.Site()
 
 #page = pywikibot.Page(site,title)
 
@@ -93,7 +91,7 @@ while len(editors) < 5:
     START_TIME = datetime.now() - difference
     last_changes = list(site.recentchanges(reverse=True, bot = False, anon = False, start=START_TIME,changetype="edit",patrolled=True,namespaces=NAMESPACES))
     last_creations = list(site.recentchanges(reverse=True, bot = False, anon = False, start=START_TIME,changetype="new",patrolled=True,namespaces=NAMESPACES))
-    admins=get_administrators()
+    admins=get_administrators(site)
     edit_size = len(list(deepcopy(last_changes)))
     print('Edit size: '+str(edit_size))
     
