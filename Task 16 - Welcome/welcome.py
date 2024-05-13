@@ -11,8 +11,13 @@ import traceback
 
 global_param_file = "ميدياويكي:پاراميطرات عامة.json"
 
-print("script path:",os.getcwd())
-local_folder = os.getcwd()
+folder_name = ""
+
+print("local path:",os.getcwd())
+print("script path:",os.path.dirname(__file__))
+print("script name:",os.path.basename(__file__))
+
+local_folder = os.path.dirname(__file__) #os.getcwd()
 
 site = pywikibot.Site()
 
