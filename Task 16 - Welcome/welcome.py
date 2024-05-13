@@ -5,7 +5,7 @@ from copy import deepcopy
 #from params import MONTHS no longer in use
 from datetime import datetime, timezone
 from sys import argv
-import os
+import os, json
 import traceback
 #from arywikibotlib import getOnlyArticles
 
