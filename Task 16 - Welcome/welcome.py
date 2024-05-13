@@ -11,6 +11,9 @@ import traceback
 
 global_param_file = "ميدياويكي:پاراميطرات عامة.json"
 
+print("script path:",os.getcwd())
+local_folder = os.getcwd()
+
 site = pywikibot.Site()
 
 def read_json(site):
@@ -34,7 +37,9 @@ IP_SAVE_MESSAGE = "ترحيب ب أيپي"
 
 ARTICLE_NAMESPACE = 0
 
-LAST_RUN_FILE = "last_run.txt"
+LAST_RUN_FILE = local_folder+"/last_run.txt"
+
+USERS_FILE = local_folder+"/save_users.txt"
 
 DATE_FORMAT = "%Y-%m-%d %H:%M"
 
@@ -252,11 +257,11 @@ if __name__ == '__main__':
         write_run_time()
 
     
-    with open("save_users.txt","r",encoding="utf-8") as sv:
+    with open(USERS_FILE,"r",encoding="utf-8") as sv:
         treated_users = sv.read().split()
 
     new_users = get_new_users(site, limit=NEWUSER_COUNT_LIMIT)
-    with open("save_users.txt","a",encoding="utf-8") as sv:
+    with open(USERS_FILE,"a",encoding="utf-8") as sv:
         user_count = len(list(new_users))
         print("User count: "+str(user_count))
         i=1
