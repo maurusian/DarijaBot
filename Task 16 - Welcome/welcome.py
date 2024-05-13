@@ -2,13 +2,27 @@ import pywikibot
 from pywikibot import Family
 import random
 from copy import deepcopy
-from params import MONTHS
+#from params import MONTHS no longer in use
 from datetime import datetime, timezone
 from sys import argv
 import os
 import traceback
 #from arywikibotlib import getOnlyArticles
 
+global_param_file = "ميدياويكي:پاراميطرات عامة.json"
+
+site = pywikibot.Site()
+
+def read_json(site):
+    json_params = pywikibot.Page(site,global_param_file)
+
+    jason = json.loads(json_params.text)
+
+    return jason
+
+global_param_json = read_json(site)
+
+MONTHS = global_param_json["MONTHS"]
 
 ADMIN_LIST = ["Ideophagous","Reda benkhadra","Anass Sedrati","Mounir Neddi","Mico2022"]
 
@@ -164,7 +178,7 @@ if __name__ == '__main__':
 
     #local_args = 0 
     if local_args is not None:
-        site = pywikibot.Site()
+        
         namespaces = []
         pools = []
         if local_args[0] == '-l':
