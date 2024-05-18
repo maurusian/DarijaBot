@@ -32,7 +32,7 @@ global_param_json = read_json(site)
 
 MONTHS = global_param_json["MONTHS"]
 
-ADMIN_LIST = ["Ideophagous","Reda benkhadra","Anass Sedrati","Mounir Neddi","Mico2022"]
+ADMIN_LIST = ["Ideophagous","Reda benkhadra","Anass Sedrati"]
 
 ACCT_WELCOME_TAG = "{{ترحيب جديد|{admin}|sign=[[مستخدم:{admin}|{admin}]] ([[نقاش المستخدم:{admin}|نقاش]]){time}}}"
 IP_WELCOME_TAG = "{{ترحيب أي پي|{admin}|sign=[[مستخدم:{admin}|{admin}]] ([[نقاش المستخدم:{admin}|نقاش]]){time}}}"
