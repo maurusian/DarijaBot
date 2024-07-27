@@ -1,9 +1,24 @@
 import pywikibot
-import re
+import re, json
 from datetime import datetime
 import traceback
 
-IGNORE_LIST_PAGE_TITLE = "ويكيپيديا:مسابقة ويكيپيديا ب الداريجة يوليوز 2024/كتاتبيا مامشاركينش"
+batch_filename = "ميدياويكي:Currentcontest.json"
+
+site = pywikibot.Site()
+
+def read_json(site):
+    batch = pywikibot.Page(site,batch_filename)
+
+    jason = json.loads(batch.text)
+
+    return jason
+
+jason = read_json(site)
+
+IGNORE_LIST_PAGE_TITLE = jason["IGNORE_LIST_PAGE_TITLE"] #"ويكيپيديا:مسابقة ويكيپيديا ب الداريجة يوليوز 2024/كتاتبيا مامشاركينش"
+start_date = jason["START_DATE"] #'2024-07-20T00:00:00Z'
+end_date = jason["END_DATE"] #'2024-07-27T23:59:59Z'
 
 def load_user_list_from_ignore_page(site):
     # Set up the site and the page
@@ -117,7 +132,7 @@ def process_filtered_changes(site,filtered_changes):
                     #page = pywikibot.Page(site, get_target_page_title(site,title))
                     item = pywikibot.ItemPage.fromPage(page)
                     qid = item.id
-                    print(qid)
+                    #print(qid)
                 else:
                     qid = None
             except Exception as e:
@@ -170,6 +185,7 @@ def write_user_statistics_to_page(site, page_title, user_stats, user_points):
     :param user_points: A dictionary containing user points.
     """
     # Headers (can be translated)
+    header_count = "نمرة"
     header_user = "مشارك(ة)"
     header_edit_count = "شحال د التبديلات"
     header_edit_size = "مقدار د التبديلات (بايت)"
@@ -183,6 +199,7 @@ def write_user_statistics_to_page(site, page_title, user_stats, user_points):
         f'<div style="text-align: center;">\n'
         f'{{| class="wikitable sortable" style="margin: auto;"\n'
         f'|-\n'
+        f'! {header_count}\n'
         f'! {header_user}\n'
         f'! {header_edit_count}\n'
         f'! {header_edit_size}\n'
@@ -190,6 +207,7 @@ def write_user_statistics_to_page(site, page_title, user_stats, user_points):
     )
 
     # Add the user statistics to the table
+    i=1
     for user in sorted_users:
         stats = user_stats[user]
         edit_count = stats['total_edit_count']
@@ -197,12 +215,14 @@ def write_user_statistics_to_page(site, page_title, user_stats, user_points):
         points = user_points.get(user, 0)
         
         table_content += '|-\n'
+        table_content += f'| {i}\n'
         table_content += '| {{خ|{user}|separator=pipe}}\n'.replace("{user}",user)
         table_content += (
             f'| {edit_count}\n'
             f'| {edit_size}\n'
             f'| {points}\n'
         )
+        i+=1
 
     # Close the table and div
     table_content += '\n|}\n</div>'
@@ -210,15 +230,14 @@ def write_user_statistics_to_page(site, page_title, user_stats, user_points):
     # Write the content to the specified page
     page = pywikibot.Page(site, page_title)
     page.text = table_content
-    page.save(f"Updating user statistics on {page_title}")
-
+    page.save(f"أپدييت ل لإحصائيات")
+    
 
 
 if __name__=="__main__":
     qids = load_qids_from_file()
-    start_date = '2024-07-20T00:00:00Z'
-    end_date = '2024-07-27T23:59:59Z'
-    site = pywikibot.Site('ary', 'wikipedia')
+    
+    #site = pywikibot.Site('ary', 'wikipedia')
     #print(qids)
     #users = load_user_list_from_ignore_page()
     #print(users)
@@ -229,5 +248,5 @@ if __name__=="__main__":
     user_points = calculate_user_points(user_stats, qids)
     #print(user_points)
 
-    page_title = "ويكيپيديا:مسابقة ويكيپيديا ب الداريجة يوليوز 2024/طابلو د لإحصائيات"
+    page_title = jason["STATS_PAGE_TITLE"] #"ويكيپيديا:مسابقة ويكيپيديا ب الداريجة يوليوز 2024/طابلو د لإحصائيات"
     write_user_statistics_to_page(site, page_title, user_stats, user_points)
