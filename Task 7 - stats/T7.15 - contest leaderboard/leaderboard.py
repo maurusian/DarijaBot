@@ -1,11 +1,15 @@
 import pywikibot
-import re, json
+import re, json, os
 from datetime import datetime
 import traceback
 
 batch_filename = "ميدياويكي:Currentcontest.json"
 
 site = pywikibot.Site()
+
+local_folder = os.path.dirname(__file__)
+
+QIDS_FILE = local_folder+"/qids.txt"
 
 def read_json(site):
     batch = pywikibot.Page(site,batch_filename)
@@ -36,7 +40,7 @@ def load_user_list_from_ignore_page(site):
     return user_list
 
 def load_qids_from_file():
-    filename = 'qids.txt'
+    filename = QIDS_FILE
     qids = []
     try:
         with open(filename, 'r') as file:
