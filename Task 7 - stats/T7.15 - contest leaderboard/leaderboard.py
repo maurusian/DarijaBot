@@ -23,6 +23,10 @@ jason = read_json(site)
 IGNORE_LIST_PAGE_TITLE = jason["IGNORE_LIST_PAGE_TITLE"] #"ويكيپيديا:مسابقة ويكيپيديا ب الداريجة يوليوز 2024/كتاتبيا مامشاركينش"
 start_date = jason["START_DATE"] #'2024-07-20T00:00:00Z'
 end_date = jason["END_DATE"] #'2024-07-27T23:59:59Z'
+quality_points = {}
+
+if "QUALITY_POINTS" in jason.keys():
+    quality_points = jason["QUALITY_POINTS"]
 
 def load_user_list_from_ignore_page(site):
     # Set up the site and the page
@@ -69,6 +73,8 @@ def get_recent_changes(site,start_date, end_date):
     filtered_changes = [
         change for change in recent_changes 
         if change['user'] not in ignore_users
+        and 'vanished user' not in str(change['user']).lower()
+        and 'renamed user' not in str(change['user']).lower()
         and not pywikibot.User(site, change['user']).isAnonymous()
         and 'mw-reverted' not in change['tags']
         and 'mw-manual-revert' not in change['tags']
@@ -174,6 +180,9 @@ def calculate_user_points(user_stats, qids):
         
         # 10 points for each 1000 bytes of total edit size (rounded down)
         points += 10 * (max(stats['total_edit_size'],0) // 1000)
+
+        if user in quality_points.keys():
+            points += quality_points[user]
         
         user_points[user] = points
     
