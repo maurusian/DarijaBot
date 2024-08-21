@@ -24,6 +24,7 @@ IGNORE_LIST_PAGE_TITLE = jason["IGNORE_LIST_PAGE_TITLE"] #"ويكيپيديا:م
 start_date = jason["START_DATE"] #'2024-07-20T00:00:00Z'
 end_date = jason["END_DATE"] #'2024-07-27T23:59:59Z'
 ARTICLE_CAT = jason["ARTICLE_CAT"]
+GENERAL_CAT = jason["GENERAL_CAT"]
 quality_points = {}
 
 if "QUALITY_POINTS" in jason.keys():
@@ -242,7 +243,7 @@ def write_user_statistics_to_page(site, page_title, user_stats, user_points):
         i+=1
 
     # Close the table and div
-    table_content += '\n|}\n</div>'
+    table_content += '\n|}\n</div>\n[['+GENERAL_CAT+']]'
 
     # Write the content to the specified page
     page = pywikibot.Page(site, page_title)
@@ -253,7 +254,7 @@ def update_category(user_stats):
     category_name = ARTICLE_CAT
     qid_list = set()
     for user in user_stats.keys():
-        qid_list = qid_list.union(user_stats[user])
+        qid_list = qid_list.union(user_stats[user]['articles'])
         
     site = pywikibot.Site()  # This will automatically use the language set in user-config.py
     repo = site.data_repository()
