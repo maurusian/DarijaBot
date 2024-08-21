@@ -255,7 +255,7 @@ def update_category(user_stats):
     qid_list = set()
     for user in user_stats.keys():
         qid_list = qid_list.union(user_stats[user]['articles'])
-        
+    print("qid_list: ", qid_list) #debugging
     site = pywikibot.Site()  # This will automatically use the language set in user-config.py
     repo = site.data_repository()
     category = pywikibot.Category(site, f'{category_name}')
@@ -271,11 +271,14 @@ def update_category(user_stats):
         item.get()  # Fetch the item details from Wikidata
 
         # Get the Wikipedia page linked to this QID
-        lang = site.lang  # Use the language code from the user's site configuration
-        if lang in item.sitelinks:
-            page = pywikibot.Page(site, item.sitelinks[lang].title)
+        langwiki = site.lang+'wiki'  # Use the language code from the user's site configuration
+        print("langwiki: ",langwiki)
+        print("item.sitelinks: ",list(item.sitelinks))
+        if langwiki in item.sitelinks:
+            print(item.sitelinks[langwiki].title)
+            page = pywikibot.Page(site, item.sitelinks[langwiki].title)
             new_members.add(page.title())
-
+            print("adding cat to ",page.title())
             # Add category to this page if not already present
             if category not in page.categories():
                 page.text += f'\n[[{category_name}]]'
