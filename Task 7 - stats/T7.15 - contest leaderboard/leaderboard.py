@@ -23,6 +23,7 @@ jason = read_json(site)
 IGNORE_LIST_PAGE_TITLE = jason["IGNORE_LIST_PAGE_TITLE"] #"ويكيپيديا:مسابقة ويكيپيديا ب الداريجة يوليوز 2024/كتاتبيا مامشاركينش"
 start_date = jason["START_DATE"] #'2024-07-20T00:00:00Z'
 end_date = jason["END_DATE"] #'2024-07-27T23:59:59Z'
+ARTICLE_CAT = jason["ARTICLE_CAT"]
 quality_points = {}
 
 if "QUALITY_POINTS" in jason.keys():
@@ -35,6 +36,9 @@ def load_user_list_from_ignore_page(site):
 
     # Get the page content
     text = page.get()
+
+    # Remove category for processing
+    text = text.replace(f"[[{ARTICLE_CAT}]]","")
 
     # Find list items and extract usernames, removing the leading *
     user_list_pattern = r'\* *(.+)'
