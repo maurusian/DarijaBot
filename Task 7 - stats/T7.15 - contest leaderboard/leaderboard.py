@@ -249,7 +249,44 @@ def write_user_statistics_to_page(site, page_title, user_stats, user_points):
     page.text = table_content
     page.save(f"أپدييت ل لإحصائيات")
     
+def update_category(user_stats):
+    category_name = ARTICLE_CAT
+    qid_list = set()
+    for user in user_stats.keys():
+        qid_list = qid_list.union(user_stats[user])
+        
+    site = pywikibot.Site()  # This will automatically use the language set in user-config.py
+    repo = site.data_repository()
+    category = pywikibot.Category(site, f'{category_name}')
 
+    # Create a set of current members of the category
+    current_members = set(page.title() for page in category.articles())
+
+    # Create a set of titles for the QIDs in the list
+    new_members = set()
+
+    for qid in qid_list:
+        item = pywikibot.ItemPage(repo, qid)
+        item.get()  # Fetch the item details from Wikidata
+
+        # Get the Wikipedia page linked to this QID
+        lang = site.lang  # Use the language code from the user's site configuration
+        if lang in item.sitelinks:
+            page = pywikibot.Page(site, item.sitelinks[lang].title)
+            new_members.add(page.title())
+
+            # Add category to this page if not already present
+            if category not in page.categories():
+                page.text += f'\n[[{category_name}]]'
+                page.save(summary=f'تزاد تصنيف: {category_name}')
+
+    # Remove category from pages not in the QID list
+    for member_title in current_members - new_members:
+        page = pywikibot.Page(site, member_title)
+        text = page.text
+        if f'[[{category_name}]]' in text:
+            page.text = text.replace(f'[[{category_name}]]', '')
+            page.save(summary=f'تحيّد تصنيف: {category_name}')
 
 if __name__=="__main__":
     qids = load_qids_from_file()
@@ -267,3 +304,6 @@ if __name__=="__main__":
 
     page_title = jason["STATS_PAGE_TITLE"] #"ويكيپيديا:مسابقة ويكيپيديا ب الداريجة يوليوز 2024/طابلو د لإحصائيات"
     write_user_statistics_to_page(site, page_title, user_stats, user_points)
+
+    # Update article category for tracking
+    update_category(user_stats)
