@@ -39,7 +39,7 @@ def load_user_list_from_ignore_page(site):
     text = page.get()
 
     # Remove category for processing
-    text = text.replace(f"[[{ARTICLE_CAT}]]","")
+    text = text.replace(f"[[{GENERAL_CAT}]]","")
 
     # Find list items and extract usernames, removing the leading *
     user_list_pattern = r'\* *(.+)'
@@ -170,10 +170,8 @@ def calculate_user_points(user_stats, qids):
     
     :param user_stats: A dictionary containing user statistics.
     :param qids: A list of QIDs loaded from qids.txt.
-    :return: A dictionary with the total points for each user.
+    :return: None. Updates the user_stats dictionary with the total points for each user.
     """
-    user_points = {}
-
     for user, stats in user_stats.items():
         points = 0
         
@@ -184,16 +182,17 @@ def calculate_user_points(user_stats, qids):
         points += 5 * sum(1 for qid in stats['articles'] if qid in qids)
         
         # 10 points for each 1000 bytes of total edit size (rounded down)
-        points += 10 * (max(stats['total_edit_size'],0) // 1000)
+        points += 10 * (max(stats['total_edit_size'], 0) // 1000)
 
         if user in quality_points.keys():
             points += quality_points[user]
         
-        user_points[user] = points
+        # Update the user_stats dictionary with the calculated points
+        user_stats[user]['points'] = points
     
-    return user_points
+    return user_stats
 
-def write_user_statistics_to_page(site, page_title, user_stats, user_points):
+def write_user_statistics_to_page(site, page_title, user_stats):
     """
     Write user statistics to a specified page on the site.
     
@@ -210,7 +209,17 @@ def write_user_statistics_to_page(site, page_title, user_stats, user_points):
     header_points = "نقاط"
 
     # Sort users by points in descending order
-    sorted_users = sorted(user_stats.keys(), key=lambda user: user_points.get(user, 0), reverse=True)
+    sorted_users = sorted(
+    user_stats.keys(),
+    key=lambda user: (
+        user_stats[user].get('points', 0), 
+        user_stats[user].get('total_edit_size', 0), 
+        user_stats[user].get('total_edit_count', 0),
+        user
+    ),
+    reverse=True
+    )
+
 
     # Start creating the table
     table_content = (
@@ -230,7 +239,7 @@ def write_user_statistics_to_page(site, page_title, user_stats, user_points):
         stats = user_stats[user]
         edit_count = stats['total_edit_count']
         edit_size = stats['total_edit_size']
-        points = user_points.get(user, 0)
+        points = stats['points']
         
         table_content += '|-\n'
         table_content += f'| {i}\n'
@@ -303,11 +312,15 @@ if __name__=="__main__":
     user_stats = process_filtered_changes(site,filtered_changes)
 
     #print(user_stats)
-    user_points = calculate_user_points(user_stats, qids)
+    user_stats = calculate_user_points(user_stats, qids)
     #print(user_points)
 
     page_title = jason["STATS_PAGE_TITLE"] #"ويكيپيديا:مسابقة ويكيپيديا ب الداريجة يوليوز 2024/طابلو د لإحصائيات"
-    write_user_statistics_to_page(site, page_title, user_stats, user_points)
+    write_user_statistics_to_page(site, page_title, user_stats)
 
     # Update article category for tracking
     update_category(user_stats)
+    """
+    site = pywikibot.Site('ary', 'wikipedia')
+    print(load_user_list_from_ignore_page(site))
+    """
