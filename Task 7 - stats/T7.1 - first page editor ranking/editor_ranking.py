@@ -70,6 +70,8 @@ BODY = """{{ترتيب د لكتاتبيا د صفحة لولة
 |كاراكطيرات5={chars5}
 }}"""
 
+MAX_INTERVAL_DAYS = 30
+
 
 def get_administrators(site):
     """Return a set of Wikipedia administrator usernames."""    
@@ -84,40 +86,58 @@ def get_administrators(site):
 #print(help(site.recentchanges))
 
 
-i = 1
 editors = {}
+END_TIME = datetime.now()
+START_TIME = END_TIME - timedelta(days=DAYS_PAST)
+
+print(f"DAYS_PAST: {DAYS_PAST}")
+
 while len(editors) < 5:
-    difference = timedelta(days=DAYS_PAST)
-    START_TIME = datetime.now() - difference
-    last_changes = list(site.recentchanges(reverse=True, bot = False, anon = False, start=START_TIME,changetype="edit",patrolled=True,namespaces=NAMESPACES))
-    last_creations = list(site.recentchanges(reverse=True, bot = False, anon = False, start=START_TIME,changetype="new",patrolled=True,namespaces=NAMESPACES))
+    #difference = timedelta(days=DAYS_PAST)
+    #print(DAYS_PAST)
+    #START_TIME = datetime.now() - difference
+    #print(START_TIME)
     admins=get_administrators(site)
-    edit_size = len(list(deepcopy(last_changes)))
-    print('Edit size: '+str(edit_size))
-    
-    for change in last_changes:
-        print('*********'+str(i)+'/'+str(edit_size))
-        editor = change["user"]
-        user_editor = pywikibot.User(site,editor)
-        if 'sysop' not in user_editor.groups() and 'bot' not in user_editor.groups() and editor not in admins and editor not in IGNORE_LIST and not user_editor.is_blocked():
-            if editor not in editors.keys():
-                editors[editor] = {"edit_count":0,"size":0,"new_count":0}
-            editors[editor]["edit_count"]+=1
-            editors[editor]["size"]+=int(change["newlen"])-int(change["oldlen"])
-        i+=1
-    new_size = len(list(deepcopy(last_creations)))
-    i=1
-    print("processing new page creations")
-    print('New size: '+str(new_size))
-    for change in last_creations:
-        print('*********'+str(i)+'/'+str(new_size))
-        editor = change["user"]
-        if editor in editors.keys():
-            editors[editor]["new_count"]+=1
-            editors[editor]["size"]+=int(change["newlen"])
-        i+=1
-    
+    batch_count = DAYS_PAST // MAX_INTERVAL_DAYS
+    if DAYS_PAST % MAX_INTERVAL_DAYS != 0:
+        batch_count+=1
+    for i in range(1, batch_count+1):
+        END_TIME = START_TIME + timedelta(days=MAX_INTERVAL_DAYS)
+        print(f"START_TIME: {START_TIME}")
+        print(f"END_TIME: {END_TIME}")
+        interval_last_changes = list(site.recentchanges(reverse=True, bot = False, anon = False, start=START_TIME,end=END_TIME,changetype="edit",patrolled=True,namespaces=NAMESPACES))
+        interval_last_creations = list(site.recentchanges(reverse=True, bot = False, anon = False, start=START_TIME,end=END_TIME,changetype="new",patrolled=True,namespaces=NAMESPACES))
+
+        edit_size = len(list(deepcopy(interval_last_changes)))
+        print(f"Edit size for edit batch {i} out of {batch_count}: {edit_size}")
+
+        j = 1
+        for change in interval_last_changes:
+            print('*********'+str(j)+'/'+str(edit_size))
+            editor = change["user"]
+            user_editor = pywikibot.User(site,editor)
+            if 'sysop' not in user_editor.groups() and 'bot' not in user_editor.groups() and editor not in admins and editor not in IGNORE_LIST and not user_editor.is_blocked():
+                if editor not in editors.keys():
+                    editors[editor] = {"edit_count":0,"size":0,"new_count":0}
+                editors[editor]["edit_count"]+=1
+                editors[editor]["size"]+=int(change["newlen"])-int(change["oldlen"])
+            j+=1
             
+        new_size = len(list(deepcopy(interval_last_creations)))
+        j = 1
+        print("processing new page creations")
+        print('New size: '+str(new_size))
+        for change in interval_last_creations:
+            print('*********'+str(i)+'/'+str(new_size))
+            editor = change["user"]
+            if editor in editors.keys():
+                editors[editor]["new_count"]+=1
+                editors[editor]["edit_count"]+=1
+                editors[editor]["size"]+=int(change["newlen"])
+            j+=1
+
+        START_TIME = END_TIME
+                
         
 
     print("Editors count: "+str(len(editors)))
