@@ -87,6 +87,7 @@ def fetch_recent_edits(admins):
 
 site = pywikibot.Site()
 
+"""
 admins = get_administrators()
 print(admins)
 
@@ -94,3 +95,10 @@ now = datetime.utcnow()
 start_date = now - timedelta(days=1)  # The more recent date
 end_date = now   # The older date
 print()
+"""
+
+username = "TohaomgBot"
+
+user = pywikibot.User(site,username)
+
+print(user.groups())
