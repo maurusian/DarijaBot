@@ -119,6 +119,38 @@ def get_target_page_title(site,page_title):
     
     return None
 
+def get_all_users_change_size_for_page(title):
+    page = pywikibot.Page(site, title)
+
+    total_change_size = 0
+
+    start = datetime.strptime(start_date, "%Y-%m-%dT%H:%M:%SZ")
+    end = datetime.strptime(end_date, "%Y-%m-%dT%H:%M:%SZ")
+
+    try:
+        ## Fetch all revisions for the page
+        revisions = list(page.revisions(reverse=True))  # reverse=True ensures oldest to newest
+
+        # Iterate over the revisions and calculate changes in the specified date range
+        for idx, revision in enumerate(revisions):
+            revision_time = revision.timestamp  # Timestamp of the revision
+
+            # Filter revisions by the given date range
+            if start <= revision_time <= end:
+                if idx > 0:  # If there's a previous revision
+                    prev_revision = revisions[idx - 1]
+                    size_change = revision.size - prev_revision.size
+                else:  # If it's the first revision
+                    size_change = revision.size
+
+                # Add the size change to the total
+                total_change_size += size_change
+    except pywikibot.exceptions.NoPageError:
+        print(f"Page {title} doesn't exist.")
+        total_change_size = 0
+    print('Total revision size for all users, for ',title,' : ',total_change_size)
+    return total_change_size
+
 def process_filtered_changes(site,filtered_changes):
     # Set up the site and repository
     
@@ -126,37 +158,55 @@ def process_filtered_changes(site,filtered_changes):
     
     user_stats = {}
 
+    user_edit_size_by_page = {} #temporary storage of values to enable the use of min
+
     for change in filtered_changes:
         user = change['user']
         title = change['title']
+        change_type = change['type']
+        if user not in user_edit_size_by_page.keys():
+            user_edit_size_by_page[user] = {}
+        if title not in user_edit_size_by_page[user].keys():
+            user_edit_size_by_page[user][title] = 0
+        
         #print(title)
         #tags = change['tags']
         #print(tags)
         namespace = change['ns']
-        size = change['newlen'] - change['oldlen']
-        
         if user not in user_stats.keys():
             user_stats[user] = {'articles': set(), 'total_edit_count': 0, 'total_edit_size': 0}
         
-        user_stats[user]['total_edit_count'] += 1
+        print(title,': ',change_type,': ',change['newlen'] - change['oldlen'])
+        if change_type in ['edit','new']:
+            user_stats[user]['total_edit_count'] += 1
+            
+            if namespace == 0:  # Only consider changes in the main namespace for articles and edit size
+                try:
+                    page = pywikibot.Page(site, get_target_page_title(site,title))
+                    
+                    if page is not None:
+                        #page = pywikibot.Page(site, get_target_page_title(site,title))
+                        item = pywikibot.ItemPage.fromPage(page)
+                        qid = item.id
+                        #print(qid)
+                    else:
+                        qid = None
+                except Exception as e:
+                    print(f"Error processing page {title}: {e}")
+                    traceback.print_exc()
+                    
+                user_stats[user]['articles'].add(qid)
+                user_edit_size_by_page[user][title] += change['newlen'] - change['oldlen'] #size of the edit
+                #user_stats[user]['total_edit_size'] += size
 
-        if namespace == 0:  # Only consider changes in the main namespace for articles and edit size
-            try:
-                page = pywikibot.Page(site, get_target_page_title(site,title)) 
-                if page is not None:
-                    #page = pywikibot.Page(site, get_target_page_title(site,title))
-                    item = pywikibot.ItemPage.fromPage(page)
-                    qid = item.id
-                    #print(qid)
-                else:
-                    qid = None
-            except Exception as e:
-                print(f"Error processing page {title}: {e}")
-                traceback.print_exc()
-                
-            user_stats[user]['articles'].add(qid)
-            user_stats[user]['total_edit_size'] += size
-
+    #cap by maximum amount of bytes in the article and sum
+    print("user_edit_size_by_page: ",user_edit_size_by_page)
+    for user,article_sizes in user_edit_size_by_page.items():
+        for title, size in article_sizes.items():
+            all_users_changes = get_all_users_change_size_for_page(title)
+            print(f"comparing {size} to {all_users_changes}")
+            user_stats[user]['total_edit_size'] += min(size,all_users_changes)
+        
     # Convert sets to lists and prepare final dictionary
     for user in user_stats:
         user_stats[user]['articles'] = list(user_stats[user]['articles'])
