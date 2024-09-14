@@ -2,8 +2,17 @@ import pywikibot
 from datetime import datetime
 import os
 
-IGNORE_LIST_FILE = "ignore_list.txt"
+print("local path:",os.getcwd())
+print("script path:",os.path.dirname(__file__))
+print("script name:",os.path.basename(__file__))
+
+local_folder = os.path.dirname(__file__) #os.getcwd()
+
+IGNORE_LIST_FILE = local_folder+"/ignore_list.txt"
 PAGE_TO_UPDATE = "موضيل:مساهمات ديال لكتاتبيا الجداد"
+EDIT_SUMMARY = "أپدييت ديال لإحصائيات"
+HEADER = "<noinclude>{{پاج كيعمرها بوت2}}</noinclude>"
+FOOTER = "<noinclude>{{شرح}}</noinclude>"
 
 def load_ignore_list():
     """Load the ignore list from file or create an empty one if the file doesn't exist."""
@@ -54,8 +63,8 @@ def get_new_user_contributions(site, ignore_list):
 def update_wiki_page(site, page_title, total_contributions):
     """Update the wiki page with the total contributions count."""
     page = pywikibot.Page(site, page_title)
-    page.text = "<noinclude>{{پاج كيعمرها بوت2}}</noinclude>"+str(total_contributions)+"<noinclude>{{شرح}}</noinclude>"
-    page.save(summary="أپدييت ديال لإحصائيات")
+    page.text = HEADER+str(total_contributions)+FOOTER
+    page.save(summary=EDIT_SUMMARY)
 
 def main():
     # Load ignore list
