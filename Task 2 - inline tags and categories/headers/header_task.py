@@ -33,6 +33,7 @@ ARTICLE_NAMESPACE = 0
 IGNORE_LIST = ['الصفحة اللولا'] #list of pages to be completely ignored by the bot, for all tasks
 PAGE_TYPE_IGNORE_LIST = ['موضيل','تصنيف','ويكيپيديا','إدارة','قيسارية','لمداكرة د قيسارية','خدايمي','لمداكرة د لخدايمي','لمداكرة د ويكيپيديا','مداكرة','لمداكرة د تصنيف','لمداكرة د لموضيل'] #list of page types to be completely ignored by the bot, for all tasks
 DISAMB_TAG = u"{{توضيح}}" #tag for disambiguation page
+SPACE = " "
 
 def validate_page(page):
     """
