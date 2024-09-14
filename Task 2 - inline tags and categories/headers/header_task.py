@@ -3,25 +3,31 @@ import arywikibotlib        as awbl
 from   arywikibotlib        import isHuman, hasPropertyXValue
 
 import pywikibot
-from pywikibot import textlib
+from   pywikibot            import textlib
 from   pywikibot.exceptions import NoPageError
 
-import re, sys, os, random, json
+import re, sys, os, random, json, time
 from   copy                 import deepcopy
 from   datetime             import datetime, timezone
 from   sys                  import argv
 
+print("local path:",os.getcwd())
+print("script path:",os.path.dirname(__file__))
+print("script name:",os.path.basename(__file__))
+
+local_folder = os.path.dirname(__file__) #os.getcwd()
+
 MAIN_PARAM_PAGE = "ميدياويكي:عطاشة2.1.json"
 
-LAST_RUN_FILE = "last_run.txt"
+LAST_RUN_FILE = local_folder+"/last_run.txt"
 
 DATE_FORMAT = "%Y-%m-%d %H:%M"
 
-RECENT_LOG_FILE = "recent_log.txt"
+RECENT_LOG_FILE = local_folder+"/recent_log.txt"
 
 JOB_ID_MSG_PART = "نمرة د دّوزة {}"
 
-LOCAL_LOG = "task2.log"
+LOCAL_LOG = local_folder+"/task2.log"
 
 
 ################## Get parameters ####################
@@ -39,6 +45,8 @@ def get_main_task_params():
 site = pywikibot.Site()
 
 pjason = get_main_task_params()
+
+RECENT_LOG_RETENTION_DAYS = pjason["RECENT_LOG_RETENTION_DAYS"]
 
 ################ End get parameters ##################
 
@@ -90,6 +98,24 @@ def get_final_target(page):
             with open(LOCAL_LOG,'a') as log:
                 log.write("Error: "+str(sys.exc_info())+'\n')
     return temp
+
+
+def delete_recent_log_if_old():
+    # Get the current time
+    current_time = time.time()
+    
+    # Get the file's last modification time
+    file_mod_time = os.path.getmtime(RECENT_LOG_FILE)
+    
+    # Calculate the file age in days
+    file_age_days = (current_time - file_mod_time) / (24 * 3600)
+    
+    # Check if the file is older than the given number of days
+    if file_age_days > RECENT_LOG_RETENTION_DAYS:
+        os.remove(RECENT_LOG_FILE)
+        print(f"{file_path} deleted.")
+    else:
+        print(f"{file_path} is not old enough to delete.")
         
 
 #List of subprograms
@@ -127,25 +153,25 @@ def has_infobox_tag(page):
         return True
     return False
 
-def get_commons_category(page):
+def get_commons_category(text):
     COMMONS_CAT_TAG_PART = "{{Commons category|"
 
-    if COMMONS_CAT_TAG_PART in page.text:
-        page_parts = page.text.split(COMMONS_CAT_TAG_PART)
-        commons_cat = page_parts[-1].split('}}')[0]
+    if COMMONS_CAT_TAG_PART in text:
+        text_parts = text.split(COMMONS_CAT_TAG_PART)
+        commons_cat = text_parts[-1].split('}}')[0]
         return commons_cat
     else:
         return None
 
-def get_infobox_template_page(page):
+def get_infobox_template_page(text):
     regexp = re.compile(INFOBOX_TAG_PATTERN)
-    m = regexp.search(page.text)
+    m = regexp.search(text)
     if m:
         #return m.group(0)
         return TEMPLATE_NS+":"+str(m.group(0)).split("|")[0].replace("{","").replace("}","")
     else:
         regexp = re.compile(INFOBOX_TAG_PATTERN2)
-        m = regexp.search(page.text)
+        m = regexp.search(text)
         if m:
             #return m.group(0)
             return TEMPLATE_NS+":"+str(m.group(0)).split("|")[0].replace("{","").replace("}","")
@@ -180,12 +206,12 @@ def get_final_redirect_target(page):
 
 ##############################################No category tag treatment##############################################
 ###Tags
-NO_CATEGORY_TAG = "{{مقالة ما مصنفاش}}"
+NO_CATEGORY_TAG = pjason["JOBS"]["NoCategoryTag"]["TAGCODE"] #"{{مقالة ما مصنفاش}}"
 CATEGORY_ISSUE_RGX = "{{مقالة خاصها تقاد\|.+مامصنفاش.+}}"
 
 ###Save messages
-ADD_NO_CAT_TAG_MESSAGE = 'طاڭ ديال "مقالة مامصنفاش" تزاد.'
-REMOVE_NO_CAT_TAG_MESSAGE = 'طاڭ ديال "مقالة مامصنفاش" تحيّد.'
+ADD_NO_CAT_TAG_MESSAGE = pjason["JOBS"]["NoCategoryTag"]["ADD_SAVE_MESSAGE"] #'طاڭ ديال "مقالة مامصنفاش" تزاد.'
+REMOVE_NO_CAT_TAG_MESSAGE = pjason["JOBS"]["NoCategoryTag"]["RMV_SAVE_MESSAGE"] #'طاڭ ديال "مقالة مامصنفاش" تحيّد.'
 
 ###Functions
 
@@ -222,12 +248,12 @@ def setNoCategoryTag(page,text,MESSAGE):
 
 ##############################################No backlinks tag treatment##############################################
 ###Tags
-ORPHANED_PAGE_TAG = "{{مقالة مقطوعة من شجرة}}"
+ORPHANED_PAGE_TAG = pjason["JOBS"]["NoBacklinkTag"]["TAGCODE"] #"{{مقالة مقطوعة من شجرة}}"
 ORPHANED_ISSUE_RGX = "{{مقالة خاصها تقاد\|.+مقطوعة.+}}"
 
 ###Save messages
-ADD_ORPHAN_TAG_MESSAGE = 'طاڭ ديال "مقطوعة من شجرة" تزاد.'
-REMOVE_ORPHAN_TAG_MESSAGE = 'طاڭ ديال "مقطوعة من شجرة" تحيّد.'
+ADD_ORPHAN_TAG_MESSAGE = pjason["JOBS"]["NoBacklinkTag"]["ADD_SAVE_MESSAGE"] #'طاڭ ديال "مقطوعة من شجرة" تزاد.'
+REMOVE_ORPHAN_TAG_MESSAGE = pjason["JOBS"]["NoBacklinkTag"]["RMV_SAVE_MESSAGE"] #'طاڭ ديال "مقطوعة من شجرة" تحيّد.'
 
 ###Functions
 def setNoBacklinkTag(page,text,MESSAGE):
@@ -251,13 +277,13 @@ def setNoBacklinkTag(page,text,MESSAGE):
 
 ##############################################Deadend tag##############################################
 ###Tags
-CUL_DE_SAC_TAG = "{{مقالة زنقة ماكاتخرجش}}"
+CUL_DE_SAC_TAG = pjason["JOBS"]["setNoOutLinkTag"]["TAGCODE"] #"{{مقالة زنقة ماكاتخرجش}}"
 OUTLINK_PATTERN = r'\[\[.+?\]\]'
 CUL_DE_SAC_ISSUE_RGX = "{{مقالة خاصها تقاد\|.+ماكاتخرجش.+}}"
 
 ###Save messages
-ADD_DEADEND_TAG_MESSAGE = "طّاڭ ديال زنقة ماكاتخرجش تزاد"
-REMOVE_DEADEND_TAG_MESSAGE = "طّاڭ ديال زنقة ماكاتخرجش تحيد"
+ADD_DEADEND_TAG_MESSAGE = pjason["JOBS"]["setNoOutLinkTag"]["ADD_SAVE_MESSAGE"] #"طّاڭ ديال زنقة ماكاتخرجش تزاد"
+REMOVE_DEADEND_TAG_MESSAGE = pjason["JOBS"]["setNoOutLinkTag"]["RMV_SAVE_MESSAGE"] #"طّاڭ ديال زنقة ماكاتخرجش تحيد"
 
 ###Functions
 def setNoOutLinkTag(page,text,MESSAGE):
@@ -267,7 +293,7 @@ def setNoOutLinkTag(page,text,MESSAGE):
     if CUL_DE_SAC_TAG in text:
         has_deadend_tag = True
     else:
-        links = re.findall(OUTLINK_PATTERN,page.text)
+        links = re.findall(OUTLINK_PATTERN,text)
         for link in links:
             link_page = pywikibot.Page(site,link[2:-2].split('|')[0])
             link_page = get_final_target(link_page) #make sure the linked page is not a redirect page, but its final target
@@ -283,21 +309,100 @@ def setNoOutLinkTag(page,text,MESSAGE):
         MESSAGE += ADD_DEADEND_TAG_MESSAGE+SPACE
     return text,MESSAGE
 
-##############################################No sources tag##############################################
+##############################################Bot Article tag##############################################
 ###Tags
-json_source_proc = pjason["JOBS"][0]
-func = json_source_proc["SETFUNC"]
-NO_SOURCES_ON_PAGE_TAG = json_source_proc["TAGCODE"]
-SOURCE_TAG_EXCEPTION_CAT = json_source_proc["TAG_EXCEPTION_CAT"]
+BOT_ARTICLE_TAG = pjason["JOBS"]["BotArticleTag"]["TAGCODE"]
 
 ###Save messages
-ADD_NO_SOURCE_TAG_MESSAGE = json_source_proc["ADD_SAVE_MESSAGE"]
-REMOVE_NO_SOURCE_TAG_MESSAGE = json_source_proc["RMV_SAVE_MESSAGE"]
+ADD_BOT_ARTICLE_TAG_MESSAGE = pjason["JOBS"]["BotArticleTag"]["ADD_SAVE_MESSAGE"]
+REMOVE_BOT_ARTICLE_TAG_MESSAGE = pjason["JOBS"]["BotArticleTag"]["RMV_SAVE_MESSAGE"]
+
+BOT_LIST = ['AmgharBot', 'DarijaBot', 'InternetArchiveBot','MediaWiki default'
+            ,'MediaWiki message delivery','MenoBot','PGVBot','Sa7bot','TohaomgBot'
+            ,'BotFunast']
+
+###Functions    
+
+# Helper function to check if a user is a bot based on the "bot" flag or the bot_list
+def is_bot(user):
+    user_obj = pywikibot.User(site, user)
+    print(user)
+    return 'bot' in user_obj.groups() or user in BOT_LIST
+
+# Helper function to check if an article was created by a bot
+def is_created_by_bot(page):
+    first_revision = list(page.revisions())[-1]
+    return is_bot(first_revision.user)
+
+# Helper function to calculate the sum of bytes added by human users (non-bot)
+def is_human_edits_sum_exceed_1000_bytes(page):
+    total_bytes = 0
+    for revision in page.revisions():
+        if not is_bot(revision.user):
+            total_bytes += revision.size
+        if total_bytes > 1000:
+            return True  # Early exit if it exceeds 1000 bytes
+    return False
+
+# Helper function to calculate the sum of pure text added by human users
+def is_human_pure_text_sum_exceed_1000_bytes(page):
+    total_text_bytes = 0
+    for revision in page.revisions():
+        if not is_bot(revision.user):
+            prev_revision = page.getOldVersion(revision.parentid) if revision.parentid else ''
+            curr_revision = page.getOldVersion(revision.revid)
+            prev_text = pywikibot.textlib.removeDisabledParts(prev_revision)
+            curr_text = pywikibot.textlib.removeDisabledParts(curr_revision)
+            diff_bytes = len(curr_text) - len(prev_text)
+            total_text_bytes += max(0, diff_bytes)  # Only consider positive increases
+        if total_text_bytes > 1000:
+            return True  # Early exit if it exceeds 1000 bytes
+    return False
+
+# Main function to check if an article is a bot article
+def isBotArticle(page):
+    # Step 1: Check if the article was created by a bot
+    if not is_created_by_bot(page):
+        return False
+
+    # Step 2: Check if no human has edited the article
+    human_edits_count = sum(1 for rev in page.revisions() if not is_bot(rev.user))
+    if human_edits_count > 0:
+        # Step 3: Check if the sum of human edits (in bytes) exceeds 1000 bytes
+        if is_human_edits_sum_exceed_1000_bytes(page):
+            # Step 4: Check if the sum of pure text added by humans exceeds 1000 bytes
+            if is_human_pure_text_sum_exceed_1000_bytes(page):
+                return False
+
+        # If none of the above conditions disqualify it, it's a bot article
+    return True
+
+def setBotArticleTag(page,text,MESSAGE):
+
+    if BOT_ARTICLE_TAG in text and not isBotArticle(page):
+        text = text.replace(BOT_ARTICLE_TAG,"").strip()
+        MESSAGE += REMOVE_BOT_ARTICLE_TAG_MESSAGE+SPACE
+    elif not BOT_ARTICLE_TAG in text and isBotArticle(page):
+        text = BOT_ARTICLE_TAG+'\n'+text
+        MESSAGE += ADD_BOT_ARTICLE_TAG_MESSAGE+SPACE
+    
+    return text,MESSAGE
+
+##############################################No sources tag##############################################
+###Tags
+json_source_proc = pjason["JOBS"]["NoSourceTag"]["TAGCODE"]
+func = pjason["JOBS"]["NoSourceTag"]["SETFUNC"] #json_source_proc["SETFUNC"]
+NO_SOURCES_ON_PAGE_TAG = pjason["JOBS"]["NoSourceTag"]["TAGCODE"] #json_source_proc["TAGCODE"]
+SOURCE_TAG_EXCEPTION_CAT = pjason["JOBS"]["NoSourceTag"]["TAG_EXCEPTION_CAT"] #json_source_proc["TAG_EXCEPTION_CAT"]
+
+###Save messages
+ADD_NO_SOURCE_TAG_MESSAGE = pjason["JOBS"]["NoSourceTag"]["ADD_SAVE_MESSAGE"] #json_source_proc["ADD_SAVE_MESSAGE"]
+REMOVE_NO_SOURCE_TAG_MESSAGE = pjason["JOBS"]["NoSourceTag"]["RMV_SAVE_MESSAGE"] #json_source_proc["RMV_SAVE_MESSAGE"]
 
 ###Regex and regex-like
 #SOURCE_EXIST_PATTERN = r"ref.+?/ref" #probably not needed
 #REF_TAG = "<ref" #probably not needed
-NO_SOURCES_ISSUE_RGX = "{{"+json_source_proc["GENERIC_FIX_ART_TAG_NAME"]+"\|.+"+json_source_proc["RELATED_ARY_NAME_STR"]+".+}}"
+NO_SOURCES_ISSUE_RGX = "{{"+pjason["JOBS"]["NoSourceTag"]["GENERIC_FIX_ART_TAG_NAME"]+"\|.+"+pjason["JOBS"]["NoSourceTag"]["RELATED_ARY_NAME_STR"]+".+}}"
 SOURCE_PATTERN = r"<ref[^>]*>"
 SRC_SFN_PATTERN = r"\{\{[Ss]fn\|([^}|]+)(\|[^}|]+)*\}\}" #matches {{sfn}} tag with parameters
 
@@ -332,7 +437,7 @@ def setNoSourceTag(page,text,MESSAGE):
     #print(setNoSourceTag)
     has_no_source_tag = False
     regexp = re.compile(NO_SOURCES_ISSUE_RGX,flags=re.DOTALL)
-    if NO_SOURCES_ON_PAGE_TAG in text or regexp.search(page.text):
+    if NO_SOURCES_ON_PAGE_TAG in text or regexp.search(text):
         has_no_source_tag = True
     
     cats = page.categories()
@@ -391,13 +496,14 @@ REDIR_CAT_ADD_MESSAGE = "تصنيف د تّحويلات تزاد"
 
 ###Functions
 def add_redirect_cat(page,text,MESSAGE):
-    if REDIRECT_PAGE_CAT_CODE not in page.text:
+    if REDIRECT_PAGE_CAT_CODE not in text:
         text+='\n\n'+REDIRECT_PAGE_CAT_CODE
         MESSAGE +=REDIR_CAT_ADD_MESSAGE+SPACE
     return text,MESSAGE
 
 ##############################################Missing pictures tag##########################################
 ###Tags and search string segmemts
+picture_json_source_proc = pjason["JOBS"]["NoPicturetag"]["TAGCODE"]
 PICTURE_MISSING_TAG         = "{{مقالة ناقصينها تصاور|{parameter}}}"
 PICTURE_MISSING_TAG_PATTERN = r"{{مقالة ناقصينها تصاور\|.*?}}"
 PICTURE_MISSING_TAG_PART    = "{{مقالة ناقصينها تصاور"
@@ -405,7 +511,7 @@ PIC_REGEX                   = r"{{معلومات.+\|صورة=.+\..+}}"
 PIC_REGEX2                  = r"{{معلومات.+\|الصورة=.+\..+}}"
 PIC_REGEX3                  = r"{{معلومات.+\|تصويرة=.+\..+}}"
 PICTURE_PROPERTIES = ["P18","P154","P41","P94","P158","P2176","P8592","P948","P8224","P1846"]
-PIC_EXCEPTION_CAT_LIST = ["تصنيف:نهارات د لعام","تصنيف:عوام د تقويم لميلادي","تصنيف:ستيتناء من طاݣ ناقصين تصاور"]
+PIC_EXCEPTION_CAT_LIST = pjason["JOBS"]["NoPicturetag"]["TAG_EXCEPTION_CAT"] #picture_json_source_proc["TAG_EXCEPTION_CAT"]
 #INFOBOX_TAG_PART = "{{معلومات"
 
 GALLERY_PART_DICT = {'en':'<gallery'
@@ -418,13 +524,26 @@ FILE_PART_DICT = {'en':'[[File:'
 CITY_INFOBOX_TAG_PART = "{{معلومات مدينة"
 
 ###Save messages
-ADD_PICTURE_MISSING_TAG = "طّاڭ ديال ناقصين تصاور تزاد"
-RMV_PICTURE_MISSING_TAG = "طّاڭ ديال ناقصين تصاور تحيّد"
+ADD_PICTURE_MISSING_TAG = pjason["JOBS"]["NoPicturetag"]["ADD_SAVE_MESSAGE"] #picture_json_source_proc["ADD_SAVE_MESSAGE"]
+RMV_PICTURE_MISSING_TAG = pjason["JOBS"]["NoPicturetag"]["RMV_SAVE_MESSAGE"] #picture_json_source_proc["RMV_SAVE_MESSAGE"]
 
 ###Functions
 
 def has_pictures_or_videos(page):
     return bool(page.imagelinks())
+
+def remove_comments(text):
+    """Remove commented-out sections from wiki text."""
+    return re.sub(r'<!--.*?-->', '', text, flags=re.DOTALL)
+
+def has_pictures(text):
+    #text = remove_comments(page.text)
+    if any(ext in text.lower() for ext in ['.jpg', '.jpeg', '.png', '.gif', '.svg','.webp']):
+        return True
+    if '<gallery>' in text.lower():
+        return True
+    
+    return False
 
 def is_in_exception_list(page,text):
     #rudimentary method for now
@@ -451,9 +570,9 @@ def get_image_properties_from_wikidata(item):
 
     return image_properties
 
-def is_image_property_used_in_infobox(page, image_properties):
+def is_image_property_used_in_infobox(text, image_properties):
     #print("is_image_property_used_in_infobox")
-    infobox_template_page = get_infobox_template_page(page)
+    infobox_template_page = get_infobox_template_page(text)
 
     #print(infobox_template_page)
     
@@ -475,15 +594,13 @@ def setNoPicturetag(page,text,MESSAGE):
     has_picture_missing_tag = False
     add_picture_tag = False
     picture = ""
-    commons_cat = get_commons_category(page)
-    regexp = re.compile(PIC_REGEX,flags=re.DOTALL)
-    regexp2 = re.compile(PIC_REGEX2,flags=re.DOTALL)
-    regexp3 = re.compile(PIC_REGEX3,flags=re.DOTALL)
-    if has_pictures_or_videos(page) or FILE_PART_DICT['ary'] in text or FILE_PART_DICT['en'] in text or FILE_PART_DICT['ar'] in text or GALLERY_PART_DICT['en'] in text or regexp.search(text) or regexp2.search(text) or regexp3.search(text):
-        #print(FILE_PART_DICT['en'] in text)
-        #print("has a picture in text")
-        has_picture = True
-        #print("found article to have a picture "+str(page.title())+" flag has_picture="+str(has_picture))
+    commons_cat = get_commons_category(text)
+    #regexp = re.compile(PIC_REGEX,flags=re.DOTALL)
+    #regexp2 = re.compile(PIC_REGEX2,flags=re.DOTALL)
+    #regexp3 = re.compile(PIC_REGEX3,flags=re.DOTALL)
+
+    
+    has_picture = has_pictures(text)
     
     if PICTURE_MISSING_TAG_PART in text:
         #print("Has picture missing tag")
@@ -499,7 +616,7 @@ def setNoPicturetag(page,text,MESSAGE):
 
             #print((len(image_properties)>0))
             #print((is_image_property_used_in_infobox(page, image_properties)))
-            if len(image_properties)>0 and is_image_property_used_in_infobox(page, image_properties):
+            if len(image_properties)>0 and is_image_property_used_in_infobox(text, image_properties):
                 #print("has a picture in infobox")
                 has_picture = True
                 #add_picture_tag = False
@@ -522,7 +639,7 @@ def setNoPicturetag(page,text,MESSAGE):
             add_picture_tag = False
 
         #check commons catagory tag
-        commons_cat = get_commons_category(page)
+        commons_cat = get_commons_category(text)
         if commons_cat is not None:
             add_picture_tag = True
             picture = "Category:"+commons_cat.replace(' ','_')
@@ -652,11 +769,12 @@ def add_smth_not_right_tag(page,text,MESSAGE):
 if __name__=="__main__":
 
     function_map = {
-        'setNoSourceTag': setNoSourceTag,
-        'setNoCategoryTag': setNoCategoryTag,
-        'setNoBacklinkTag': setNoBacklinkTag,
-        'setEmptyParagraphTag': setEmptyParagraphTag,
-        'setNoOutLinkTag': setNoOutLinkTag
+                    'setNoSourceTag': setNoSourceTag
+                   ,'setNoCategoryTag': setNoCategoryTag
+                   ,'setNoBacklinkTag': setNoBacklinkTag
+                   ,'setEmptyParagraphTag': setEmptyParagraphTag
+                   ,'setNoOutLinkTag': setNoOutLinkTag
+                   ,'setNoPicturetag': setNoPicturetag
     }
 
     print_to_console_and_log('Number of passed arguments: '+str(len(argv)))
@@ -697,6 +815,7 @@ if __name__=="__main__":
     pool_size = len(list(deepcopy(pool)))
     print_to_console_and_log('Pool size: '+str(pool_size))
     i = 1
+    delete_recent_log_if_old()
     pages_in_log = load_pages_in_log()
 
     with open(RECENT_LOG_FILE,'a',encoding='utf-8') as f:
@@ -752,18 +871,18 @@ if __name__=="__main__":
                                 print_to_console_and_log(str(sys.exc_info()))
                         """
                         #print("testing page text changed")    
-                        if new_text != page.text:
-                            #print("page text has been changed")
-                            page.text = new_text
-                            try:
-                                if JOB_ID is not None:
-                                    MESSAGE+=" - "+JOB_ID_MSG_PART.format(JOB_ID)
-                                page.save(MESSAGE)
-                            except:
-                                #LOG_PAGE_TITLE = 
-                                #log_error(LOG_PAGE_TITLE,log_message,save_log_message,site)
-                                print(sys.exc_info())
-                                continue
+                    if new_text != page.text:
+                        #print("page text has been changed")
+                        page.text = new_text
+                        try:
+                            if JOB_ID is not None:
+                                MESSAGE+=" - "+JOB_ID_MSG_PART.format(JOB_ID)
+                            page.save(MESSAGE)
+                        except:
+                            #LOG_PAGE_TITLE = 
+                            #log_error(LOG_PAGE_TITLE,log_message,save_log_message,site)
+                            print(sys.exc_info())
+                            continue
                             
                         #cha = input("continue to next page?\n")
                 """
