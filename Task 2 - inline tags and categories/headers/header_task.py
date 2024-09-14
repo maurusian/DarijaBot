@@ -1,7 +1,4 @@
-from   pgvbotLib            import *
-import arywikibotlib        as awbl
-from   arywikibotlib        import isHuman, hasPropertyXValue
-
+#from   pgvbotLib            import *
 import pywikibot
 from   pywikibot            import textlib
 from   pywikibot.exceptions import NoPageError
@@ -28,6 +25,33 @@ RECENT_LOG_FILE = local_folder+"/recent_log.txt"
 JOB_ID_MSG_PART = "نمرة د دّوزة {}"
 
 LOCAL_LOG = local_folder+"/task2.log"
+
+
+
+################## Copied functions for Toolforge ####################
+ARTICLE_NAMESPACE = 0
+IGNORE_LIST = ['الصفحة اللولا'] #list of pages to be completely ignored by the bot, for all tasks
+PAGE_TYPE_IGNORE_LIST = ['موضيل','تصنيف','ويكيپيديا','إدارة','قيسارية','لمداكرة د قيسارية','خدايمي','لمداكرة د لخدايمي','لمداكرة د ويكيپيديا','مداكرة','لمداكرة د تصنيف','لمداكرة د لموضيل'] #list of page types to be completely ignored by the bot, for all tasks
+DISAMB_TAG = u"{{توضيح}}" #tag for disambiguation page
+
+def validate_page(page):
+    """
+    Verifies if a page is valid for treatment
+    or not. For now, only content pages are
+    valid for treatment
+    """
+
+    if page.title() in IGNORE_LIST or page.isRedirectPage() or DISAMB_TAG in page.text:
+        return False
+
+
+    page_double_dot_parts = page.title().split(':')
+    
+    if len(page_double_dot_parts) == 1: #for now only content pages
+        return True
+    elif len(page_double_dot_parts) > 1 and page_double_dot_parts[0] not in PAGE_TYPE_IGNORE_LIST:
+        return True
+    return False
 
 
 ################## Get parameters ####################
@@ -103,20 +127,20 @@ def get_final_target(page):
 def delete_recent_log_if_old():
     # Get the current time
     current_time = time.time()
-    
-    # Get the file's last modification time
-    file_mod_time = os.path.getmtime(RECENT_LOG_FILE)
-    
-    # Calculate the file age in days
-    file_age_days = (current_time - file_mod_time) / (24 * 3600)
-    
-    # Check if the file is older than the given number of days
-    if file_age_days > RECENT_LOG_RETENTION_DAYS:
-        os.remove(RECENT_LOG_FILE)
-        print(f"{file_path} deleted.")
-    else:
-        print(f"{file_path} is not old enough to delete.")
+
+    if os.path.exists(RECENT_LOG_FILE):
+        # Get the file's last modification time
+        file_mod_time = os.path.getmtime(RECENT_LOG_FILE)
         
+        # Calculate the file age in days
+        file_age_days = (current_time - file_mod_time) / (24 * 3600)
+        
+        # Check if the file is older than the given number of days
+        if file_age_days > RECENT_LOG_RETENTION_DAYS:
+            os.remove(RECENT_LOG_FILE)
+            print(f"{RECENT_LOG_FILE} deleted.")
+        else:
+            print(f"{RECENT_LOG_FILE} is not old enough to delete.")
 
 #List of subprograms
 ##Help functions
@@ -830,7 +854,7 @@ if __name__=="__main__":
                     
                 MESSAGE = ""
                     
-                if validate_page(page) and awbl.validate_page(page,0,"article",2,"GEN"):
+                if validate_page(page):
                     #print("checking page "+str(i))
                         
                     new_text = page.text
