@@ -805,13 +805,13 @@ def add_smth_not_right_tag(page,text,MESSAGE):
 if __name__=="__main__":
 
     function_map = {
-                    'setNoSourceTag': setNoSourceTag
-                   ,'setNoCategoryTag': setNoCategoryTag
-                   ,'setNoBacklinkTag': setNoBacklinkTag
-                   #,'setEmptyParagraphTag': setEmptyParagraphTag
-                   ,'setNoOutLinkTag': setNoOutLinkTag
-                   ,'setNoPicturetag': setNoPicturetag
-                   ,'setBotArticleTag': setBotArticleTag
+                   # 'setNoSourceTag': setNoSourceTag
+                   #,'setNoCategoryTag': setNoCategoryTag
+                   #,'setNoBacklinkTag': setNoBacklinkTag
+                   #,'setNoOutLinkTag': setNoOutLinkTag
+                   #,'setNoPicturetag': setNoPicturetag
+                   #,
+                   'setBotArticleTag': setBotArticleTag
     }
 
     print_to_console_and_log('Number of passed arguments: '+str(len(argv)))
@@ -874,40 +874,10 @@ if __name__=="__main__":
 
                     for func in function_map.keys():
 
-                        #Calling "No category tag treatment" subprogram
-                        #new_text,MESSAGE = setNoCategoryTag(page,new_text,MESSAGE)
-                           
-                        #checking back links
-                        #new_text,MESSAGE = setOrphanTag(page,new_text,MESSAGE)
-                          
-                        #handling no source tag
                         
                         new_text,MESSAGE = function_map[func](page,new_text,MESSAGE)
 
-                        #handling empty paragraphs
-                        #new_text,MESSAGE = setEmptyParagraphTag(page,new_text,MESSAGE)
-
-                        #handling missing picture tag
-                        #new_text,MESSAGE = add_missing_picture_tag(page,new_text,MESSAGE)
-
-                        #handling too many problems at once
-                        #new_text,MESSAGE = add_smth_not_right_tag(page,new_text,MESSAGE)
-
-                        """
-                        Deactivated for now
-                        #handling Wikipidia with SOMETHINGS_NOT_RIGHT_TAG
-                        new_text,MESSAGE = add_smth_not_right_tag(page,new_text,MESSAGE)
-                        """
-                        #handling deadend tag
-                        """
-                        try:
-                            new_text,MESSAGE = setDeadendTag(page,new_text,MESSAGE,site)
-                        except Exception:
-                            with open('error_log.txt','w',encoding='utf-8') as er:
-                                er.write(str(page.title())+'\n'+str(sys.exc_info()))
-                                print_to_console_and_log(str(sys.exc_info()))
-                        """
-                        #print("testing page text changed")    
+                        
                     if new_text != page.text:
                         #print("page text has been changed")
                         page.text = new_text
