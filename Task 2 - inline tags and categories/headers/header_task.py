@@ -535,7 +535,7 @@ PICTURE_MISSING_TAG_PART    = "{{مقالة ناقصينها تصاور"
 PIC_REGEX                   = r"{{معلومات.+\|صورة=.+\..+}}"
 PIC_REGEX2                  = r"{{معلومات.+\|الصورة=.+\..+}}"
 PIC_REGEX3                  = r"{{معلومات.+\|تصويرة=.+\..+}}"
-PICTURE_PROPERTIES = ["P18","P154","P41","P94","P158","P2176","P8592","P948","P8224","P1846"]
+PICTURE_PROPERTIES = ["P15","P18","P154","P41","P94","P158","P2176","P8592","P948","P8224","P1846"]
 PIC_EXCEPTION_CAT_LIST = pjason["JOBS"]["NoPicturetag"]["TAG_EXCEPTION_CAT"] #picture_json_source_proc["TAG_EXCEPTION_CAT"]
 #INFOBOX_TAG_PART = "{{معلومات"
 
