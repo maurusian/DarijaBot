@@ -797,9 +797,10 @@ if __name__=="__main__":
                     'setNoSourceTag': setNoSourceTag
                    ,'setNoCategoryTag': setNoCategoryTag
                    ,'setNoBacklinkTag': setNoBacklinkTag
-                   ,'setEmptyParagraphTag': setEmptyParagraphTag
+                   #,'setEmptyParagraphTag': setEmptyParagraphTag
                    ,'setNoOutLinkTag': setNoOutLinkTag
                    ,'setNoPicturetag': setNoPicturetag
+                   ,'setBotArticleTag': setBotArticleTag
     }
 
     print_to_console_and_log('Number of passed arguments: '+str(len(argv)))
