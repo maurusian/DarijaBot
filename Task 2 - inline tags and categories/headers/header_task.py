@@ -240,6 +240,17 @@ REMOVE_NO_CAT_TAG_MESSAGE = pjason["JOBS"]["NoCategoryTag"]["RMV_SAVE_MESSAGE"] 
 
 ###Functions
 
+def is_category_hidden(category):
+    #site = pywikibot.Site()
+    #category = pywikibot.Category(site, category_name)
+
+    #print(category.categoryinfo)
+    
+    if 'hidden' in category.categoryinfo.keys():
+        return True
+    
+    return False
+
 def hasExplicitCategory(page):
     len_cat = len(list(page.categories()))
     if len_cat==0:
@@ -248,7 +259,7 @@ def hasExplicitCategory(page):
     i = 0
     for category in page.categories():
         i+=1
-        if str(category.title()).strip() in page.text:
+        if str(category.title()).strip() in page.text and not is_category_hidden(category): # if there's a cat that's explicit and not hidden
             #print("found "+str(i)+" categories so far")
             return True
     #print("found "+str(i)+" categories (final)")
