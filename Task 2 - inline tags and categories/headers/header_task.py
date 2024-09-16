@@ -805,13 +805,12 @@ def add_smth_not_right_tag(page,text,MESSAGE):
 if __name__=="__main__":
 
     function_map = {
-                   # 'setNoSourceTag': setNoSourceTag
-                   #,'setNoCategoryTag': setNoCategoryTag
-                   #,'setNoBacklinkTag': setNoBacklinkTag
-                   #,'setNoOutLinkTag': setNoOutLinkTag
-                   #,'setNoPicturetag': setNoPicturetag
-                   #,
-                   'setBotArticleTag': setBotArticleTag
+                    'setNoSourceTag': setNoSourceTag
+                   ,'setNoCategoryTag': setNoCategoryTag
+                   ,'setNoBacklinkTag': setNoBacklinkTag
+                   ,'setNoOutLinkTag': setNoOutLinkTag
+                   ,'setNoPicturetag': setNoPicturetag
+                   ,'setBotArticleTag': setBotArticleTag
     }
 
     print_to_console_and_log('Number of passed arguments: '+str(len(argv)))
