@@ -163,7 +163,10 @@ def is_user_anonymous(username, site):
 def update_word_counts(word_structure, word_list, user):
     """
     Updates the given structure with the words entered by a user, keeping track of the number of times 
-    the user has entered each word.
+    the user has entered each word. This allows the possibility of running the program multiple times
+    without corrupting the old data or reloading words from already processed pages, in order to add
+    words from new pages to the dictionary. This is also useful during development and maintenance of
+    the code.
 
     Args:
     word_structure (dict): The structure to be updated.
@@ -178,19 +181,22 @@ def update_word_counts(word_structure, word_list, user):
         if word in word_structure:
             # Check if this user has already entered this word
             found_user = False
-            for entry in word_structure[word]:
-                if entry['user'] == user:
+            #print("word: ",word)
+            #print("value: ",word_structure[word])
+            for word_user, word_count in word_structure[word].items():
+                if word_user == user:
                     # Increment the count for this user
-                    entry['count'] += 1
+                    word_structure[word][user] += 1
                     found_user = True
                     break
             
             # If this user has not entered this word before, add a new entry
             if not found_user:
-                word_structure[word].append({'user': user, 'count': 1})
+                word_structure[word][user] = 1
         else:
             # Add the word with the user and initial count
-            word_structure[word] = [{'user': user, 'count': 1}]
+            word_structure[word] = {}
+            word_structure[word][user] = 1
 
     return word_structure
 
@@ -223,12 +229,11 @@ if __name__ == "__main__":
     print(recent_pages)
     for page in articles:
         print(f"********* {i} /",pool_size)
-        if page.title() in recent_pages:
-            print(page.title(),"already treated")
-        else:
-            print(page.title())
+        if page.title() not in recent_pages:
+            #print(page.title(),"already treated")
+            #print(page.title())
             username = page.oldest_revision.user
-            print(username)
+            #print(username)
             if is_user_anonymous(username, site):
                 username = "anonymous"
             if not username.lower().endswith('bot') and not is_bot_user(username, site):
