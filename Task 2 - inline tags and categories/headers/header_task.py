@@ -574,7 +574,7 @@ def remove_comments(text):
 
 def has_pictures(text):
     #text = remove_comments(page.text)
-    if any(ext in text.lower() for ext in ['.jpg', '.jpeg', '.png', '.gif', '.svg','.webp']):
+    if any(ext in text.lower() for ext in ['.jpg', '.jpeg', '.png', '.gif', '.svg','.webp','.webm']):
         return True
     if '<gallery>' in text.lower():
         return True
