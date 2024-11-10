@@ -7,7 +7,7 @@ from arywikibotlib import interlink_page_with_qid, has_wikipedia_article
 SAVE_MESSAGE = "مقال تصاوب"
 
 
-excel_file_path = 'Batch 2 - lvl2 - Taroudant.xlsx' #'armed.xlsx'
+excel_file_path = 'final_data.xlsx'
 df = pd.read_excel(excel_file_path)
 
 json_file_path = 'column_mapping.json' 
@@ -54,7 +54,11 @@ def create_article(x,template_file):
         
     
     for old_value, index_value in data.items():
-        text_code_source = text_code_source.replace(old_value, str(df.iloc[x, letter_to_index[index_value]]))
+        value = df.iloc[x, letter_to_index[index_value]]
+        if isinstance(value, float) and not value.is_integer():
+            text_code_source = text_code_source.replace(old_value, str("{:.1f}".format(value)))
+        else:
+            text_code_source = text_code_source.replace(old_value, str(value))
 
     
     # {pop_change}
@@ -115,39 +119,48 @@ def has_missing_data(df,i):
 
     return False
 
+
+#def has_draft_page()
+
 if __name__ == '__main__':
     for i in range(0,df.shape[0]):
         name_final=df.iloc[i, key_dicc('{village_name}')]+' ('+df.iloc[i, key_dicc('{fraction}')]+')'
         print(f'*********{str(i+1)}/{str(df.shape[0])}************* : {str(name_final)}')
         site = pywikibot.Site()
         site.login()
+        
         page = pywikibot.Page(site,name_final)
         temp_text = page.text
+
+        draft_ns = "واساخ:"
+        draft_page = pywikibot.Page(site,draft_ns+name_final)
+        draft_temp_text = draft_page.text
 
         qid = df.iloc[i, key_dicc('{qid}')]
 
         if not has_wikipedia_article(qid, site.lang):
             if temp_text.strip()=='':
-                #print(df.iloc[i, key_dicc('{population}')])
-                if str(df.iloc[i, key_dicc('{population}')]).lower()=='x':
-                    text_adwwar=create_article_2004(i)
+                if draft_temp_text.strip()=='':
+                    #print(df.iloc[i, key_dicc('{population}')])
+                    if str(df.iloc[i, key_dicc('{population}')]).lower()=='x' or str(df.iloc[i, letter_to_index["Q"]]).lower()=='x':
+                        text_adwwar=create_article_2004(i)
 
-                    temp_text=text_adwwar
+                    elif has_missing_data(df,i):
+                        text_adwwar=create_article_2014_missing(i)
 
-                elif has_missing_data(df,i):
-                    text_adwwar=create_article_2014_missing(i)
+                    else:
+                        text_adwwar=create_article_2014(i)
 
-                    temp_text=text_adwwar
+                    draft_temp_text=text_adwwar
+                    
+                    if draft_temp_text != draft_page.text:
+                        draft_page.text = draft_temp_text
+                        draft_page.save(SAVE_MESSAGE)
 
+                        interlink_page_with_qid(draft_page, site.lang, qid, namespace="article")
+                    #break
+                
                 else:
-                    text_adwwar=create_article_2014(i)
-
-                    temp_text=text_adwwar
-
-                if temp_text != page.text:
-                    page.text = temp_text
-                    page.save(SAVE_MESSAGE)
-
-                    interlink_page_with_qid(page, site.lang, qid, namespace="article")
+                    print(f"draft article for {draft_ns}{name_final} already exists with qid {qid}")
         else:
             print(f"article for {name_final} already exists with qid {qid}")

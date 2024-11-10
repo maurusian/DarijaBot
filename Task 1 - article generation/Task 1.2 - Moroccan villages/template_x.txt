@@ -1,3 +1,4 @@
+{{واساخ خاصو يتراجع}}
 {{معلومات دوار}}
 '''{village_name}''' هوّ [[دوار]] {village_type} كاين ف جماعة [[{commune}]]، دائرة [[{circle} (دائرة)|{circle}]]، [[{prov_type} {province}]]، [[{region}]] ف [[لمغريب]]. هاد دّوار كينتامي ل مشيخة [[{fraction} (مشيخة)|{fraction}]] لي كتضم {village_count} د دّواور. لعاداد د سّكان ديالو واصل ل {population_2004} شخص على حساب [[لإحصاء لعام 2004|لإحصاء الرسمي د عام 2004]].<ref>{{مرجع ويب
 | url = https://docs.google.com/spreadsheets/d/18mOOuVCAhkc38zrmKPxLUqGN6t0dTIOe/edit?usp=sharing&ouid=109715649259751438490&rtpof=true&sd=true
@@ -13,5 +14,6 @@
 {{عيون}}
 {{ضبط مخازني}}
 
-[[تصنيف:دوار ف لمغريب]]
-[[تصنيف:دوار ف  {prov_type} {province}]]
+[[:تصنيف:دوار ف لمغريب]]
+[[:تصنيف:دوار ف  {prov_type} {province}]]
+[[تصنيف:واساخ زادو داريجابوت]]
