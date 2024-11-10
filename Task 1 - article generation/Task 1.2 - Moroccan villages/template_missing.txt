@@ -1,3 +1,4 @@
+{{واساخ خاصو يتراجع}}
 {{معلومات دوار}}
 '''{village_name}''' هوّ [[دوار]] {village_type} كاين ف جماعة [[{commune}]]، دائرة [[{circle} (دائرة)|{circle}]]، [[{prov_type} {province}]]، [[{region}]] ف [[لمغريب]]. هاد دّوار كينتامي ل مشيخة [[{fraction} (مشيخة)|{fraction}]] لي كتضم {village_count} د دّواور. لعاداد د سّكان ديالو واصل ل {population} شخص على حساب [[لإحصاء لعام 2014|لإحصاء الرسمي د عام 2014]].<ref name=census>{{Cite report
 |title=Données démographiques et socio-économiques de la population rurale (hors nomades) par douar selon le Recensement général de la population et de l'habitat de 2014|publisher=[[لمندوبية سامية د تخطيط]]
@@ -61,5 +62,6 @@ PlotData =
 {{عيون}}
 {{ضبط مخازني}}
 
-[[تصنيف:دوار ف لمغريب]]
-[[تصنيف:دوار ف  {prov_type} {province}]]
+[[:تصنيف:دوار ف لمغريب]]
+[[:تصنيف:دوار ف  {prov_type} {province}]]
+[[تصنيف:واساخ زادو داريجابوت]]
