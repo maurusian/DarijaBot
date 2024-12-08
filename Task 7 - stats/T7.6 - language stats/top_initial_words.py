@@ -131,14 +131,18 @@ def extract_unique_words_darija(text):
     Returns:
     list: A list of unique Arabic words.
     """
+
+    remove_char = "ـ"
     # Remove non-Arabic characters and numbers, replace with space
-    clean_text = re.sub(r'[^ءاإآأ-يڭݣگڤپ\s]', ' ', text)
+    #clean_text = re.sub(r'[^ءاإآأ-يڭݣگڤپ\s]', ' ', text)
 
     # Replace digits with space
-    clean_text = re.sub(r'\d+', ' ', clean_text)
+    clean_text = re.sub(r'\d+', ' ', text)
 
     # Normalize multiple spaces to a single space
     clean_text = re.sub(r'\s+', ' ', clean_text).strip()
+
+    clean_text = clean_text.replace(remove_char, "") #this character is used to lengthen some letters
 
     # Split the text into words and return unique words
     words = clean_text.split()
