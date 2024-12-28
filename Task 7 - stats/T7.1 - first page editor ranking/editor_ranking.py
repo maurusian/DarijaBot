@@ -78,6 +78,12 @@ def get_administrators(site):
     # Fetch administrators using the allusers API with augroup set to sysop
     return set(user['name'] for user in site.allusers(group='sysop'))
 
+def vanished_user(editor):
+    """Returns whether a user is a vanished user or not."""
+    if "vanished user" in editor.lower() or "renamed user" in editor.lower():
+        return True
+    return False
+
 #page = pywikibot.Page(site,title)
 
 
@@ -116,7 +122,9 @@ while len(editors) < 5:
             print('*********'+str(j)+'/'+str(edit_size))
             editor = change["user"]
             user_editor = pywikibot.User(site,editor)
-            if 'sysop' not in user_editor.groups() and 'bot' not in user_editor.groups() and editor not in admins and editor not in IGNORE_LIST and not user_editor.is_blocked():
+            if ('sysop' not in user_editor.groups() and 'bot' not in user_editor.groups()
+                and editor not in admins and editor not in IGNORE_LIST
+                and not user_editor.is_blocked() and not vanished_user(editor)):
                 if editor not in editors.keys():
                     editors[editor] = {"edit_count":0,"size":0,"new_count":0}
                 editors[editor]["edit_count"]+=1
