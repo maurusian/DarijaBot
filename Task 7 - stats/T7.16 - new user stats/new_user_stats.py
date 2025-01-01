@@ -12,7 +12,7 @@ current_year = datetime.now().year
 #print(current_year)
 
 IGNORE_LIST_FILE = local_folder+"/ignore_list.txt"
-PAGE_TO_UPDATE = "موضيل:مساهمات ديال لكتاتبيا الجداد 2024"
+PAGE_TO_UPDATE = "موضيل:مساهمات ديال لكتاتبيا الجداد "+str(current_year)
 EDIT_SUMMARY = "أپدييت ديال لإحصائيات"
 HEADER = "<noinclude>{{پاج كيعمرها بوت2}}</noinclude>"
 FOOTER = "<noinclude>{{شرح}}</noinclude>"
@@ -32,7 +32,7 @@ def save_ignore_list(ignore_list):
 
 def get_new_user_contributions(site, ignore_list):
     """Get the number of contributions by users registered in the current year."""
-    current_year = '2024' #str(datetime.now().year)
+    current_year = str(datetime.now().year)
     new_user_contributions = 0
     ignore_list_updated = False
 
