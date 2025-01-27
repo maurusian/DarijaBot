@@ -69,6 +69,7 @@ BODY = """{{ترتيب د لكتاتبيا د صفحة لولة
 |زيادة5={posneg5}
 |كاراكطيرات5={chars5}
 }}
+<div class="ranking-table-first-page">
 <center><small>محسوبين غير المساهمات ف 30 يوم اللخرة<br>ديال كتاتبيا ماعندهمش صلاحيات د أمغار</small></center>"""
 
 MAX_INTERVAL_DAYS = 30
