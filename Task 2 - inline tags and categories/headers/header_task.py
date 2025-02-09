@@ -68,6 +68,9 @@ def get_main_task_params():
     return pjason
 
 site = pywikibot.Site()
+site.throttle.maxdelay = 0
+site.login()
+
 
 pjason = get_main_task_params()
 
@@ -574,7 +577,7 @@ def remove_comments(text):
 
 def has_pictures(text):
     #text = remove_comments(page.text)
-    if any(ext in text.lower() for ext in ['.jpg', '.jpeg', '.png', '.gif', '.svg','.webp','.webm']):
+    if any(ext in text.lower() for ext in ['.jpg', '.jpeg', '.png', '.gif', '.svg','.webp','.webm','.ogg']) and any(file_str in text.lower() for file_str in ['file:','فيشي:','ملف:']):
         return True
     if '<gallery>' in text.lower():
         return True

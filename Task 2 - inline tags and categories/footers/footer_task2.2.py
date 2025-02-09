@@ -167,7 +167,7 @@ def setStubTag(page,text,MESSAGE):
 
 ##############################################Source header treatment##############################################
 ###Header patterns
-ACCEPTED_SECTION_HEADER_PATTERN = "==\s*عيون\s*لكلام\s*=="
+ACCEPTED_SECTION_HEADER_PATTERN = "==\s*مصادر\s*=="
 FAULTY_SOURCE_SECTION_HEADERS = ["\\=\\=\s*[ل]{0,1}عيون\s*د\s*لكلام\s*\\=\\="
                                 ,"\\=\\=\s*[ل]{0,1}عين\s*[د]{0,1}\s*لكلام\s*\\=\\="
                                 ,"\\=\\=\s*[ا]{0,1}[ل]{0,1}مصاد[ي]{0,1}ر\s*\\=\\="
@@ -175,14 +175,17 @@ FAULTY_SOURCE_SECTION_HEADERS = ["\\=\\=\s*[ل]{0,1}عيون\s*د\s*لكلام\s
                                 ,"\\=\\=\s*[ا]{0,1}[ل]{0,1}مصدر\s*\\=\\="
                                 ,"\\=\\=\s*[ا]{0,1}[ل]{0,1}مرجع\s*\\=\\="
                                 ,"\\=\\=\s*[ل]{0,1}عيون\s*\\=\\="
+                                ,"\\=\\=\s*عيون كلام\s*\\=\\="
+                                ,"\\=\\=\s*عيون الكلام\s*\\=\\="
+                                ,"\\=\\=\s*عيون\s*لكلام\s*\\=\\="
                                 ,ACCEPTED_SECTION_HEADER_PATTERN
                                 ]
                                 #,"==\s*عيون\s*لكلام\s*=="]
-SECTION_HEADER = "== عيون لكلام =="
+SECTION_HEADER = "== مصادر =="
 
 ###Save messages
-CORRECT_SOURCE_HEADER_MESSAGE = "إصلاح لهادر د عيون لكلام."
-ADD_SOURCE_HEADER_MESSAGE = "زيادة د لهادر د عيون لكلام."
+CORRECT_SOURCE_HEADER_MESSAGE = "إصلاح لهادر د لمصادر."
+ADD_SOURCE_HEADER_MESSAGE = "زيادة د لهادر د لمصادر."
 
 ###Functions
 def setSourceHeaderTag(page,text,MESSAGE):
@@ -202,11 +205,24 @@ def setSourceHeaderTag(page,text,MESSAGE):
                 """
                 break
 
-    if NEW_SOURCE_TAG in text and not has_source_section_header:
-        text = text.replace(NEW_SOURCE_TAG,SECTION_HEADER+"\n"+NEW_SOURCE_TAG) #"\n\n"+SECTION_HEADER
-        MESSAGE += ADD_SOURCE_HEADER_MESSAGE+SPACE
-    elif NEW_SOURCE_TAG not in text:
-        print("Could not fix source header due to lack of source tag")
+    if not has_source_section_header:
+        if NEW_SOURCE_TAG in text:
+            text = text.replace(NEW_SOURCE_TAG,SECTION_HEADER+"\n"+NEW_SOURCE_TAG) #"\n\n"+SECTION_HEADER
+            MESSAGE += ADD_SOURCE_HEADER_MESSAGE+SPACE
+        elif check_has_source_tag(text):
+            matches = re.findall(NEW_SOURCE_TAG_PTRN, text)
+            if len(matches) == 0:
+                matches = [NEW_SOURCE_TAG]
+            source_tag = matches[0]
+            text = text.replace(source_tag,SECTION_HEADER+"\n"+source_tag) #"\n\n"+SECTION_HEADER
+            MESSAGE += ADD_SOURCE_HEADER_MESSAGE+SPACE
+        elif "{{عيون" in text:
+            text = text.replace("{{عيون","{{عيون"+"\n"+source_tag) #"\n\n"+SECTION_HEADER
+            MESSAGE += ADD_SOURCE_HEADER_MESSAGE+SPACE
+    elif not check_has_source_tag(text):
+        #print("Could not fix source header due to lack of source tag")
+        text += SECTION_HEADER+"\n"+NEW_SOURCE_TAG #"\n\n"+SECTION_HEADER
+        MESSAGE += ADD_SOURCE_HEADER_MESSAGE+SPACE+ADD_SOURCE_TAG_MESSAGE+SPACE
     return text,MESSAGE
 
 
@@ -216,27 +232,59 @@ def setSourceHeaderTag(page,text,MESSAGE):
 ##############################################Source tag treatment##############################################
 ###Tags
 OLD_SOURCE_TAG1 = "{{مراجع}}"
+OLD_SOURCE_TAG1_PTRN = r'\{\{مراجع\|\d{2}em\}\}'
 OLD_SOURCE_TAG2 = "<\s*references\s*/>"
+OLD_SOURCE_TAG3 = '<references group="" responsive="1"></references>'
 NEW_SOURCE_TAG = "{{عيون}}"
+NEW_SOURCE_TAG_PTRN = r'\{\{عيون\|\d{2}em\}\}'
 
 ###Save messages
 CORRECT_SOURCE_TAG_MESSAGE = "إصلاح طّاڭ د عيون لكلام."
 ADD_SOURCE_TAG_MESSAGE ="زيادة د طّاڭ د عيون لكلام."
 
 ###Functions
+def check_has_source_tag(text):
+    """
+    Checks if the pattern {{عيون|XXem}} (where XX is any two-digit number) exists in the given text.
+
+    Parameters:
+    text (str): The input text to search.
+
+    Returns:
+    bool: True if the pattern exists, False otherwise.
+    """
+    pattern = r'\{\{عيون\|\d{2}em\}\}'
+    return bool(re.search(pattern, text)) or NEW_SOURCE_TAG in text
+
 def setSourceTag(page,text,MESSAGE):
-    has_source_tag = False
-    if NEW_SOURCE_TAG in text:
-        has_source_tag = True
-            
-    else:
+    has_source_tag = check_has_source_tag(text)
+    
+    if not has_source_tag:
         temp = text
         text = text.replace(OLD_SOURCE_TAG1,NEW_SOURCE_TAG)
+        text = text.replace(OLD_SOURCE_TAG3,NEW_SOURCE_TAG)
+
+        new_pattern = r'{{عيون|\1em}}'
+
+        matches = re.findall(OLD_SOURCE_TAG1_PTRN, text)
+    
+        for match in matches:
+            # Replace 'مراجع' with 'عيون' in the matched text
+            updated_match = match.replace('مراجع', 'عيون')
+            
+            # Replace the old matched text with the updated matched text in the whole text
+            text = text.replace(match, updated_match)
            
         if text != temp:
             has_source_tag = True
-            MESSAGE += CORRECT_SOURCE_TAG_MESSAGE+SPACE
+            #MESSAGE += CORRECT_SOURCE_TAG_MESSAGE+SPACE
             text = re.sub(OLD_SOURCE_TAG2,"",text) #ensure removal of the other tag, only one is needed
+            #print("changing old source tag (1) with new one")
+
+        if text != temp:
+            has_source_tag = True
+            #MESSAGE += CORRECT_SOURCE_TAG_MESSAGE+SPACE
+            text = re.sub(OLD_SOURCE_TAG3,"",text) #ensure removal of the other tag, only one is needed
             #print("changing old source tag (1) with new one")
 
         temp = text
@@ -261,8 +309,8 @@ OLD_AUTHORITY_CONTROL_TAG = "{{ضبط استنادي}}"
 NEW_AUTHORITY_CONTROL_TAG = "{{ضبط مخازني}}"
 
 ###Save messages
-FIX_AUTHORITY_CONTROL_TAG = "طّاڭ ديال ضبط مخازني تصلح"
-ADD_AUTHORITY_CONTROL_TAG = "طّاڭ ديال ضبط مخازني تزاد"
+FIX_AUTHORITY_CONTROL_TAG = "طّاڭ ديال ضبط مخازني تصلح."
+ADD_AUTHORITY_CONTROL_TAG = "طّاڭ ديال ضبط مخازني تزاد."
 
 ###Functions
 def setAuthorityControlTag(page,text,MESSAGE):
@@ -285,6 +333,7 @@ def setAuthorityControlTag(page,text,MESSAGE):
 
 ##############################################Empty paragraph tag##############################################
 ###Tags
+"""
 EMPTY_PARAGRAPH_TAG = "{{فقرة مازالا خاوية ولا ناقصة}}"
 EMPTY_PARAGRAPH_PATTERN1 = r"==.+==[\n\s]+(?===\s|$)"
 EMPTY_PARAGRAPH_PATTERN2 = r"===.+===[\n\s]+(?====\s|$)"
@@ -311,12 +360,13 @@ def setEmptyParagraphTag(page,text,MESSAGE):
         text = temp
         MESSAGE += ADD_EMPTY_PARAGRAPH_TAG_MESSAGE+SPACE
     return text,MESSAGE
-
+"""
 ##############################################Transfer category##############################################
 ###Tags
 
 
 ###Save messages
+"""
 REDIR_CAT_ADD_MESSAGE = "تصنيف د تّحويلات تزاد"
 
 ###Functions
@@ -325,13 +375,14 @@ def add_redirect_cat(page,text,MESSAGE):
         text+='\n\n'+REDIRECT_PAGE_CAT_CODE
         MESSAGE +=REDIR_CAT_ADD_MESSAGE+SPACE
     return text,MESSAGE
-
+"""
 ##############################################No link to Wikidata cat########################################
 ###Category
 NO_LINK_TO_WIKIDATA_CAT = "[[تصنيف:أرتيكلات مامربوطينش معا ويكيداطا]]"
 
 
 ###Save messages
+"""
 ADD_NO_LINK_TO_WIKIDATA_MESSAGE = "تزاد تّصنيف ديال [[تصنيف:أرتيكلات مامربوطينش معا ويكيداطا]]"
 RMV_NO_LINK_TO_WIKIDATA_MESSAGE = "تحيّد تّصنيف ديال [[تصنيف:أرتيكلات مامربوطينش معا ويكيداطا]]"
 
@@ -355,9 +406,69 @@ def add_no_link_to_wikidata_cat(page,text,MESSAGE):
         MESSAGE +=ADD_NO_LINK_TO_WIKIDATA_MESSAGE+SPACE
     return text,MESSAGE
 
+"""
+
+
+##############################################Put cats at the end########################################
+CATS_ADJUSTED_MSG = "مقادة ديال التصنيفات ف اللخر د الصفحة"
+
+####Function
+def extract_category_blocks(wikitext):
+    """
+    Extracts blocks of categories from the given wikitext of a Wikipedia article on arywiki.
+
+    Parameters:
+    wikitext (str): The wikitext to be parsed.
+
+    Returns:
+    list: A list of category blocks, each block containing the categories as a string.
+    """
+    # Regular expression to match category blocks
+    category_block_pattern = r'(\[\[تصنيف:.*?\]\](?:[\s\n]*\[\[تصنيف:.*?\]\])*)'
+    
+    # Find all category blocks in the wikitext
+    category_blocks = re.findall(category_block_pattern, wikitext, re.DOTALL)
+    
+    # Clean up each block by stripping extra whitespace/newlines
+    cleaned_blocks = [block.strip() for block in category_blocks]
+    
+    return cleaned_blocks
+
+def remove_extra_empty_lines(text):
+    """
+    Removes extra empty lines from the given text, ensuring at most one empty line
+    exists between two non-empty lines. Handles lines containing only spaces as empty.
+
+    Parameters:
+    text (str): The input text.
+
+    Returns:
+    str: The modified text with extra empty lines removed.
+    """
+    # Pattern to match multiple empty lines (lines with only spaces or nothing)
+    cleaned_text = re.sub(r'(\n\s*\n)+', '\n\n', text)
+    
+    # Return the cleaned text
+    return cleaned_text.strip()
+
+def put_cats_at_the_end(page,text,MESSAGE):
+    #print("checking wikidata tag")
+    cat_blocks = extract_category_blocks(text)
+    tmp_text = text
+    for cat_block in cat_blocks:
+        tmp_text = tmp_text.replace(cat_block,'')
+        tmp_text+='\n'+cat_block
+    tmp_text = remove_extra_empty_lines(tmp_text)
+    if tmp_text != text:
+        text = tmp_text
+        MESSAGE += CATS_ADJUSTED_MSG
+    return text,MESSAGE
 
 ##############################################MAIN PROGRAM##############################################
 site = pywikibot.Site()
+site.throttle.maxdelay = 0
+site.login()
+
 
 print_to_console_and_log('Number of passed arguments: '+str(len(argv)))
 local_args = None
@@ -416,6 +527,9 @@ with open(RECENT_LOG_FILE,'a',encoding='utf-8') as f:
                 #Set source header flag
                 new_text,MESSAGE = setSourceHeaderTag(page,new_text,MESSAGE)
 
+                #Set source tag once more
+                new_text,MESSAGE = setSourceTag(page,new_text,MESSAGE)
+
                 #handling Authority Control tag
                 new_text,MESSAGE = setAuthorityControlTag(page,new_text,MESSAGE)
 
@@ -423,10 +537,12 @@ with open(RECENT_LOG_FILE,'a',encoding='utf-8') as f:
                 #new_text,MESSAGE = setStubTag(page,new_text,MESSAGE)
 
                 #handling empty paragraphs
-                new_text,MESSAGE = setEmptyParagraphTag(page,new_text,MESSAGE)
+                #new_text,MESSAGE = setEmptyParagraphTag(page,new_text,MESSAGE)
 
                 #handling wikidata link
-                new_text,MESSAGE = add_no_link_to_wikidata_cat(page,new_text,MESSAGE)
+                #new_text,MESSAGE = add_no_link_to_wikidata_cat(page,new_text,MESSAGE)
+
+                new_text,MESSAGE = put_cats_at_the_end(page,new_text,MESSAGE)
 
                 
                 if new_text != page.text:
@@ -434,6 +550,7 @@ with open(RECENT_LOG_FILE,'a',encoding='utf-8') as f:
                     page.text = new_text
                     try:
                         page.save(MESSAGE)
+                        #break
                     except:
                         #LOG_PAGE_TITLE = 
                         #log_error(LOG_PAGE_TITLE,log_message,save_log_message,site)
