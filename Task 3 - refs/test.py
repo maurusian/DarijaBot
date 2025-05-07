@@ -542,35 +542,296 @@ def fix_empty_title(ref_text):
     return result
 
 
-test_input = """<ref>{{Cite web
-|url=[https://www.hespress.com/%d8%a7%d9%84%d9%85%d8%aa%d8%ad%d9%81-%d8%a7%d9%84%d9%8a%d9%87%d9%88%d8%af%d9%8a-%d8%a8%d8%a7%d9%84%d8%a8%d9%8a%d8%b6%d8%a7%d8%a1-%d8%b0%d8%a7%d9%83%d8%b1%d8%a9-%d8%a7%d9%84%d8%aa%d8%b3%d8%a7%d9%85-225537.html المتحف اليهودي بالبيضاء .. ذاكرة التسامح الديني بالمغرب] صحيفة هسبريس. وصل لهذا المسار في 18 مايو 2016 {{Webarchive
-|url=https://web.archive.org/web/20230605094803/https://www.hespress.com/%D8%A7%D9%84%D9%85%D8%AA%D8%AD%D9%81-%D8%A7%D9%84%D9%8A%D9%87%D9%88%D8%AF%D9%8A-%D8%A8%D8%A7%D9%84%D8%A8%D9%8A%D8%B6%D8%A7%D8%A1-%D8%B0%D8%A7%D9%83%D8%B1%D8%A9-%D8%A7%D9%84%D8%AA%D8%B3%D8%A7%D9%85-225537.html
-|date=2023-06-05
-}}
-|title=
-}}</ref>"""
+TO_ARY_MONTH_TAB = {
+    'January': 'يناير', 'February': 'فبراير', 'March': 'مارس', 'April': 'أبريل', 'May': 'ماي',
+    'June': 'يونيو', 'July': 'يوليوز', 'August': 'غشت', 'September': 'شتنبر', 'October': 'أكتوبر',
+    'November': 'نونبر', 'December': 'دجنبر',
 
-test_input="""<ref name="صحيفة الشرق الأوسط">[http://archive.aawsat.com/details.asp?section=54&issueno=12764&article=749494#.VzxzVDUrJdg المتحف اليهودي في الدار البيضاء.. الوحيد في العالم العربي ومحافظته مسلمة] صحيفة الشرق الأوسط، 8 نوفمبر 2013. وصل لهذا المسار في 18 مايو 2016 {{Webarchive
-|url=https://archive.aawsat.com/details.asp?section=54&issueno=12764&article=749494
-|archive-url=https://web.archive.org/web/20191204155725/20191204155725/https://archive.aawsat.com/details.asp?section=54&issueno=12764&article=749494
-|archive-date=4 دجنبر 2019
-|date=4 ديسمبر 2019
-}}</ref>"""
+    'january': 'يناير', 'february': 'فبراير', 'march': 'مارس', 'april': 'أبريل', 'may': 'ماي',
+    'june': 'يونيو', 'july': 'يوليوز', 'august': 'غشت', 'september': 'شتنبر', 'october': 'أكتوبر',
+    'november': 'نونبر', 'december': 'دجنبر',
 
-test_input="""<ref name="laselki.net">{{Cite web
-|url=http://laselki.net/aboutus.html
-|accessdate=2020-07-23
-|archive-date=2020-01-16
-|archive-url=https://web.archive.org/web/20200116014137/http://www.laselki.net/aboutus.html
-|url-status=
+    'Janvier': 'يناير', 'Février': 'فبراير', 'Mars': 'مارس', 'Avril': 'أبريل', 'Mai': 'ماي',
+    'Juin': 'يونيو', 'Juillet': 'يوليوز', 'Août': 'غشت', 'Aout': 'غشت', 'Septembre': 'شتنبر',
+    'Octobre': 'أكتوبر', 'Novembre': 'نونبر', 'Decembre': 'دجنبر',
+
+    'janvier': 'يناير', 'février': 'فبراير', 'mars': 'مارس', 'avril': 'أبريل', 'mai': 'ماي',
+    'juin': 'يونيو', 'juillet': 'يوليوز', 'août': 'غشت', 'aout': 'غشت', 'septembre': 'شتنبر',
+    'octobre': 'أكتوبر', 'novembre': 'نونبر', 'decembre': 'دجنبر',
+
+    # Arabic (Levantine + Egyptian + Standard Arabic variants)
+    'كانون الثاني': 'يناير',
+    'شباط': 'فبراير',
+    'آذار': 'مارس',
+    'نيسان': 'أبريل',
+    'أيار': 'ماي',
+    'حزيران': 'يونيو',
+    'تموز': 'يوليوز',
+    'آب': 'غشت',
+    'أيلول': 'شتنبر',
+    'تشرين الأول': 'أكتوبر',
+    'تشرين الثاني': 'نونبر',
+    'كانون الأول': 'دجنبر',
+
+    # Standard Arabic months
+    'يناير':'يناير',
+    'فبراير':'فبراير',
+    'مارس':'مارس',
+    'أبريل':'أبريل',
+    'مايو': 'ماي',
+    'يونيو': 'يونيو',
+    'يوليو': 'يوليوز',
+    'أغسطس': 'غشت',
+    'سبتمبر': 'شتنبر',
+    'أكتوبر': 'أكتوبر',
+    'نوفمبر': 'نونبر',
+    'ديسمبر': 'دجنبر',
+    
+}
+
+
+
+def get_fixed_dates_ref(ref):
+    print("get_fixed_dates_ref")
+    ref_adj = ref
+    regex_pattern = r"(\|\s*(date|accessdate|access-date|archive-date|archivedate)\s*=\s*\d{1,2}\s+[^\W\d_]+\s+\d{4})"
+    matches = re.findall(regex_pattern, ref)
+    print(matches)
+    for match in matches:
+        #print(match) #for debugging
+        date = match[0] #.group(1)
+        month_name = re.sub(r"[0-9\s]", "", date.split('=')[-1])
+        #print(month_name) #for debugging
+        if month_name in TO_ARY_MONTH_TAB.keys():
+            ary_date = date.replace(month_name,TO_ARY_MONTH_TAB[month_name])
+            ref_adj = ref_adj.replace(date,ary_date)
+        #ref_adj = re.sub(regex_pattern, replace_month, ref_adj)
+    return ref_adj
+
+
+def get_simple_ref_part(ref):
+    match = re.match(r'<ref([^>]*)>(.*?)<\/ref>', ref, re.DOTALL)
+    if not match:
+        return None
+
+    ref_attrs = match.group(1)  # attributes inside <ref ...>
+    ref_content = match.group(2)  # content inside <ref>...</ref>
+
+    url = ''
+    full_title = ''
+    archive_url = ''
+    archive_date = ''
+    publication_date = ''
+
+    # Extract the webarchive template if present
+    webarchive_match = re.search(r'\{\{[Ww]ebarchive\s*\|\s*(.*?)\}\}', ref_content, re.DOTALL)
+    param_dict = {}
+    if webarchive_match:
+        params = webarchive_match.group(1)
+        for param in params.split('|'):
+            if '=' in param:
+                key, value = param.split('=', 1)
+                param_dict[key.strip()] = value.strip()
+
+        # Priority: archive-url > url
+        if 'archive-url' in param_dict:
+            archive_url = param_dict['archive-url']
+        if 'url' in param_dict:
+            url_from_webarchive = param_dict['url']
+        else:
+            url_from_webarchive = ''
+
+        # Priority handling for archive-date and publication date
+        if 'archive-date' in param_dict:
+            archive_date = param_dict['archive-date']
+        if 'date' in param_dict:
+            if 'archive-date' not in param_dict:
+                archive_date = param_dict['date']
+            else:
+                publication_date = param_dict['date']
+
+        # Remove the webarchive template from the content
+        ref_content = re.sub(r'\{\{[Ww]ebarchive\s*\|.*?\}\}', '', ref_content, flags=re.DOTALL).strip()
+
+    else:
+        url_from_webarchive = ''
+
+    link_match = re.search(r'\[(https?://[^\s\]]+)\s+([^\]]+)\]', ref_content)
+    if link_match:
+        # normal case: [url title]
+        url = link_match.group(1).strip()
+        title_inside_link = link_match.group(2).strip()
+
+        before_link = ref_content[:link_match.start()].strip()
+        after_link = ref_content[link_match.end():].strip()
+
+        parts = []
+        if before_link:
+            parts.append(before_link)
+        parts.append(title_inside_link)
+        if after_link:
+            parts.append(after_link)
+
+        full_title = ' '.join(parts)
+
+    else:
+        # no [url title] inside content
+        if 'http' in ref_content:
+            url = ref_content.strip()
+            title = get_title_from_url(url)
+            if not title:
+                title = get_website_name(url)
+            full_title = title
+        elif url_from_webarchive:
+            # special case: use Webarchive url and text outside as title
+            url = url_from_webarchive
+            full_title = ref_content.strip()
+        else:
+            full_title = ref_content.strip()
+
+    full_title = full_title.replace('|',' - ').replace('\n',' ').replace('  ',' ')
+    if url:
+        # Build the citation manually
+        cite_parts = [
+            '{{Cite web',
+            f'|url={url}'
+        ]
+        if archive_url:
+            cite_parts.append(f'|archive-url={archive_url}')
+        if archive_date:
+            cite_parts.append(f'|archive-date={archive_date}')
+        if publication_date:
+            cite_parts.append(f'|date={publication_date}')
+        cite_parts.append(f'|title={full_title.strip()}')
+        cite_parts.append('}}')
+
+        new_cite = '\n'.join(cite_parts)
+
+        return f'<ref{ref_attrs}>{new_cite}</ref>'
+
+    return None
+
+
+def is_simple_reference(ref):
+    # Define the regex pattern to match non-simple references
+    non_simple_reference_pattern = r'<ref(?:\s+[^>]*)?>\{\{(?:Lien|Article|Ouvrage|Cite|Internetquelle|مرجع).*?\}\}<\/ref>'
+    
+    # Check if the reference matches the non-simple pattern
+    if re.search(non_simple_reference_pattern, ref, re.IGNORECASE | re.DOTALL):
+        print("has non simple ref")
+        return False
+    
+    # If the reference does not match the non-simple pattern,
+    # check if it matches the simple reference pattern
+    simple_reference_pattern = r'<ref(?:\s+[^>]*)?>(.*?)<\/ref>'
+    match = re.search(simple_reference_pattern, ref, re.DOTALL)
+    
+    # If a match is found, it's a simple reference
+    print(f"has simple ref: {bool(match)}")
+    return bool(match)
+
+
+def get_fixed_dates_ref(ref):
+    print("get_fixed_dates_ref")
+    ref_adj = ref
+
+    # Find all date-like fields inside templates
+    field_pattern = r"(\|\s*(date|accessdate|access-date|archive-date|archivedate)\s*=\s*[^|\n]*)"
+    fields = re.findall(field_pattern, ref, re.DOTALL)
+
+    for field in fields:
+        full_match = field[0]  # the full "|param= value"
+        #print(f"full_match: {full_match}")
+        field_name = field[1]  # the param name like "date"
+        #print(f"field_name: {field_name}")
+        
+        value = full_match.split('=', 1)[-1].strip()
+        #print(f"value: {value}")
+
+        # Try normal "day month year" first
+        match_normal = re.match(r'^(\d{1,2})\s+([^\d\s,،]+)\s+(\d{4})$', value)
+        #print(f"match_normal: {match_normal}")
+        match_reverse = re.match(r'^([^\d\s,،]+)\s+(\d{1,2})[,،]?\s+(\d{4})$', value)
+        #print(f"match_reverse: {match_reverse}")
+
+        if match_normal:
+            day_part = str(int(match_normal.group(1)))
+            #print(f"day_part: {day_part}")
+            month_part = match_normal.group(2)
+            year_part = match_normal.group(3)
+
+            if month_part in TO_ARY_MONTH_TAB.keys():
+                new_value = f"{day_part} {TO_ARY_MONTH_TAB[month_part]} {year_part}"
+                fixed_line = f"|{field_name}={new_value}"
+                ref_adj = ref_adj.replace(full_match, fixed_line)
+
+        elif match_reverse:
+            month_part = match_reverse.group(1)
+            day_part = str(int(match_reverse.group(2)))
+            year_part = match_reverse.group(3)
+
+            if month_part in TO_ARY_MONTH_TAB.keys():
+                new_value = f"{day_part} {TO_ARY_MONTH_TAB[month_part]} {year_part}"
+                fixed_line = f"|{field_name}={new_value}"
+                ref_adj = ref_adj.replace(full_match, fixed_line)
+
+    return ref_adj
+
+#import re
+#from urllib.parse import urlparse
+
+def fix_website_field(ref):
+    print("fix_website_field")
+    ref_adj = ref
+
+    website_pattern = r"(\|\s*website\s*=\s*[^|\n]*)"
+    websites = re.findall(website_pattern, ref, re.DOTALL)
+
+    for full_match in websites:
+        value = full_match.split('=', 1)[-1].strip()
+
+        # If the value looks like a full URL
+        if value.startswith('http://') or value.startswith('https://'):
+            parsed_url = urlparse(value)
+            domain = parsed_url.netloc
+
+            # Safety cleanup: remove "www." if present
+            if domain.startswith('www.'):
+                domain = domain[4:]
+
+            fixed_line = f"|website={domain}"
+            ref_adj = ref_adj.replace(full_match, fixed_line)
+
+    return ref_adj
+
+
+test_input = """<ref>{{مرجع ويب
+|url=https://www.lesinrocks.com/cinema/gad-elmaleh-in-gad-we-trust-90970-30-01-2001/
+|title=Gad Elmaleh - In Gad we trust - Les Inrocks
+|website=https://www.lesinrocks.com/
+|language=fr-FR
+|accessdate=2023-06-06
+|archive-url=https://web.archive.org/web/20230606104403/https://www.lesinrocks.com/cinema/gad-elmaleh-in-gad-we-trust-90970-30-01-2001/
+|archive-date=2023-06-06
+|url-status=live
+}}</ref> """
+
+'''
+test_input="""<ref>, Charles W. Furlong ,1911 ,September , The French Conquest Of Morocco: The Real Meaning Of The International Trouble, World's Work
+|The World's Work: A History of Our Time, المجلد XXII, صفحات=14988–14999, تاريخ الوصول: 2009-07-10 {{Webarchive
+|url=https://books.google.com/books?id=rHAAAAAAYAAJ&pg=RA1-PA14988
+|archive-url=https://web.archive.org/web/20170106064208/20170106064208/https://books.google.com/books?id=rHAAAAAAYAAJ&pg=RA1-PA14988
+|archive-date=6 يناير 2017
+|date=06 يناير 2017
 }}</ref>"""
+'''
 
 from pprint import pprint
 
 # Assume the previous function fix_wiki_ref_tag is already defined
 #fixed_output = fix_access_date_in_ref(fix_url_and_title_in_ref(fix_webarchive_in_ref(test_input)))
 
-fixed_output = fix_empty_title(test_input)
+fixed_output = fix_website_field(test_input)
 
 print("Original Input:")
 print(test_input)

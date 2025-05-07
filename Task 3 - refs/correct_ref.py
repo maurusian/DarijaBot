@@ -15,11 +15,18 @@ REF_PATTERN3 = r"<ref name=.+?/?>"
 BRKN_LNK_TAG_PATTERN1 = "\{\{\s*(ليان مهرس|وصلة مكسورة|[dD]ead link)\s*\|\s*date\s*=\s*[^|}]+\|\s*bot\s*=\s*[^|}]+\|\s*fix-attempted\s*=\s*[^|}]+\s*\}\}"
 
 SIMPLE_REF_PATTERN = r">[\n|\s]*\[http.+?\][\n|\s]*<"
+
+ALL_WEB_CITATION_PATTERN_TMP_NAMES = "Lien web|استشهاد بويب|Article|Cite web|Internetquelle|مرجع ويب"
+MAIN_WEB_CITATION_TEMPLATE_MATCH_PATTERN = r'\{\{(?:' + ALL_WEB_CITATION_PATTERN_TMP_NAMES + r')(.*)'
+
 CITE_WEB_PATTERN = """{{Cite web
 |url={url}
 |title={title}
 }}
 """
+
+
+ALL_CITATION_PATTERN_START = "Lien|استشهاد|Article|Ouvrage|Cite|Internetquelle|مرجع"
 
 SIMPLE_BOOK_PATTERN = """<ref{namepart}>{{Cite book
 |title={title}
@@ -96,77 +103,54 @@ TO_ARY_CONV_TAB = {'الأخير':'last'
                    ,'hrsg':'website'
                    }
 
-TO_ARY_MONTH_TAB = {'January':'يناير'
-                   ,'February':'فبراير'
-                   ,'March':'مارس'
-                   ,'April':'أبريل'
-                   ,'May':'ماي'
-                   ,'June':'يونيو'
-                   ,'July':'يوليوز'
-                   ,'August':'غشت'
-                   ,'September':'شتنبر'
-                   ,'October':'أكتوبر'
-                   ,'November':'نونبر'
-                   ,'December':'دجنبر'
-                   ,'january':'يناير'
-                   ,'february':'فبراير'
-                   ,'march':'مارس'
-                   ,'april':'أبريل'
-                   ,'may':'ماي'
-                   ,'june':'يونيو'
-                   ,'july':'يوليوز'
-                   ,'august':'غشت'
-                   ,'september':'شتنبر'
-                   ,'october':'أكتوبر'
-                   ,'november':'نونبر'
-                   ,'december':'دجنبر'
-                   ,'Janvier':'يناير'
-                   ,'Février':'فبراير'
-                   ,'Mars':'مارس'
-                   ,'Avril':'أبريل'
-                   ,'Mai':'ماي'
-                   ,'Juin':'يونيو'
-                   ,'Juillet':'يوليوز'
-                   ,'Août':'غشت'
-                   ,'Aout':'غشت'
-                   ,'Septembre':'شتنبر'
-                   ,'Octobre':'أكتوبر'
-                   ,'Novembre':'نونبر'
-                   ,'Decembre':'دجنبر'
-                   ,'janvier':'يناير'
-                   ,'février':'فبراير'
-                   ,'mars':'مارس'
-                   ,'avril':'أبريل'
-                   ,'mai':'ماي'
-                   ,'juin':'يونيو'
-                   ,'juillet':'يوليوز'
-                   ,'août':'غشت'
-                   ,'aout':'غشت'
-                   ,'septembre':'شتنبر'
-                   ,'octobre':'أكتوبر'
-                   ,'novembre':'نونبر'
-                   ,'decembre':'دجنبر'
-                   ,'كانون الثاني':''
-                   ,'شباط':'فبراير'
-                   ,'آذار':'مارس'
-                   ,'نيسان':'أبريل'
-                   ,'أيار':'ماي'
-                   ,'تموز':'يونيو'
-                   ,'آب':'يوليوز'
-                   ,'حزيران':'غشت'
-                   ,'أيلول':'شتنبر'
-                   ,'تشرين الأول':'أكتوبر'
-                   ,'تشرين الثاني':'نونبر'
-                   ,'كانون الأول':'دجنبر'
-                   ,'مايو':'ماي'
-                   ,'يوليو':'يوليوز'
-                   ,'أغسطس':'غشت'
-                   ,'سبتمبر':'شتنبر'
-                   ,'نوفمبر':'نونبر'
-                   ,'ديسمبر':'دجنبر'
-                   }
+TO_ARY_MONTH_TAB = {
+    'January': 'يناير', 'February': 'فبراير', 'March': 'مارس', 'April': 'أبريل', 'May': 'ماي',
+    'June': 'يونيو', 'July': 'يوليوز', 'August': 'غشت', 'September': 'شتنبر', 'October': 'أكتوبر',
+    'November': 'نونبر', 'December': 'دجنبر',
 
-SAVE_MESSAGE = "إصلاح ديال طّاڭات د لعيون"
+    'january': 'يناير', 'february': 'فبراير', 'march': 'مارس', 'april': 'أبريل', 'may': 'ماي',
+    'june': 'يونيو', 'july': 'يوليوز', 'august': 'غشت', 'september': 'شتنبر', 'october': 'أكتوبر',
+    'november': 'نونبر', 'december': 'دجنبر',
+
+    'Janvier': 'يناير', 'Février': 'فبراير', 'Mars': 'مارس', 'Avril': 'أبريل', 'Mai': 'ماي',
+    'Juin': 'يونيو', 'Juillet': 'يوليوز', 'Août': 'غشت', 'Aout': 'غشت', 'Septembre': 'شتنبر',
+    'Octobre': 'أكتوبر', 'Novembre': 'نونبر', 'Decembre': 'دجنبر',
+
+    'janvier': 'يناير', 'février': 'فبراير', 'mars': 'مارس', 'avril': 'أبريل', 'mai': 'ماي',
+    'juin': 'يونيو', 'juillet': 'يوليوز', 'août': 'غشت', 'aout': 'غشت', 'septembre': 'شتنبر',
+    'octobre': 'أكتوبر', 'novembre': 'نونبر', 'decembre': 'دجنبر',
+
+    # Arabic (Levantine + Egyptian + Standard Arabic variants)
+    'كانون الثاني': 'يناير',
+    'شباط': 'فبراير',
+    'آذار': 'مارس',
+    'نيسان': 'أبريل',
+    'أيار': 'ماي',
+    'حزيران': 'يونيو',
+    'تموز': 'يوليوز',
+    'آب': 'غشت',
+    'أيلول': 'شتنبر',
+    'تشرين الأول': 'أكتوبر',
+    'تشرين الثاني': 'نونبر',
+    'كانون الأول': 'دجنبر',
+
+    # Standard Arabic months
+    'يناير':'يناير',
+    'فبراير':'فبراير',
+    'مارس':'مارس',
+    'أبريل':'أبريل',
+    'مايو': 'ماي',
+    'يونيو': 'يونيو',
+    'يوليو': 'يوليوز',
+    'أغسطس': 'غشت',
+    'سبتمبر': 'شتنبر',
+    'أكتوبر': 'أكتوبر',
+    'نوفمبر': 'نونبر',
+    'ديسمبر': 'دجنبر',
+    
+}
+
+SAVE_MESSAGE = "عطاشة 3.1: مقادّة ديال لمصادر ف لمقال"
 
 LAST_RUN_FILE = "last_run.txt"
 
@@ -242,18 +226,20 @@ def extract_params(text):
 
 def is_simple_reference(ref):
     # Define the regex pattern to match non-simple references
-    non_simple_reference_pattern = r'<ref>\{\{(?:Lien|Article|Ouvrage|Cite|Internetquelle|مرجع).*?\}\}<\/ref>'
+    non_simple_reference_pattern = r'<ref(?:\s+[^>]*)?>\{\{(?:'+ALL_CITATION_PATTERN_START+').*?\}\}<\/ref>'
     
     # Check if the reference matches the non-simple pattern
-    if re.search(non_simple_reference_pattern, ref, re.IGNORECASE):
+    if re.search(non_simple_reference_pattern, ref, re.IGNORECASE | re.DOTALL):
+        print("has non simple ref")
         return False
     
     # If the reference does not match the non-simple pattern,
     # check if it matches the simple reference pattern
-    simple_reference_pattern = r'<ref>(.*?)<\/ref>'
-    match = re.search(simple_reference_pattern, ref)
+    simple_reference_pattern = r'<ref(?:\s+[^>]*)?>(.*?)<\/ref>'
+    match = re.search(simple_reference_pattern, ref, re.DOTALL)
     
     # If a match is found, it's a simple reference
+    print(f"has simple ref: {bool(match)}")
     return bool(match)
 
 
@@ -292,32 +278,109 @@ def get_website_name(url):
 
 
 def get_simple_ref_part(ref):
-    ref_part = list(re.findall(SIMPLE_REF_PATTERN, ref,re.DOTALL))
-    if len(ref_part) == 1:
-        #print("found*********************")
-        #print(ref_part)
-        words = ref_part[0].replace('<','').replace('[','').replace('>','').replace(']','').split(' ')
-        url = ''
-        for word in words:
-            if 'http' in word:
-                url = word.strip()
-                #print('url: '+url)
+    match = re.match(r'<ref([^>]*)>(.*?)<\/ref>', ref, re.DOTALL)
+    if not match:
+        return None
 
-        if url:
-            title = ref_part[0].replace('<','').replace('[','').replace('>','').replace(']','').replace(url,'').strip()
+    ref_attrs = match.group(1)  # attributes inside <ref ...>
+    ref_content = match.group(2)  # content inside <ref>...</ref>
 
-            value = ref.replace(ref_part[0],'>'+CITE_WEB_PATTERN.replace('{url}',url).replace('{title}',title)+'<')
+    url = ''
+    full_title = ''
+    archive_url = ''
+    archive_date = ''
+    publication_date = ''
 
-            #print(value)
-            return value
+    # Extract the webarchive template if present
+    webarchive_match = re.search(r'\{\{[Ww]ebarchive\s*\|\s*(.*?)\}\}', ref_content, re.DOTALL)
+    param_dict = {}
+    if webarchive_match:
+        params = webarchive_match.group(1)
+        for param in params.split('|'):
+            if '=' in param:
+                key, value = param.split('=', 1)
+                param_dict[key.strip()] = value.strip()
+
+        # Priority: archive-url > url
+        if 'archive-url' in param_dict:
+            archive_url = param_dict['archive-url']
+        if 'archiveurl' in param_dict:
+            archive_url = param_dict['archive-url']
+        if 'url' in param_dict:
+            url_from_webarchive = param_dict['url']
+        else:
+            url_from_webarchive = ''
+
+        # Priority handling for archive-date and publication date
+        if 'archive-date' in param_dict:
+            archive_date = param_dict['archive-date']
+        if 'archivedate' in param_dict:
+            archive_date = param_dict['archive-date']
+        if 'date' in param_dict:
+            if 'archive-date' not in param_dict or 'archivedate' not in param_dict:
+                archive_date = param_dict['date']
+            else:
+                publication_date = param_dict['date']
+
+        # Remove the webarchive template from the content
+        ref_content = re.sub(r'\{\{[Ww]ebarchive\s*\|.*?\}\}', '', ref_content, flags=re.DOTALL).strip()
+
     else:
-        if 'http' in ref:
-            url = ref.replace('<ref>','').replace('</ref>','').strip()
+        url_from_webarchive = ''
+
+    link_match = re.search(r'\[(https?://[^\s\]]+)\s+([^\]]+)\]', ref_content)
+    if link_match:
+        # normal case: [url title]
+        url = link_match.group(1).strip()
+        title_inside_link = link_match.group(2).strip()
+
+        before_link = ref_content[:link_match.start()].strip()
+        after_link = ref_content[link_match.end():].strip()
+
+        parts = []
+        if before_link:
+            parts.append(before_link)
+        parts.append(title_inside_link)
+        if after_link:
+            parts.append(after_link)
+
+        full_title = ' '.join(parts)
+
+    else:
+        # no [url title] inside content
+        if 'http' in ref_content:
+            url = ref_content.strip()
             title = get_title_from_url(url)
             if not title:
                 title = get_website_name(url)
-                
-            return '<ref>'+CITE_WEB_PATTERN.replace('{url}',url).replace('{title}',title)+'</ref>'
+            full_title = title
+        elif url_from_webarchive:
+            # special case: use Webarchive url and text outside as title
+            url = url_from_webarchive
+            full_title = ref_content.strip()
+        else:
+            full_title = ref_content.strip()
+
+    full_title = full_title.replace('|',' - ').replace('\n',' ').replace('  ',' ')
+    if url:
+        # Build the citation manually
+        cite_parts = [
+            '{{مرجع ويب',
+            f'|url={url}'
+        ]
+        if archive_url:
+            cite_parts.append(f'|archive-url={archive_url}')
+        if archive_date:
+            cite_parts.append(f'|archive-date={archive_date}')
+        if publication_date:
+            cite_parts.append(f'|date={publication_date}')
+        cite_parts.append(f'|title={full_title.strip()}')
+        cite_parts.append('}}')
+
+        new_cite = '\n'.join(cite_parts)
+
+        return f'<ref{ref_attrs}>{new_cite}</ref>'
+
     return None
 
 def extract_isbn(wiki_reference):
@@ -400,17 +463,47 @@ def get_fixed_keywords_ref(ref):
 def get_fixed_dates_ref(ref):
     print("get_fixed_dates_ref")
     ref_adj = ref
-    regex_pattern = r"(\|\s*(date|accessdate|access-date|archive-date|archivedate)\s*=\s*\d{1,2}\s+[a-zA-Z]+\s+\d{4})"
-    matches = re.findall(regex_pattern, ref)
-    for match in matches:
-        #print(match) #for debugging
-        date = match[0] #.group(1)
-        month_name = re.sub(r"[0-9\s]", "", date.split('=')[-1])
-        #print(month_name) #for debugging
-        if month_name in TO_ARY_MONTH_TAB.keys():
-            ary_date = date.replace(month_name,TO_ARY_MONTH_TAB[month_name])
-            ref_adj = ref_adj.replace(date,ary_date)
-        #ref_adj = re.sub(regex_pattern, replace_month, ref_adj)
+
+    # Find all date-like fields inside templates
+    field_pattern = r"(\|\s*(date|accessdate|access-date|archive-date|archivedate)\s*=\s*[^|\n]*)"
+    fields = re.findall(field_pattern, ref, re.DOTALL)
+
+    for field in fields:
+        full_match = field[0]  # the full "|param= value"
+        #print(f"full_match: {full_match}")
+        field_name = field[1]  # the param name like "date"
+        #print(f"field_name: {field_name}")
+        
+        value = full_match.split('=', 1)[-1].strip()
+        #print(f"value: {value}")
+
+        # Try normal "day month year" first
+        match_normal = re.match(r'^(\d{1,2})\s+([^\d\s,،]+)\s+(\d{4})$', value)
+        #print(f"match_normal: {match_normal}")
+        match_reverse = re.match(r'^([^\d\s,،]+)\s+(\d{1,2})[,،]?\s+(\d{4})$', value)
+        #print(f"match_reverse: {match_reverse}")
+
+        if match_normal:
+            day_part = str(int(match_normal.group(1)))
+            #print(f"day_part: {day_part}")
+            month_part = match_normal.group(2)
+            year_part = match_normal.group(3)
+
+            if month_part in TO_ARY_MONTH_TAB.keys():
+                new_value = f"{day_part} {TO_ARY_MONTH_TAB[month_part]} {year_part}"
+                fixed_line = f"|{field_name}={new_value}"
+                ref_adj = ref_adj.replace(full_match, fixed_line)
+
+        elif match_reverse:
+            month_part = match_reverse.group(1)
+            day_part = str(int(match_reverse.group(2)))
+            year_part = match_reverse.group(3)
+
+            if month_part in TO_ARY_MONTH_TAB.keys():
+                new_value = f"{day_part} {TO_ARY_MONTH_TAB[month_part]} {year_part}"
+                fixed_line = f"|{field_name}={new_value}"
+                ref_adj = ref_adj.replace(full_match, fixed_line)
+
     return ref_adj
 
 
@@ -640,11 +733,13 @@ def fix_webarchive_in_ref(ref_text):
     ref_inner = re.sub(r'}}\s*', '', ref_inner)
 
     # Now process the main Cite web template
-    main_template_match = re.search(r'{{Cite web(.*)', ref_inner, re.DOTALL)
+    main_template_match = re.search(MAIN_WEB_CITATION_TEMPLATE_MATCH_PATTERN, ref_inner, re.DOTALL)
     if not main_template_match:
         return ref_text
 
     main_template_content = main_template_match.group(1)
+
+    print(f"main_template_content: {main_template_content}")
 
     params = extract_params(main_template_content)
 
@@ -666,13 +761,14 @@ def fix_webarchive_in_ref(ref_text):
     ref_open = ref_open_match.group(0) if ref_open_match else '<ref>'
 
     # Replace the Cite web content
-    new_cite_web = '{{Cite web\n'
+    new_cite_web = '{{مرجع ويب\n'
     for key, value in final_params.items():
         new_cite_web += f'|{key}={value}\n'
     new_cite_web += '}}'
 
     # Replace the old Cite web template inside
-    ref_inner_replaced = re.sub(r'{{Cite web.*', new_cite_web, ref_inner, flags=re.DOTALL)
+
+    ref_inner_replaced = re.sub(MAIN_WEB_CITATION_TEMPLATE_MATCH_PATTERN, new_cite_web, ref_inner, flags=re.DOTALL)
 
     # Rebuild the full <ref> tag
     result = f'{ref_open}{ref_inner_replaced}</ref>'
@@ -692,7 +788,8 @@ def fix_url_and_title_in_ref(ref_text):
     ref_inner = re.sub(r'}}\s*', '', ref_inner)
 
     # Find main Cite web template
-    main_template_match = re.search(r'{{Cite web(.*)', ref_inner, re.DOTALL)
+
+    main_template_match = re.search(MAIN_WEB_CITATION_TEMPLATE_MATCH_PATTERN, ref_inner, re.DOTALL)
     if not main_template_match:
         return ref_text
 
@@ -727,13 +824,14 @@ def fix_url_and_title_in_ref(ref_text):
     ref_open = ref_open_match.group(0) if ref_open_match else '<ref>'
 
     # Replace the Cite web content
-    new_cite_web = '{{Cite web\n'
+    new_cite_web = '{{مرجع ويب\n'
     for key, value in final_params.items():
         new_cite_web += f'|{key}={value}\n'
     new_cite_web += '}}'
 
     # Replace the old Cite web template inside
-    ref_inner_replaced = re.sub(r'{{Cite web.*', new_cite_web, ref_inner, flags=re.DOTALL)
+
+    ref_inner_replaced = re.sub(MAIN_WEB_CITATION_TEMPLATE_MATCH_PATTERN, new_cite_web, ref_inner, flags=re.DOTALL)
 
     # Rebuild the full <ref> tag
     result = f'{ref_open}{ref_inner_replaced}</ref>'
@@ -747,6 +845,9 @@ def fix_access_date_in_ref(ref_text):
     access_date_patterns = [
         r'وصل لهذا المسار في (\d{1,2} [^\s]+ \d{4})',
         r'accessed on (\d{1,2} [^\s]+ \d{4})',
+        r'Retrieved on (\d{1,2} [^\s]+ \d{4})',
+        r'تاريخ الوصول (\d{1,2} [^\s]+ \d{4})',
+        r'تاريخ الوصول\s*:\s*(\d{4}-\d{2}-\d{2})',
         # Add more patterns if needed
     ]
 
@@ -760,7 +861,7 @@ def fix_access_date_in_ref(ref_text):
     ref_inner = re.sub(r'}}\s*', '', ref_inner)
 
     # Find main Cite web template
-    main_template_match = re.search(r'{{Cite web(.*)', ref_inner, re.DOTALL)
+    main_template_match = re.search(MAIN_WEB_CITATION_TEMPLATE_MATCH_PATTERN, ref_inner, re.DOTALL)
     if not main_template_match:
         return ref_text
 
@@ -797,13 +898,13 @@ def fix_access_date_in_ref(ref_text):
     ref_open = ref_open_match.group(0) if ref_open_match else '<ref>'
 
     # Replace the Cite web content
-    new_cite_web = '{{Cite web\n'
+    new_cite_web = '{{مرجع ويب\n'
     for key, value in final_params.items():
         new_cite_web += f'|{key}={value}\n'
     new_cite_web += '}}'
 
     # Replace the old Cite web template inside
-    ref_inner_replaced = re.sub(r'{{Cite web.*', new_cite_web, ref_inner, flags=re.DOTALL)
+    ref_inner_replaced = re.sub(MAIN_WEB_CITATION_TEMPLATE_MATCH_PATTERN, new_cite_web, ref_inner, flags=re.DOTALL)
 
     # Rebuild the full <ref> tag
     result = f'{ref_open}{ref_inner_replaced}</ref>'
@@ -857,7 +958,7 @@ def fix_empty_title(ref_text):
     ref_inner = re.sub(r'}}\s*', '', ref_inner)
 
     # Find main Cite web template
-    main_template_match = re.search(r'{{Cite web(.*)', ref_inner, re.DOTALL)
+    main_template_match = re.search(MAIN_WEB_CITATION_TEMPLATE_MATCH_PATTERN, ref_inner, re.DOTALL)
     if not main_template_match:
         return ref_text
 
@@ -912,18 +1013,43 @@ def fix_empty_title(ref_text):
     ref_open = ref_open_match.group(0) if ref_open_match else '<ref>'
 
     # Replace the Cite web content
-    new_cite_web = '{{Cite web\n'
+    new_cite_web = '{{مرجع ويب\n'
     for key, value in final_params.items():
         new_cite_web += f'|{key}={value}\n'
     new_cite_web += '}}'
 
     # Replace the old Cite web template inside
-    ref_inner_replaced = re.sub(r'{{Cite web.*', new_cite_web, ref_inner, flags=re.DOTALL)
+    ref_inner_replaced = re.sub(MAIN_WEB_CITATION_TEMPLATE_MATCH_PATTERN, new_cite_web, ref_inner, flags=re.DOTALL)
 
     # Rebuild the full <ref> tag
     result = f'{ref_open}{ref_inner_replaced}</ref>'
 
     return result
+
+
+def fix_website_field(ref):
+    print("fix_website_field")
+    ref_adj = ref
+
+    website_pattern = r"(\|\s*website\s*=\s*[^|\n]*)"
+    websites = re.findall(website_pattern, ref, re.DOTALL)
+
+    for full_match in websites:
+        value = full_match.split('=', 1)[-1].strip()
+
+        # If the value looks like a full URL
+        if value.startswith('http://') or value.startswith('https://'):
+            parsed_url = urlparse(value)
+            domain = parsed_url.netloc
+
+            # Safety cleanup: remove "www." if present
+            if domain.startswith('www.'):
+                domain = domain[4:]
+
+            fixed_line = f"|website={domain}"
+            ref_adj = ref_adj.replace(full_match, fixed_line)
+
+    return ref_adj
 
 if __name__ =="__main__":
 
@@ -935,8 +1061,8 @@ if __name__ =="__main__":
 
     #refs = list(re.findall(REF_PATTERN, page.text,re.DOTALL))
 
-    test_title = "هواية د راديو" #"لمتحف ليهودي لمغريبي"
-    load_from_cat_name = "" #"تصنيف:أرتيكلات فيهوم موشكيل بسباب عطاشة 3.1"
+    test_title = "" #"لمتحف ليهودي لمغريبي"
+    load_from_cat_name = "تصنيف:أرتيكلات فيهوم موشكيل بسباب عطاشة 3.1"
     if test_title is not None and test_title.strip() != "":
         test_page = pywikibot.Page(site,test_title)
         pool = [test_page]
@@ -1002,35 +1128,58 @@ if __name__ =="__main__":
                             new_ref = get_simple_book_ref(ref)
                         """
                         #else:
-                        
+                        print(ref)
                         if is_simple_reference(ref):
+                            print("is simple ref")
                             new_ref = get_simple_ref_part(ref)
-
-                            
                             if new_ref is not None:
                                 #fix issues introduced by naive implementation of get_simple_ref_part, due to "webarchive" template
+                            
                                 new_ref = fix_webarchive_in_ref(new_ref)
+
+                                #fix url and title
                                 new_ref = fix_url_and_title_in_ref(new_ref)
-                                new_ref = fix_access_date_in_ref(new_ref)
                                 new_ref = fix_empty_title(new_ref)
-                                
+
+                                #fix dates
+                                new_ref = get_fixed_dates_ref(new_ref)
+                                new_ref = fix_access_date_in_ref(new_ref)
+                                #fix issues introduced by naive implementation of get_simple_ref_part, due to "webarchive" template
+                                #new_ref = fix_webarchive_in_ref(new_ref)
+                                #new_ref = fix_url_and_title_in_ref(new_ref)
+                                #new_ref = fix_access_date_in_ref(new_ref)
+                                #new_ref = fix_empty_title(new_ref)
+                                #new_ref = get_fixed_dates_ref(new_ref)
+
+                                new_ref = new_ref.replace("}}\n</ref>","}}</ref>") #bug fix
                                 tmp_text = tmp_text.replace(ref,new_ref) #to be tested
+
+                            else:
+                                print(f"Reference {ref} should be parsed as a simple ref but is not.")
 
                                 
                                 
                         else:
+                            
                             new_ref = get_textual_fixed_ref(ref)
 
                             new_ref = get_fixed_keywords_ref(new_ref)
                                 
-                            new_ref = get_fixed_dates_ref(new_ref)
 
                             #fix issues introduced by naive implementation of get_simple_ref_part, due to "webarchive" template
-                            new_ref = fix_webarchive_in_ref(new_ref)
-                            new_ref = fix_url_and_title_in_ref(new_ref)
-                            new_ref = fix_access_date_in_ref(new_ref)
-                            new_ref = fix_empty_title(new_ref)
                             
+                            new_ref = fix_webarchive_in_ref(new_ref)
+
+                            #fix url and title
+                            new_ref = fix_url_and_title_in_ref(new_ref)
+                            new_ref = fix_empty_title(new_ref)
+
+                            #fix dates
+                            new_ref = get_fixed_dates_ref(new_ref)
+                            new_ref = fix_access_date_in_ref(new_ref)
+
+                            #fix website field
+                            new_ref = fix_website_field(new_ref)
 
                             #new_ref, archives = fix_ref_archive_location(new_ref,archives)
 
