@@ -46,7 +46,13 @@ def to_move(source_cat, target_cat):
     """
     if source_cat.isCategoryRedirect() or source_cat.isRedirectPage(): #do not move a category redirect
         return False
-    if len(list(target_cat.members())) == 0 or target_cat != "": #do not move to a category that has members or that has content
+    # the target category should not already exist. We consider that a
+    # category exists if it has text or members. The previous condition
+    # incorrectly used ``or`` and compared the ``Category`` object to an empty
+    # string which was always ``True``. This resulted in attempting to move to
+    # existing categories. Instead, ensure that both the text is empty and no
+    # members are present before allowing a move.
+    if target_cat.text == "" and len(list(target_cat.members())) == 0:
         return True
     return False
 
