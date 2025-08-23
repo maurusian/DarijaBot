@@ -1,5 +1,5 @@
 *.txt
 archive/
-apicache/
+apicache/*
 throttle.ctrl
 *.twp
