@@ -52,14 +52,19 @@ TO_ARY_CONV_TAB = {'الأخير':'last'
                    ,'تاريخ لوصول':'access-date'
                    ,'مسار أرشيف':'archive-url'
                    ,'تاريخ أرشيف':'archive-date'
+                   ,'مسار-الأرشيف':'archive-url'
+                   ,'تاريخ-الأرشيف':'archive-date'
+                   ,'تاريخ-الوصول':'access-date'
                    ,'مكان':'location'
                    ,'صفحات':'pages'
                    ,'عنوان مترجم':'trans-title'
                    ,'الأول1':'first1'
                    ,'أول1':'first1'
                    ,'أول2':'first2'
+                   ,'الأول3':'first3'
                    ,'الأخير1':'last1'
                    ,'الأخير2':'last2'
+                   ,'محرر-الأول':'editor-first'
                    ,'الأول2':'first2'
                    ,'صفحة':'page'
                    ,'المجلد':'volume'
@@ -70,6 +75,9 @@ TO_ARY_CONV_TAB = {'الأخير':'last'
                    ,'وصلة مؤلف':'author-link'
                    ,'مؤلفون مشاركون':'authors'
                    ,'حالة المسار':'url-status'
+                   ,'مؤلف3':'author3'
+                   ,'العدد':'issue'
+                   ,'محرر':'editor'
                    ,'titre':'title'
                    ,'langue':'language'
                    ,'consulté le':'access-date'
@@ -100,7 +108,8 @@ TO_ARY_CONV_TAB = {'الأخير':'last'
                    ,'archiv-url':'archive-url'
                    ,'archiv-datum':'archive-date'
                    ,'sprache':'language'
-                   ,'hrsg':'website'
+                   ,'hrsg':'website',
+                   'دوي':'doi'
                    }
 
 TO_ARY_MONTH_TAB = {
@@ -1061,8 +1070,8 @@ if __name__ =="__main__":
 
     #refs = list(re.findall(REF_PATTERN, page.text,re.DOTALL))
 
-    test_title = "" #"لمتحف ليهودي لمغريبي"
-    load_from_cat_name = "تصنيف:أرتيكلات فيهوم موشكيل بسباب عطاشة 3.1"
+    test_title = "الصهيونية" #"جاسمين دمراوي" #"لمتحف ليهودي لمغريبي"
+    load_from_cat_name = "" #"تصنيف:أرتيكلات فيهوم موشكيل بسباب عطاشة 3.1"
     if test_title is not None and test_title.strip() != "":
         test_page = pywikibot.Page(site,test_title)
         pool = [test_page]
@@ -1131,7 +1140,7 @@ if __name__ =="__main__":
                         print(ref)
                         if is_simple_reference(ref):
                             print("is simple ref")
-                            new_ref = get_simple_ref_part(ref)
+                            new_ref = None #get_simple_ref_part(ref)
                             if new_ref is not None:
                                 #fix issues introduced by naive implementation of get_simple_ref_part, due to "webarchive" template
                             
