@@ -4,31 +4,28 @@ from tkinter import filedialog, simpledialog, messagebox
 import requests
 import pywikibot
 
-import requests
-
-import requests
-
-import requests
-
 def get_final_qid(qid):
     params = {
         'action': 'wbgetentities',
         'ids': qid,
         'format': 'json'
     }
-    response = requests.get('https://www.wikidata.org/w/api.php', params=params)
-    data = response.json()
+    try:
+        response = requests.get('https://www.wikidata.org/w/api.php', params=params)
+        data = response.json()
 
-    entities = data.get('entities', {})
-    if not entities:
-        return qid  # fallback
+        entities = data.get('entities', {})
+        if not entities:
+            return qid  # fallback
 
-    entity_data = entities.get(qid)
-    # If it's a redirect, the real QID is in entity_data['redirects']['to']
-    if entity_data and 'redirects' in entity_data:
-        return entity_data['redirects']['to']
+        entity_data = entities.get(qid)
+        # If it's a redirect, the real QID is in entity_data['redirects']['to']
+        if entity_data and 'redirects' in entity_data:
+            return entity_data['redirects']['to']
 
-    return qid
+        return qid
+    except:
+        print(response.text)
 
 
 
@@ -41,9 +38,10 @@ def extract_qid(url):
     return url.strip().rsplit('/', 1)[-1]
 
 def main():
-    batch_count = 126
+    batch_count = 93
     MAX_BATCH_ROWS = 15000
-    start_index = 1396677
+    #total disambig 1509721
+    start_index = 1423777
     site = pywikibot.Site("wikidata", "wikidata")
     site.throttle.maxdelay = 0
     site.login()
@@ -70,7 +68,7 @@ def main():
         messagebox.showerror("Error", "No input file selected.")
         return
 
-    description = DESC_BY_ITEMS["disambig"] #simpledialog.askstring("Description", "Enter the Darija description (ary):")
+    description = DESC_BY_ITEMS["cat"] #simpledialog.askstring("Description", "Enter the Darija description (ary):")
     print(description)
     if not description:
         messagebox.showerror("Error", "No description provided.")
@@ -84,7 +82,7 @@ def main():
         if not reader or "item" not in reader[0]:
             messagebox.showerror("Error", "'item' column not found in CSV.")
             return
-        output_path = f"batch {batch_count}.txt"
+        output_path = f"batch cats {batch_count}.txt"
         i = -1
         for j in range(start_index, len(reader)):
             row = reader[j]
@@ -110,7 +108,7 @@ def main():
                 i = 0
                 print(f"QuickStatements saved to {output_path}")
                 batch_count+=1
-                output_path = f"batch {batch_count}.txt"
+                output_path = f"batch cats {batch_count}.txt"
             
     
     #messagebox.showinfo("Success", f"QuickStatements saved to {output_path}")
