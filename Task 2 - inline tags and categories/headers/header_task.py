@@ -165,6 +165,7 @@ INFOBOX_TAG_PATTERN2 = r"{{صندوق\s+معلومات\s+\w+(?:\s+\w+)*(?:\s*[\n
 #r"{{صندوق\s+معلومات\s*\w+(?:\s+\w+)*(?:\s*[\n|}]?\s*)"
 #r"{{صندوق\s+معلومات\s*\w+(?:\s+\w+)*(?:\s*[\n|}]?\s*)"
 DATABOX = "{{Databox}}"
+DATABOX2 = "{{داطابوكس}}"
 
 TEMPLATE_NS = "موضيل"
 
@@ -177,7 +178,7 @@ def has_infobox_tag(page):
     if regexp.search(page.text):
         return True
 
-    if DATABOX in page.text:
+    if DATABOX in page.text or DATABOX2 in page.text:
         return True
     return False
 
