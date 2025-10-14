@@ -327,6 +327,7 @@ REMOVE_DEADEND_TAG_MESSAGE = pjason["JOBS"]["setNoOutLinkTag"]["RMV_SAVE_MESSAGE
 
 ###Functions
 def setNoOutLinkTag(page,text,MESSAGE):
+    print("setNoOutLinkTag")
     has_deadend_tag = False
     should_not_add_tag = False
     regexp = re.compile(CUL_DE_SAC_ISSUE_RGX,flags=re.DOTALL)
@@ -366,7 +367,7 @@ BOT_LIST = ['AmgharBot', 'DarijaBot', 'InternetArchiveBot','MediaWiki default'
 # Helper function to check if a user is a bot based on the "bot" flag or the bot_list
 def is_bot(user):
     user_obj = pywikibot.User(site, user)
-    print(user)
+    #print(user)
     return 'bot' in user_obj.groups() or user in BOT_LIST
 
 # Helper function to check if an article was created by a bot
@@ -570,6 +571,7 @@ RMV_PICTURE_MISSING_TAG = pjason["JOBS"]["NoPicturetag"]["RMV_SAVE_MESSAGE"] #pi
 ###Functions
 
 def has_pictures_or_videos(page):
+    print(f"page.imagelinks(): {page.imagelinks()}")
     return bool(page.imagelinks())
 
 def remove_comments(text):
@@ -578,9 +580,9 @@ def remove_comments(text):
 
 def has_pictures(text):
     #text = remove_comments(page.text)
-    if any(ext in text.lower() for ext in ['.jpg', '.jpeg', '.png', '.gif', '.svg','.webp','.webm','.ogg']) and any(file_str in text.lower() for file_str in ['file:','فيشي:','ملف:']):
+    if any(ext in text.lower() for ext in ['.jpg', '.jpeg', '.png', '.gif', '.svg','.webp','.webm','.ogg','.tif']) and any(file_str in text.lower() for file_str in ['file:','فيشي:','ملف:']):
         return True
-    if '<gallery>' in text.lower():
+    if '<gallery' in text.lower():
         return True
     
     return False
@@ -612,6 +614,7 @@ def get_image_properties_from_wikidata(item):
 
 def is_image_property_used_in_infobox(text, image_properties):
     #print("is_image_property_used_in_infobox")
+    print("is_image_property_used_in_infobox")
     infobox_template_page = get_infobox_template_page(text)
 
     #print(infobox_template_page)
@@ -629,7 +632,7 @@ def is_image_property_used_in_infobox(text, image_properties):
     return False
 
 def setNoPicturetag(page,text,MESSAGE):
-    #print("checking picture tag")
+    print("checking picture tag")
     has_picture = False
     has_picture_missing_tag = False
     add_picture_tag = False
@@ -641,6 +644,8 @@ def setNoPicturetag(page,text,MESSAGE):
 
     
     has_picture = has_pictures(text)
+
+    print(f"has_picture: {has_picture}")
     
     if PICTURE_MISSING_TAG_PART in text:
         #print("Has picture missing tag")
@@ -656,7 +661,7 @@ def setNoPicturetag(page,text,MESSAGE):
 
             #print((len(image_properties)>0))
             #print((is_image_property_used_in_infobox(page, image_properties)))
-            if len(image_properties)>0 and is_image_property_used_in_infobox(text, image_properties):
+            if len(image_properties)>0 and (is_image_property_used_in_infobox(text, image_properties) or DATABOX in text or DATABOX2 in text):
                 #print("has a picture in infobox")
                 has_picture = True
                 #add_picture_tag = False
@@ -707,7 +712,7 @@ def setNoPicturetag(page,text,MESSAGE):
 NEED_MORE_WORK_TAG = "{{مقالة خاصها تقاد}}"
 need_more_work_tag_part = "{{مقالة خاصها تقاد"
 TAG_PROBLEM_NAME_DICT = {EMPTY_PARAGRAPH_TAG:"فقرة خاوية ؤلا ناقصة"
-                        ,NO_SOURCES_ON_PAGE_TAG:"ناقصين عيون لكلام"
+                        ,NO_SOURCES_ON_PAGE_TAG:"ناقصين لمصادر"
                         ,CUL_DE_SAC_TAG:"زنقة ماكاتخرجش"
                         ,ORPHANED_PAGE_TAG:"مقطوعة من شجرة"
                         ,NO_CATEGORY_TAG:"ناقصين تصنيفات"
@@ -841,13 +846,16 @@ if __name__=="__main__":
     else:
 
         print_to_console_and_log("Creating working pool")
-        pool = site.allpages(namespace=ARTICLE_NAMESPACE, filterredir=False)
+        #pool = site.allpages(namespace=ARTICLE_NAMESPACE, filterredir=False)
+        #testing with single page
+        title = "صحافة"
+        pool = [pywikibot.Page(site,title)]
         #pool = [page for page in site.allpages() if validate_page(page)]
     #"""
 
     #pool = [pywikibot.Page(site, 'جن')]
     #pool = list(pywikibot.Category(site,'تصنيف:مقالات ناقصينهوم تصاور').articles())
-    #pool = list(pywikibot.Category(site,'تصنيف:مقالات بلا عيون لكلام').articles())
+    #pool = list(pywikibot.Category(site,'تصنيف:مقالات بلا مصادر').articles())
     #pool = list(pywikibot.Category(site,'تصنيف:أرتيكلات مامربوطينش معا ويكيداطا').articles())
     #pool = list(pywikibot.Category(site,'تصنيف:مقالات زناقي ماكايخرّجوش').articles())
     #pool = list(pywikibot.Category(site,'تصنيف:مقالات مقطوعين من شجرة').articles())
