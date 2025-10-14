@@ -9,6 +9,8 @@ import json, re, traceback
 
 
 site = pywikibot.Site()
+site.throttle.maxdelay = 0
+site.login()
 
 jobid = input("Job ID: ")
 
@@ -30,6 +32,8 @@ def read_json(site):
     return jason
 
 def get_ary_page(lang_page):
+    print(f"lang_page: {lang_page}")
+    print(f"lang_page.title(): {lang_page.title()}")
     try:
         item = pywikibot.ItemPage.fromPage(lang_page)
         if "arywiki" in item.sitelinks.keys():
@@ -41,7 +45,18 @@ def get_ary_page(lang_page):
         print(traceback.format_exc())
         return None
 
-    
+def get_lang_page_raw_title(ori_page,lang):
+    try:
+        item = pywikibot.ItemPage.fromPage(ori_page)
+        if f"{lang}wiki" in item.sitelinks.keys():
+            #print(str(item.sitelinks["arywiki"]))
+            lang_page_title = str(item.sitelinks[f"{lang}wiki"])[2:-2].split(":")[-1]
+            print("lang_page_title: "+lang_page_title)
+            return lang_page_title
+    except:
+        print(traceback.format_exc())
+        return None
+
 
 def get_var_value(TITLE_PART,title):
     value = title.replace(TITLE_PART,"").strip()
@@ -73,9 +88,17 @@ TITLE_PART = TITLE_STRUCT.split('{')[0]
 
 MOVE_OPTIONS = jason["MOVE_OPTIONS"]
 
+ADD_REDIR = None
+if "ADD_REDIR" in jason.keys():
+    ADD_REDIR = jason["ADD_REDIR"]
+
+REPLACE_IN_TEXT = None
+if "REPLACE_IN_TEXT" in jason.keys():
+    REPLACE_IN_TEXT = jason["REPLACE_IN_TEXT"]
+
 KEYWORDS = None
 
-if MOVE_OPTIONS is not None and len(MOVE_OPTIONS)>0:
+if MOVE_OPTIONS is not None and len(MOVE_OPTIONS)>0 and "KEYWORDS" in MOVE_OPTIONS[0].keys():
     KEYWORDS = MOVE_OPTIONS[0]["KEYWORDS"]
 
 print(KEYWORDS)
@@ -90,48 +113,67 @@ TEMPLATES = MAIN_CAT_PAGE.articles()
 
 for tmp in TEMPLATES:
     print(tmp)
-    var_title = get_var_value(TITLE_PART,tmp.title())
-    var_page_ary = get_ary_page(pywikibot.Page(site_lang,var_title))
-    ary_tmp_title1 = tmp.title().replace("Category",TEMPLATE_ARY_NS)
-    ary_tmp_title2 = ary_tmp_title1
-    for key,value in KEYWORDS.items():
-        ary_tmp_title2 = ary_tmp_title2.replace(key,value)
-    ary_titles = [ary_tmp_title1,ary_tmp_title2]
-    if var_page_ary is not None:                        
-        
-        ary_tmp_title3 = ary_tmp_title1.replace(var_title,var_page_ary.title())
-
-        ary_tmp_title4 = ary_tmp_title2.replace(var_title,var_page_ary.title())
-
-        ary_titles = [ary_tmp_title1,ary_tmp_title2,ary_tmp_title3,ary_tmp_title4]
-    
-    TO_ADD = True
-    for ary_title in ary_titles:
-        
-        ary_page = pywikibot.Page(site,ary_title)
-        if ary_page.text != "":
-            TO_ADD = False
-
-    item = None
-    #ADD_REDIR = False
-    if TO_ADD:
-        try:
-            item = pywikibot.ItemPage.fromPage(tmp)
-            #print(list(item.sitelinks.keys()))
-            #break
-            if "arywiki" in item.sitelinks.keys():
-                TO_ADD = False
-                
-        except:
-            print(traceback.format_exc())
-            print("no Wikidata item")
-            #TO_ADD = True
-
-    if TO_ADD:
-        ary_page = pywikibot.Page(site,ary_titles[-1])
-        ary_page.text = tmp.text
-        ary_page.save(CREATE_TMP_SAVE_MESSAGE)
-    if item is not None:
-        interlink_page(ary_page,tmp,"ary","template")
+    #check ary page exists:
+    ary_tmp = get_ary_page(tmp)
+    if ary_tmp is None:
+        var_title = get_var_value(TITLE_PART,tmp.title())
+        var_page_ary = get_ary_page(pywikibot.Page(site_lang,var_title))
+        ary_tmp_title1 = tmp.title().replace("Category",TEMPLATE_ARY_NS)
+        ary_tmp_title2 = ary_tmp_title1
+        if KEYWORDS:
+            for key,value in KEYWORDS.items():
+                ary_tmp_title2 = ary_tmp_title2.replace(key,value)
+        ary_titles = [ary_tmp_title1,ary_tmp_title2]
+        if var_page_ary is not None:                        
             
+            ary_tmp_title3 = ary_tmp_title1.replace(var_title,var_page_ary.title())
+
+            ary_tmp_title4 = ary_tmp_title2.replace(var_title,var_page_ary.title())
+
+            ary_titles = [ary_tmp_title1,ary_tmp_title2,ary_tmp_title3,ary_tmp_title4]
         
+        TO_ADD = True
+        for ary_title in ary_titles:
+            
+            ary_page = pywikibot.Page(site,ary_title)
+            if ary_page.text != "":
+                TO_ADD = False
+
+        item = None
+        #ADD_REDIR = False
+        if TO_ADD:
+            try:
+                item = pywikibot.ItemPage.fromPage(tmp)
+                #print(list(item.sitelinks.keys()))
+                #break
+                if "arywiki" in item.sitelinks.keys():
+                    TO_ADD = False
+                    
+            except:
+                print(traceback.format_exc())
+                print("no Wikidata item")
+                #TO_ADD = True
+
+        if TO_ADD:
+            ary_page = pywikibot.Page(site,ary_titles[-1])
+            
+            if REPLACE_IN_TEXT:
+                for key,value in REPLACE_IN_TEXT.items():
+                    tmp.text = tmp.text.replace(key,value)
+
+            ary_page.text = tmp.text
+            ary_page.save(CREATE_TMP_SAVE_MESSAGE)
+        if item is not None:
+            #pass
+            interlink_page(ary_page,tmp,"ary","template")
+
+            
+
+        if ADD_REDIR:
+            for lang in ADD_REDIR:
+                redir_page = pywikibot.Page(site,f"{TEMPLATE_ARY_NS}:{get_lang_page_raw_title(tmp,lang)}")
+                print(redir_page.title())
+                if redir_page.text == "":
+                    redir_page.text = f"""#تحويل [[{ary_page.title()}]]\n\n[[تصنيف:تحويلات موضيلات]]"""
+                    redir_page.save(CREATE_TMP_SAVE_MESSAGE)
+    
