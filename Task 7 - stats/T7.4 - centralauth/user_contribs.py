@@ -1,12 +1,17 @@
 import requests
 from openpyxl import load_workbook, Workbook
 
-read_excel_filename = "user_contribs.xlsx"
-target_excel_filename = "user_contribs_target.xlsx"
+read_excel_filename = "CentralAuth-WikiCamp 2025.xlsx"
+target_excel_filename = "CentralAuth-WikiCamp 2025_target.xlsx"
 
 def get_user_contributions(username):
     # Define the URL for the API
     url = "https://meta.wikimedia.org/w/api.php"
+
+    # Define headers with a proper User-Agent
+    headers = {
+        "User-Agent": "DarijaBot/0.0 (https://ary.wikipedia.org/wiki/%D8%AE%D8%AF%D8%A7%D9%8A%D9%85%D9%8A:DarijaBot; wikimorocco@contact.org) requests"
+    }
 
     # Define parameters for querying the user's global contributions
     params = {
@@ -18,14 +23,16 @@ def get_user_contributions(username):
     }
 
     # Query the user's global contributions
-    response = requests.get(url, params=params)
+    response = requests.get(url, params=params, headers=headers)
+    #print(dir(response))
+    #print(response.text)
     response_json = response.json()
 
-    print(response_json.keys())
+    #print(response_json.keys())
 
     # Query the user's global information
-    response = requests.get(url, params=params)
-    response_json = response.json()
+    #response = requests.get(url, params=params)
+    #response_json = response.json()
 
     # Check if the response contains the expected data
     if "query" in response_json and "globaluserinfo" in response_json["query"] and "merged" in response_json["query"]["globaluserinfo"]:
@@ -65,9 +72,11 @@ def write_to_excel(max_row_num):
 
     load_wb.save(target_excel_filename)
         
-write_to_excel(546)
+write_to_excel(65)
 # Example usage:
+"""
 username = "Ideophagous"  # Replace with the desired username
 contributions = get_user_contributions(username)
 for project, count in contributions:
     print(f"{project}: {count} contributions")
+"""
