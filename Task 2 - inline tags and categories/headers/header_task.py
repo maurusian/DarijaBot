@@ -848,7 +848,7 @@ if __name__=="__main__":
         print_to_console_and_log("Creating working pool")
         #pool = site.allpages(namespace=ARTICLE_NAMESPACE, filterredir=False)
         #testing with single page
-        title = "صحافة"
+        title = ""
         pool = [pywikibot.Page(site,title)]
         #pool = [page for page in site.allpages() if validate_page(page)]
     #"""
