@@ -6,7 +6,7 @@ from datetime import datetime
 from arywikibotlib import getOnlyArticles
 from pywikibot.exceptions import OtherPageSaveError, SpamblacklistError
 
-ALL_WEB_CITATION_PATTERN_TMP_NAMES = "Lien web|استشهاد بويب|Article|Cite web|Internetquelle|مرجع ويب|ouvrage|cite magazine|مرجع مجلة|مرجع موسوعة|مرجع پاطونط|cite patent|cite book|مرجع كتاب|مرجع تيز|cite thesis|cite encyclopedia|cite journal|مرجع جورنال|cite report|cite conference|مرجع خبار|cite tweet|cite episode|cite dictionary"
+ALL_WEB_CITATION_PATTERN_TMP_NAMES = "Lien web|استشهاد ويب|استشهاد بخبر|استشهاد بويب|Article|Cite web|Internetquelle|مرجع ويب|ouvrage|cite magazine|مرجع مجلة|مرجع موسوعة|مرجع پاطونط|cite patent|cite book|مرجع كتاب|مرجع تيز|cite thesis|cite encyclopedia|cite journal|مرجع جورنال|cite report|cite conference|مرجع خبار|cite tweet|cite episode|cite dictionary"
 MAIN_WEB_CITATION_TEMPLATE_MATCH_PATTERN = r"\{\{(" + ALL_WEB_CITATION_PATTERN_TMP_NAMES + r")((?:\|[^{}]*)*)\}\}"
 
 TO_ARY_CONV_TAB = {'الأخير':'last'
@@ -196,7 +196,7 @@ if __name__ == "__main__":
     site.throttle.maxdelay = 0
     site.login()
 
-    test_title = "" #"جاسمين دمراوي"  # Optional manual page title for testing
+    test_title = "دم" #"جاسمين دمراوي"  # Optional manual page title for testing
     load_from_cat_name = "" #"تصنيف:أرتيكلات فيهوم موشكيل بسباب عطاشة 3.1"
 
     if test_title.strip():
