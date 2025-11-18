@@ -3,7 +3,6 @@ import re, os
 from sys import argv
 from copy import deepcopy
 from datetime import datetime
-from arywikibotlib import getOnlyArticles
 from pywikibot.exceptions import OtherPageSaveError, SpamblacklistError
 
 ALL_WEB_CITATION_PATTERN_TMP_NAMES = "Lien web|استشهاد ويب|استشهاد بخبر|استشهاد بويب|Article|Cite web|Internetquelle|مرجع ويب|ouvrage|cite magazine|مرجع مجلة|مرجع موسوعة|مرجع پاطونط|cite patent|cite book|مرجع كتاب|مرجع تيز|cite thesis|cite encyclopedia|cite journal|مرجع جورنال|cite report|cite conference|مرجع خبار|cite tweet|cite episode|cite dictionary"
@@ -89,6 +88,12 @@ RECENT_LOG_FILE = "recent_log.txt"
 JOB_ID_MSG_PART = "نمرة د دّوزة {}"
 
 LOCAL_LOG = "task3.1.1.log"
+
+def getOnlyArticles(site):
+    """
+    Returns a generator that contains only articles (with no redirects)
+    """
+    return site.allpages(namespace=0,filterredir=False)
 
 
 def print_to_console_and_log(MSG):
