@@ -224,35 +224,19 @@ if __name__ == '__main__':
             i = 1
             for page in pool:
                 print('*********'+str(i)+'/'+str(pool_size))
-                
-                contributors = dict(page.contributors())
+                try:
+                    contributors = dict(page.contributors())
 
-                for contributor in contributors.keys():
-                    try:
-                        user = pywikibot.User(site,contributor)
-                    except pywikibot.exceptions.InvalidTitleError:
-                        print("InvalidTitleError: "+traceback.format_exc())
-                        user = None
-                    if user is not None:
-                        user_talk_page = user.getUserTalkPage()
-                        if user_talk_page.text == "" and not user_talk_page.exists():
-                            #now = datetime.now()
-                            time = get_time_string()
-                            admin = get_random_admin()
-                            if user.isRegistered():
-                                WELCOME = ACCT_WELCOME_TAG.replace("{admin}",admin).replace("{time}",time)
-                                SAVE_MESSAGE = ACCT_SAVE_MESSAGE
-                            else:
-                                WELCOME = IP_WELCOME_TAG.replace("{admin}",admin).replace("{time}",time)
-                                SAVE_MESSAGE = IP_SAVE_MESSAGE
-                            user_talk_page.text = WELCOME
-                            user_talk_page.save(SAVE_MESSAGE)
-                        else:
-                            talk_page_contributors = dict(user_talk_page.contributors())
-                            #print(page.title())
-                            #print(talk_page_contributors)
-                            if len(talk_page_contributors.keys()) == 1 and list(talk_page_contributors.keys())[0] == 'MenoBot':
-                                
+                    for contributor in contributors.keys():
+                        try:
+                            user = pywikibot.User(site,contributor)
+                        except pywikibot.exceptions.InvalidTitleError:
+                            print("InvalidTitleError: "+traceback.format_exc())
+                            user = None
+                        if user is not None:
+                            user_talk_page = user.getUserTalkPage()
+                            if user_talk_page.text == "" and not user_talk_page.exists():
+                                #now = datetime.now()
                                 time = get_time_string()
                                 admin = get_random_admin()
                                 if user.isRegistered():
@@ -263,6 +247,24 @@ if __name__ == '__main__':
                                     SAVE_MESSAGE = IP_SAVE_MESSAGE
                                 user_talk_page.text = WELCOME
                                 user_talk_page.save(SAVE_MESSAGE)
+                            else:
+                                talk_page_contributors = dict(user_talk_page.contributors())
+                                #print(page.title())
+                                #print(talk_page_contributors)
+                                if len(talk_page_contributors.keys()) == 1 and list(talk_page_contributors.keys())[0] == 'MenoBot':
+                                    
+                                    time = get_time_string()
+                                    admin = get_random_admin()
+                                    if user.isRegistered():
+                                        WELCOME = ACCT_WELCOME_TAG.replace("{admin}",admin).replace("{time}",time)
+                                        SAVE_MESSAGE = ACCT_SAVE_MESSAGE
+                                    else:
+                                        WELCOME = IP_WELCOME_TAG.replace("{admin}",admin).replace("{time}",time)
+                                        SAVE_MESSAGE = IP_SAVE_MESSAGE
+                                    user_talk_page.text = WELCOME
+                                    user_talk_page.save(SAVE_MESSAGE)
+                except pywikibot.exceptions.NoPageError:
+                    print("Skipped non existing page")
                 i+=1
         write_run_time()
 
