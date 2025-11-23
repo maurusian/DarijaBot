@@ -38,15 +38,16 @@ def get_new_user_contributions(site, ignore_list):
 
     for user in site.allusers(total=None):
         username = user['name']
-        if username not in ignore_list:
+        if username not in ignore_list and "renamed user" not in username.lower() and "vanished user" not in username.lower():
             groups = user.get('groups', [])
+            print(username, groups)
 
             # Ignore bots, regardless of other roles they might have
             registration_date = user.get('registration')
 
             registration_year = registration_date[:4]
 
-            if registration_year == current_year and 'bot' not in groups and username[-3:].lower() != 'bot':
+            if registration_year == current_year and 'bot' not in groups and username[-3:].lower() != 'bot' and 'temp' not in groups: #ignore bots and temporary accounts
                 # Always count contributions for new users
                 contributions_count = len(list(site.usercontribs(user=username)))
                 if contributions_count > 0:
