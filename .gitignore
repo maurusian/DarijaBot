@@ -13,6 +13,9 @@ user-config.py
 *.ctrl
 *.lwp
 apicache-py3
+apicache
+*/apicache
+*/apicache-py3
 *log.txt
 .Python
 build/
