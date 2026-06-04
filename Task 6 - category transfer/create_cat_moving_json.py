@@ -12,6 +12,9 @@ ADMINS = ["Ideophagous"]
 SAVE_MESSAGE = "عطاشة 6.1، لكوض دجيسون تصاوب"
 
 site = pywikibot.Site()
+site.login()
+site.throttle.maxdelay = 0
+site.throttle.mindelay = 0
 
 JOB_PAGE_TITLE_PTRN = "ميدياويكي:عطاشة6.1.خدمة{}.json"
 
@@ -70,31 +73,44 @@ def get_all_subcategories(category_name):
 
     return subcategories
 
-def get_all_search_results(search_token,search_limit,lang):
-    search_url = "https://"+lang+".wikipedia.org/w/index.php?title=Special:search&limit="+search_limit+"&ns0=1&offset=0&profile=default&search="+urllib.parse.quote(search_token)
-    #search_url = base_url + search_title
+def get_all_search_results(search_token, search_limit, lang):
+    search_url = (
+        "https://"
+        + lang
+        + ".wikipedia.org/w/index.php?title=Special:Search&limit="
+        + search_limit
+        + "&ns0=1&offset=0&profile=default&search="
+        + urllib.parse.quote(search_token)
+    )
 
-    response = requests.get(search_url)
+    headers = {
+        "User-Agent": "Darijabot/1.0 (https://ary.wikipedia.org/wiki/User:Darijabot; contact on-wiki)"
+    }
+
+    response = requests.get(search_url, headers=headers)
 
     if response.status_code != 200:
+        print(response.status_code)
         print(f"Failed to get page: {search_url}")
         return None
 
-    soup = BeautifulSoup(response.text, 'html.parser')
+    soup = BeautifulSoup(response.text, "html.parser")
 
-    divs = soup.find_all('div', class_='mw-search-result-heading')
+    divs = soup.find_all("div", class_="mw-search-result-heading")
 
-    titles = [div.find('a').get('title') for div in divs]
+    titles = [div.find("a").get("title") for div in divs]
 
     return titles
+
 
 def get_all_search_result_cats(jason):
     search_token = jason["MAIN_SEARCH_TOKEN"]
     search_limit = str(jason["MAX_DATA_POOL_SIZE"])
     lang = jason["lang"]
 
-    titles = get_all_search_results(search_token,search_limit,lang)
-    
+    titles = get_all_search_results(search_token, search_limit, lang)
+    print("titles: ", titles)
+
     tokens = jason["TOKENS"]
 
     all_cats = set()
@@ -102,7 +118,14 @@ def get_all_search_result_cats(jason):
     for title in titles:
         for token in tokens:
             if token["SOURCE_TKN"] in title:
-                all_cats.add(pywikibot.Category(site,title))
+                cat = pywikibot.Category(site, title)
+
+                try:
+                    if cat.exists() and not cat.isRedirectPage():
+                        all_cats.add(cat)
+                except Exception as e:
+                    print(f"Error checking category {title}: {e}")
+
                 break
 
     return all_cats

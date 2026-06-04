@@ -138,8 +138,4 @@ dmypy.json
 
 CentralAuth-WikiCamp 2025.xlsx
 CentralAuth-WikiCamp 2025_target.xlsx
-exclusive_ary_results.xlsx
 *.xlsx
-**/apicache/
-*.txt
-**/*.txt

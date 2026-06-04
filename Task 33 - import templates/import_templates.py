@@ -17,6 +17,7 @@ jobid = input("Job ID: ")
 JOB_PAGE_TITLE_PTRN = f"ميدياويكي:عطاشة33.خدمة{jobid}.json"
 
 TEMPLATE_ARY_NS = "موضيل"
+MODULE_ARY_NS = "مودول"
 
 
 
@@ -80,11 +81,22 @@ CREATE_TMP_SAVE_MESSAGE = jason["CREATE_TMP_SAVE_MESSAGE"]
 
 print(TITLE_STRUCT)
 
-VAR = re.search(r"\{\w+\}?",TITLE_STRUCT).group(0)
+ARY_NS = TEMPLATE_ARY_NS #default
 
-print(VAR)
+if "TARGET_NS" in jason.keys():
+    TARGET_NS = jason["TARGET_NS"]
+    if TARGET_NS == "Module":
+        ARY_NS = MODULE_ARY_NS
 
-TITLE_PART = TITLE_STRUCT.split('{')[0]
+VAR = None
+TITLE_PART = None
+
+if TITLE_STRUCT:
+    VAR = re.search(r"\{\w+\}?",TITLE_STRUCT).group(0)
+
+    print(VAR)
+
+    TITLE_PART = TITLE_STRUCT.split('{')[0]
 
 MOVE_OPTIONS = jason["MOVE_OPTIONS"]
 
@@ -116,9 +128,11 @@ for tmp in TEMPLATES:
     #check ary page exists:
     ary_tmp = get_ary_page(tmp)
     if ary_tmp is None:
-        var_title = get_var_value(TITLE_PART,tmp.title())
-        var_page_ary = get_ary_page(pywikibot.Page(site_lang,var_title))
-        ary_tmp_title1 = tmp.title().replace("Category",TEMPLATE_ARY_NS)
+        var_page_ary = None
+        if TITLE_PART:
+            var_title = get_var_value(TITLE_PART,tmp.title())
+            var_page_ary = get_ary_page(pywikibot.Page(site_lang,var_title))
+        ary_tmp_title1 = tmp.title().replace("Template",ARY_NS)
         ary_tmp_title2 = ary_tmp_title1
         if KEYWORDS:
             for key,value in KEYWORDS.items():
@@ -169,9 +183,9 @@ for tmp in TEMPLATES:
 
             
 
-        if ADD_REDIR:
+        if ADD_REDIR and ARY_NS == TEMPLATE_ARY_NS: #only for templates
             for lang in ADD_REDIR:
-                redir_page = pywikibot.Page(site,f"{TEMPLATE_ARY_NS}:{get_lang_page_raw_title(tmp,lang)}")
+                redir_page = pywikibot.Page(site,f"{ARY_NS}:{get_lang_page_raw_title(tmp,lang)}")
                 print(redir_page.title())
                 if redir_page.text == "":
                     redir_page.text = f"""#تحويل [[{ary_page.title()}]]\n\n[[تصنيف:تحويلات موضيلات]]"""
