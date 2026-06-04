@@ -136,6 +136,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+CentralAuth-WikiCamp 2025.xlsx
+CentralAuth-WikiCamp 2025_target.xlsx
+exclusive_ary_results.xlsx
 *.xlsx
-*/last_run.txt
-last_run.txt
+**/apicache/

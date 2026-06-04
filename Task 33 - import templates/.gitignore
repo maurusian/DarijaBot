@@ -14,6 +14,8 @@ user-config.py
 *.lwp
 apicache-py3
 apicache
+*/apicache
+*/apicache-py3
 *log.txt
 .Python
 build/
@@ -136,6 +138,21 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-*.xlsx
-*/last_run.txt
-last_run.txt
+
+#tracking files
+*save_users.txt
+*last_run.txt
+
+Task 7 - stats/T7.7 -google search/api_key.txt
+Task 7 - stats/T7.7 -google search/cx_id.txt
+Task 7 - stats/user_contribs.xlsx
+
+**/archive/
+
+**/last_run*.txt
+
+Task 24 - quality of articles/suggestion_list.txt
+
+**/recent_log*.txt
+**/apicache/
+**/apicache-py3/
