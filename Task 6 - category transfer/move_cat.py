@@ -3,6 +3,7 @@ import json, traceback
 from pywikibot.exceptions import CascadeLockedPageError, ArticleExistsConflictError
 
 site = pywikibot.Site()
+site.throttle.maxdelay = 0
 site.login()
 
 def read_json(filename):
