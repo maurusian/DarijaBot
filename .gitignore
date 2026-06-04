@@ -153,6 +153,10 @@ Task 7 - stats/user_contribs.xlsx
 
 Task 24 - quality of articles/suggestion_list.txt
 
+<<<<<<< HEAD
 **/recent_log*.txt
 **/*.xlsx
 **/*.txt
+=======
+**/recent_log*.txt
+>>>>>>> c518bc496d32ce6a1e615a46b51408ea17c1a44e
