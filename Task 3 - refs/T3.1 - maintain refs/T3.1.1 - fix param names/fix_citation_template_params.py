@@ -4,9 +4,16 @@ from sys import argv
 from copy import deepcopy
 from datetime import datetime
 from pywikibot.exceptions import OtherPageSaveError, SpamblacklistError
+import mwparserfromhell
+
 
 ALL_WEB_CITATION_PATTERN_TMP_NAMES = "Lien web|استشهاد ويب|استشهاد بخبر|استشهاد بويب|Article|Cite web|Internetquelle|مرجع ويب|ouvrage|cite magazine|مرجع مجلة|مرجع موسوعة|مرجع پاطونط|cite patent|cite book|مرجع كتاب|مرجع تيز|cite thesis|cite encyclopedia|cite journal|مرجع جورنال|cite report|cite conference|مرجع خبار|cite tweet|cite episode|cite dictionary"
 MAIN_WEB_CITATION_TEMPLATE_MATCH_PATTERN = r"\{\{(" + ALL_WEB_CITATION_PATTERN_TMP_NAMES + r")((?:\|[^{}]*)*)\}\}"
+
+CITATION_NAMES_RE = re.compile(
+    r"^(?:%s)$" % ALL_WEB_CITATION_PATTERN_TMP_NAMES,
+    flags=re.IGNORECASE
+)
 
 TO_ARY_CONV_TAB = {'الأخير':'last'
                    ,'الأول':'first'
@@ -74,6 +81,8 @@ TO_ARY_CONV_TAB = {'الأخير':'last'
                    ,'archiv-datum':'archive-date'
                    ,'sprache':'language'
                    ,'hrsg':'website'
+                   ,'lien auteur':'author-link'
+                   ,'citation':'quote'
                    }
 
 
@@ -135,6 +144,7 @@ def load_pages_in_log():
     return page_name_list
 
 def extract_params(param_text):
+    print(param_text)
     params = {}
     current = ""
     depth = 0
@@ -177,6 +187,7 @@ def rebuild_template(name, params_dict):
     return "\n".join(template_lines)
 
 def fix_single_citation_match(match):
+    print("fix_single_citation_match")
     template_name = match.group(1).strip()
     param_text = match.group(2) or ""
     try:
@@ -191,22 +202,43 @@ def fix_single_template(template_name, raw_param_text):
     return rebuild_template(template_name, corrected_params)
 
 
-def fix_citation_templates_in_text(text):
+def fix_citation_templates_in_text_old(text):
+    print("fix_citation_templates_in_text")
     pattern = re.compile(MAIN_WEB_CITATION_TEMPLATE_MATCH_PATTERN, flags=re.DOTALL | re.IGNORECASE)
-    return pattern.sub(fix_single_citation_match, text)
+    result = pattern.sub(fix_single_citation_match, text)
+    print(result)
+    return result
 
+def fix_citation_templates_in_text(text: str) -> str:
+    wikicode = mwparserfromhell.parse(text)
+
+    for template in wikicode.filter_templates():
+        name = str(template.name).strip()
+        if not CITATION_NAMES_RE.match(name):
+            continue
+
+        # rename parameters in-place
+        for param in template.params:
+            old_name = str(param.name).strip()
+            new_name = TO_ARY_CONV_TAB.get(old_name, old_name)
+            if new_name != old_name:
+                param.name = new_name
+
+    return str(wikicode)
+    
 
 if __name__ == "__main__":
     site = pywikibot.Site()
     site.throttle.maxdelay = 0
     site.login()
 
-    test_title = "دم" #"جاسمين دمراوي"  # Optional manual page title for testing
+    test_title = "أحمد موجاهيد" #"جاسمين دمراوي"  # Optional manual page title for testing
     load_from_cat_name = "" #"تصنيف:أرتيكلات فيهوم موشكيل بسباب عطاشة 3.1"
 
     if test_title.strip():
         test_page = pywikibot.Page(site, test_title)
         pool = [test_page]
+        #print(test_page.title())
 
     elif load_from_cat_name.strip():
         category = pywikibot.Category(site, load_from_cat_name)
@@ -242,7 +274,7 @@ if __name__ == "__main__":
         for page in pool:
             print_to_console_and_log('********* ' + str(i) + '/' + str(pool_size))
             if str(page.title()) not in pages_in_log:
-                #print(page.title())
+                #print("testing for",page.title())
                 try:
                     original_text = page.text
                     fixed_text = fix_citation_templates_in_text(original_text)
